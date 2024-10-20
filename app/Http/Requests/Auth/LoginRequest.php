@@ -51,7 +51,7 @@ class LoginRequest extends FormRequest
                 RateLimiter::hit($this->throttleKey());
 
                 throw ValidationException::withMessages([
-                    'email' => trans('auth.failed'),
+                    'email' => 'Maklumat ini tidak ada di dalam rekod.',
                 ]);
             }
         }else{
@@ -59,7 +59,7 @@ class LoginRequest extends FormRequest
                 RateLimiter::hit($this->throttleKey());
 
                 throw ValidationException::withMessages([
-                    'email' => trans('auth.failed'),
+                    'email' => 'Maklumat ini tidak ada di dalam rekod.',
                 ]);
             }
         }
