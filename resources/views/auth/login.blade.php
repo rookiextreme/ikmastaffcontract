@@ -32,7 +32,7 @@
                             <div class="text-gray-500 fw-semibold fs-6">Sila Log Masuk Sekarang</div>
                         </div>
                         <div class="fv-row mb-8">
-                            <input type="text" placeholder="E-mel" name="email" autocomplete="off" class="form-control bg-transparent" value="{{ old('email') }}" required/>
+                            <input type="text" placeholder="E-mel/No. Kad Pengenalan" name="email" autocomplete="off" class="form-control bg-transparent" value="{{ old('email') }}" required/>
                         </div>
                         <div class="fv-row mb-3">
                             <input type="password" placeholder="Kata Laluan" name="password" autocomplete="off" class="form-control bg-transparent" required/>

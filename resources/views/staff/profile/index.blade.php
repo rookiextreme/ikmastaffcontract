@@ -83,6 +83,9 @@
     </div>
     @if($page == 'main')
         @include('staff.profile.tabs.profile-tab')
+    @elseif($page == 'academic')
+        @include('staff.profile.modals.academic-modal')
+        @include('staff.profile.tabs.academic-tab')
     @endif
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
@@ -104,6 +107,10 @@
     @if($page == 'main')
         <script src="{{ asset('js/modules/staff/profile/init.js') }}"></script>
         <script src="{{ asset('js/modules/staff/profile/index.js') }}"></script>
+    @elseif($page == 'academic')
+        <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/academic/init.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/academic/index.js') }}"></script>
     @endif
 @endsection
 

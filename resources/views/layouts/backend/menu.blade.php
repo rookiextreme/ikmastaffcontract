@@ -57,68 +57,27 @@
                         </a>
                     </div>
                     @endrole
-
-{{--                    @role('super-admin|admin')--}}
-{{--                        <div class="menu-item pt-5">--}}
-{{--                            <!--begin:Menu content-->--}}
-{{--                            <div class="menu-content">--}}
-{{--                                <span class="menu-heading fw-bold text-uppercase fs-7">Tetapan Sistem</span>--}}
-{{--                            </div>--}}
-{{--                            <!--end:Menu content-->--}}
-{{--                        </div>--}}
-{{--                        <div class="menu-item">--}}
-{{--                            <a class="menu-link"--}}
-{{--                               href="{{ route('admin.setting.course-type') }}">--}}
-{{--                                    <span class="menu-icon">--}}
-{{--                                    <i class="ki-duotone ki-abstract-13 fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                    </span>--}}
-{{--                                <span class="menu-title">Jenis Kursus</span>--}}
-{{--                            </a>--}}
-{{--                            <a class="menu-link"--}}
-{{--                               href="{{ route('admin.setting.course-category') }}">--}}
-{{--                                    <span class="menu-icon">--}}
-{{--                                    <i class="ki-duotone ki-abstract-13 fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                    </span>--}}
-{{--                                <span class="menu-title">Kategori Kursus</span>--}}
-{{--                            </a>--}}
-{{--                            <a class="menu-link"--}}
-{{--                               href="{{ route('admin.setting.position') }}">--}}
-{{--                                    <span class="menu-icon">--}}
-{{--                                    <i class="ki-duotone ki-abstract-13 fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                    </span>--}}
-{{--                                <span class="menu-title">Jawatan Dalaman</span>--}}
-{{--                            </a>--}}
-{{--                            <a class="menu-link"--}}
-{{--                               href="{{ route('admin.setting.course-tagging') }}">--}}
-{{--                                    <span class="menu-icon">--}}
-{{--                                    <i class="ki-duotone ki-abstract-13 fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                    </span>--}}
-{{--                                <span class="menu-title">Tags</span>--}}
-{{--                            </a>--}}
-{{--                            <a class="menu-link"--}}
-{{--                               href="{{ route('admin.setting.faq') }}">--}}
-{{--                                    <span class="menu-icon">--}}
-{{--                                    <i class="ki-duotone ki-abstract-13 fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                    </span>--}}
-{{--                                <span class="menu-title">FAQ</span>--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                    @endrole--}}
+                    @role('super-admin|admin')
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Pengguna</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.user.list') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Senarai Pengguna</span>
+                        </a>
+                    </div>
+                    @endrole
                 </div>
                 <!--end::Menu-->
             </div>

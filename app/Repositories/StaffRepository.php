@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Staff;
+use App\Models\StaffAcademic;
 use App\Models\User;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
@@ -103,5 +104,94 @@ class StaffRepository
             'message' => 'Rekod Peribadi Dikemaskini',
             'url' => route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'main'])
         ];
+    }
+
+    public function getAcademicList(Request $request){
+        $staff_id = $request->staff_id;
+
+        $model = DB::select('
+            SELECT
+            ac.id,
+            ac.certificate_name,
+            ac.institution_name,
+            ac.institution_location,
+            ac.major_specialization,
+            ac.minor_specialization,
+            ac.overall_grade,
+            aq.name as qualification
+            FROM staff_academics ac
+            JOIN academic_qualifications aq ON aq.id = ac.academic_qualification_id
+            AND ac.staff_id = ?
+            LIMIT 100
+        ',[
+            $staff_id
+        ]);
+
+        return $model;
+    }
+
+    public function storeUpdateAcademic(Request $request){
+        $qualification = $request->qualification;
+        $cert_name = $request->cert_name;
+        $institution_name = $request->institution_name;
+        $institution_location = $request->institution_location;
+        $major_specialization = $request->major_specialization;
+        $minor_specialization = $request->minor_specialization;
+        $profession_cert_date = $request->profession_cert_date;
+        $profession_cert = $request->profession_cert;
+        $overall_grade = $request->overall_grade;
+        $id = $request->id;
+        $staff_id = $request->staff_id;
+
+        DB::beginTransaction();
+        try{
+            $m = $id ? StaffAcademic::find($id) : new StaffAcademic;
+            $m->staff_id = $staff_id;
+            $m->academic_qualification_id = $qualification;
+            $m->certificate_name = $cert_name;
+            $m->institution_name = $institution_name;
+            $m->institution_location = $institution_location;
+            $m->major_specialization = $major_specialization;
+            $m->minor_specialization = $minor_specialization;
+            $m->professional_certification = $profession_cert;
+            $m->professional_certification_date = $profession_cert_date ? $this->reverseDate($profession_cert_date) : null;
+            $m->overall_grade = $overall_grade;
+            $m->save();
+
+            $complete = StaffAcademic::where('staff_id', $staff_id)->count();
+            $staff = Staff::find($staff_id);
+            $staff->academic_complete = $complete > 0;
+            $staff->save();
+
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Rekod Akademik '.($id ? 'Dikemaskini' : 'Ditambah'),
+        ];
+    }
+
+    public function getAcademic($id){
+        $data = [];
+
+        $m = StaffAcademic::find($id);
+        $data['id'] = $m->id;
+        $data['academic_qualification_id'] = $m->academic_qualification_id;
+        $data['certificate_name'] = $m->certificate_name;
+        $data['institution_name'] = $m->institution_name;
+        $data['institution_location'] = $m->institution_location;
+        $data['major_specialization'] = $m->major_specialization;
+        $data['minor_specialization'] = $m->minor_specialization;
+        $data['professional_certification'] = $m->professional_certification;
+        $data['professional_certification_date'] = $m->professional_certification_date ? $this->regularDate($m->professional_certification_date) : null;
+        $data['overall_grade'] = $m->overall_grade;
+        return $data;
     }
 }

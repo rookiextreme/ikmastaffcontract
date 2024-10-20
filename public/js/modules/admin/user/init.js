@@ -21,8 +21,8 @@ let table = new DatatableInit({
             raw: function (full) {
                 let btn = '';
 
-                if(full.role_name == 'peserta'){
-                    btn = `<li><a href="${common.getUrl()}participant/application/${full.id}/profile" class="dropdown-item text-info">Profil</a></li>`
+                if(full.role_name == 'staff'){
+                    btn = `<li><a href="${common.getUrl()}staff/profile/${full.id}/main" class="dropdown-item text-info">Profil</a></li>`
                 }
 
                 btn = `<div class="dropdown">

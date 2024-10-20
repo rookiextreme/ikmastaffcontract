@@ -30,13 +30,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
         if($user->hasRole('super-admin')){
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('admin.user.list', absolute: false));
         }elseif($user->hasRole('admin')){
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('admin.user.list', absolute: false));
         }elseif($user->hasRole('approval-admin')){
             return redirect()->intended(route('dashboard', absolute: false));
         }elseif($user->hasRole('staff')){
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('staff.profile', absolute: false));
         }
 
         return redirect()->intended(route('dashboard', absolute: false));
@@ -53,6 +53,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
