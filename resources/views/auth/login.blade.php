@@ -56,9 +56,9 @@
                     @endif
                 </div>
             </div>
-            <div class="p-10 text-center gap-5 fw-semibold ">
-                Tiada Akaun?<a class="m-4 text-primary" href="{{ route('register') }}">Daftar Sekarang</a>
-            </div>
+{{--            <div class="p-10 text-center gap-5 fw-semibold ">--}}
+{{--                Tiada Akaun?<a class="m-4 text-primary" href="{{ route('register') }}">Daftar Sekarang</a>--}}
+{{--            </div>--}}
         </div>
         <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2" style="background-image: url({{ asset('assets/images/auth_background.png') }})">
             <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
