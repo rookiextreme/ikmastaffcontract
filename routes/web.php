@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/meta-test', function (Request $request) {
+    Log::info('Incoming Request:', $request->all());
     echo $request->hub_challenge;
 });
 
