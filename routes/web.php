@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
 //    return view('welcome');
 //});
 
-Route::get('/meta-test', function () {
-
+Route::get('/meta-test', function (Request $request) {
+    return response()->json($request->hub_challenge);
 });
 
 Route::get('/dashboard', function () {
