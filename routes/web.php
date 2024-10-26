@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/meta-test', function (Request $request) {
     Log::info('Incoming Request:', $request->all());
-    echo $request->hub_challenge;
+//    echo $request->hub_challenge;
+    return response()->json(['status' => 'success'], 200);
 });
 
 Route::get('/dashboard', function () {
