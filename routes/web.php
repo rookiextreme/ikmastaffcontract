@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/meta-test', function (Request $request) {
+Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
     Log::info('Incoming Request:', $request->all());
 //    echo $request->hub_challenge;
     return response()->json(['status' => 'success'], 200);
