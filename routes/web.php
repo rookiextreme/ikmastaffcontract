@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/meta-test', function (Request $request) {
-    return [
-       'value' => $request->hub_challenge
-    ];
+    echo $request->hub_challenge;
 });
 
 Route::get('/dashboard', function () {
