@@ -14,6 +14,10 @@ Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
     return response()->json(['status' => 'success'], 200);
 });
 
+Route::match(['GET', 'POST'], '/meta-test-verify', function (Request $request) {
+    echo $request->hub_challenge;
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
