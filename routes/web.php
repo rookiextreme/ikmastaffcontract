@@ -15,6 +15,7 @@ Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
 });
 
 Route::match(['GET', 'POST'], '/meta-test-verify', function (Request $request) {
+    Log::info('Incoming Request:', $request->all());
     echo $request->hub_challenge;
 });
 
