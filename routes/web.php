@@ -16,7 +16,10 @@ Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
 
 Route::match(['GET', 'POST'], '/meta-test-verify', function (Request $request) {
     Log::info('Incoming Request:', $request->all());
-    echo $request->hub_challenge;
+    if($request->hub_challenge){
+        echo $request->hub_challenge;
+    }
+    return response()->json(['status' => 'success'], 200);
 });
 
 Route::get('/dashboard', function () {
