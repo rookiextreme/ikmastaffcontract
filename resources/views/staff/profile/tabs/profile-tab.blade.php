@@ -4,6 +4,13 @@
         <div class="card shadow-sm">
             <div class="card-header">
                 <h3 class="card-title">Rekod Peribadi</h3>
+                @if(Auth::user()->hasRole('super-admin|admin'))
+                    <div class="card-toolbar">
+                        <a href="{{ route('admin.user.list') }}" class="btn btn-sm btn-danger">
+                            Kembali Ke Senarai Pengguna
+                        </a>
+                    </div>
+                @endif
             </div>
             <div class="card-body">
                 <div class="row">

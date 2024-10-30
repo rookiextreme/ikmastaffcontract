@@ -6,7 +6,7 @@
                 <h3 class="card-title">Tetapan Kata Laluan</h3>
                 @if(Auth::user()->hasRole('super-admin|admin'))
                     <div class="card-toolbar">
-                        <a href="{{ route('v2.admin.user.index') }}" class="btn btn-sm btn-danger">
+                        <a href="{{ route('admin.user.list') }}" class="btn btn-sm btn-danger">
                             Kembali Ke Senarai Pengguna
                         </a>
                     </div>
