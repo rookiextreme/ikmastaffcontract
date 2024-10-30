@@ -33,10 +33,11 @@
                                 <table class="table table-bordered text-center align-middle" id="user-list">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
-                                        <th style="width: 25%">Nama</th>
-                                        <th style="width: 25%">E-Mel</th>
-                                        <th style="width: 25%">Role</th>
-                                        <th style="width: 25%">Tindakan</th>
+                                        <th style="width: 20%">Nama</th>
+                                        <th style="width: 20%">E-Mel</th>
+                                        <th style="width: 20%">Role</th>
+                                        <th style="width: 20%">Status</th>
+                                        <th style="width: 20%">Tindakan</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -73,6 +74,6 @@
         let moduleUrl = `admin/user/`;
     </script>
 
-    <script src="{{ asset('js/modules/admin/user/init.js') }}"></script>
-    <script src="{{ asset('js/modules/admin/user/index.js') }}"></script>
+    <script src="{{ asset('js/modules/admin/user/init2.js') }}"></script>
+    <script src="{{ asset('js/modules/admin/user/index2.js') }}"></script>
 @endsection

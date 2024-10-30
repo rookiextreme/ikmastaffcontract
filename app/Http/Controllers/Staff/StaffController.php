@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\StaffAcademic;
+use App\Models\User;
 use App\Repositories\StaffRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class StaffController extends Controller
 {
@@ -94,5 +97,22 @@ class StaffController extends Controller
 
     public function deleteAcademic(Request $request) : JsonResponse{
         return $this->setResponse($this->setHardDelete(StaffAcademic::class, $request->id, 'Akademik'));
+    }
+
+    public function resetPassword(Request $request){
+        $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'password.required' => 'Kata Laluan Wajib Diisi',
+            'password.confirmed' => 'Kata Laluan Tidak Sama',
+            'password.min' => 'Kata Laluan Perlu Minima 8 Karakter',
+        ]);
+
+        $user_id = $request->user_id;
+        $m = User::find($user_id);
+        $m->password = Hash::make($request->password);
+        $m->save();
+
+        return redirect()->back()->with('success', 'Your action was successful!');
     }
 }

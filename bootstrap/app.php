@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckUserActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
             'meta-test-verify' // <-- exclude this route
+        ]);
+
+        $middleware->alias([
+            'activeuser' => CheckUserActive::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

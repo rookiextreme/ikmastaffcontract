@@ -4,9 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+Route::get('user-inactive', function(){
+    return view('user-inactive');
+})->name('user-inactive');
 
 Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
     Log::info('Incoming Request:', $request->all());

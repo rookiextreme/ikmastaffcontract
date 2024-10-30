@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Jobs\UserJob;
 use App\Models\ParticipantProfile;
 use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,8 @@ class AdminUserRepository
             u.ic_no,
             u.name,
             u.email,
+            u.active,
+            IF(u.active = 0, "Tidak Aktif", "Aktif") as active_display,
             r.display_name,
             r.name as role_name,
             r.id as role_id
@@ -142,5 +145,29 @@ class AdminUserRepository
         ]);
 
         return $m[0];
+    }
+
+    public function activateUser(Request $request){
+        $active = $request->active;
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try{
+            $m = User::find($id);
+            $m->active = $active == 0;
+            $m->save();
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollback();
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Pengguna '.($active == 0 ? 'Diaktifkan' : 'Dinyahaktifkan')
+        ];
     }
 }

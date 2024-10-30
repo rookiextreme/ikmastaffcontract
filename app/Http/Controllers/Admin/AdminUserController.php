@@ -50,6 +50,8 @@ class AdminUserController extends Controller
                 return $data->email;
             })->addColumn('role', function($data){
                 return strtoupper($data->display_name);
+            })->addColumn('active_display', function($data){
+                return strtoupper($data->active_display);
             })->make();
     }
 
@@ -60,6 +62,11 @@ class AdminUserController extends Controller
 
     public function getInfoUser(Request $request){
         $m = $this->adminUserRepository->getUser($request->id);
+        return $this->setDataResponse($m);
+    }
+
+    public function userActive(Request $request){
+        $m = $this->adminUserRepository->activateUser($request);
         return $this->setDataResponse($m);
     }
 }

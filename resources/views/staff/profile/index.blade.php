@@ -17,13 +17,11 @@
                         <div class="d-flex flex-column">
                             <!--begin::Name-->
                             <div class="d-flex align-items-center mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">Profil</a>
-                                <a href="#">
-                                    <i class="ki-duotone ki-verify fs-1 text-primary">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </a>
+                                <a class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">Profil</a>
+                                <i class="ki-duotone ki-verify fs-1 text-primary">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
                             </div>
                             <!--end::Name-->
                         </div>
@@ -64,6 +62,10 @@
                     <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'profile' ? 'active' : '' }}"
                        href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'main']) }}">Rekod Peribadi</a>
                 </li>
+                <li class="nav-item mt-2">
+                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'resetpassword' ? 'active' : '' }}"
+                       href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'resetpassword']) }}">Tetapan Kata Laluan</a>
+                </li>
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 @if($staff->profile_complete == 1)
@@ -86,6 +88,8 @@
     @elseif($page == 'academic')
         @include('staff.profile.modals.academic-modal')
         @include('staff.profile.tabs.academic-tab')
+    @elseif($page == 'resetpassword')
+        @include('staff.profile.tabs.password-tab')
     @endif
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">

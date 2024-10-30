@@ -99,19 +99,22 @@ function userStoreUpdate(selector){
     })
 }
 
-$(document).on('click', '.course-delete', function(){
+$(document).on('click', '.user-active', function(){
     let data = common.getForm();
     data.append('id', common.getRowId(this, 'data-id'));
+    let currentActive = $(this).attr('data-active');
+
+    data.append('active', currentActive)
 
     alerting.fireSwal({
-        text: 'Padam Kursus? Semua Sesi Akan Dipadam',
-        icon: 'error',
-        confirmButton: 'Padam',
+        text: currentActive == 0 ? 'Aktifkan Pengguna?' : 'Nyahaktifkan Pengguna?',
+        icon: currentActive == 0 ? 'warning' : 'error',
+        confirmButton: 'Ya',
         buttonColor: 'btn btn-warning',
         showCancelButton: true,
         callback: function(){
             http.fetch({
-                url: `${common.getUrl()}${moduleUrl}delete`,
+                url: `${common.getUrl()}${moduleUrl}user-active`,
                 data: data,
                 method: 'POST',
                 callback: function(r){

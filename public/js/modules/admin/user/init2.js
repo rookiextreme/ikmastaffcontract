@@ -17,10 +17,12 @@ let table = new DatatableInit({
             data: 'role'
         },
         {
+            data: 'active_display'
+        },
+        {
             data: 'action',
             raw: function (full) {
                 let btn = '';
-
                 if(full.role_name == 'staff'){
                     btn = `<li><a href="${common.getUrl()}staff/profile/${full.id}/main" class="dropdown-item text-info">Profil</a></li>`
                 }
@@ -31,7 +33,8 @@ let table = new DatatableInit({
                       </button>
                       <ul class="dropdown-menu">
                         ${btn}
-                        <li><button class="dropdown-item text-danger user-edit">Kemaskini</button></li>
+                        <li><button class="dropdown-item text-warning user-edit">Kemaskini</button></li>
+                        <li><button class="dropdown-item ${full.active == 0 ? 'text-success' : 'text-danger'} user-active" data-active="${full.active}">${full.active == 0 ? 'Aktifkan' : 'Nyahaktifkan'}</button></li>
                       </ul>
                     </div>`
 
