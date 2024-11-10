@@ -43,7 +43,7 @@
                         </div>
                         <div class="d-grid mb-10">
                             <button type="submit" class="btn btn-primary">
-                                <span class="indicator-label">Log Masuk</span>
+                                <span class="indicator-label">Log Masuk Hello</span>
                             </button>
                         </div>
                     </form>
