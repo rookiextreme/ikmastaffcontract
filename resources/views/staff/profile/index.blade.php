@@ -62,29 +62,29 @@
                     <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'profile' ? 'active' : '' }}"
                        href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'main']) }}">Rekod Peribadi</a>
                 </li>
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'resetpassword' ? 'active' : '' }}"
-                       href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'resetpassword']) }}">Tetapan Kata Laluan</a>
-                </li>
+{{--                <li class="nav-item mt-2">--}}
+{{--                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'resetpassword' ? 'active' : '' }}"--}}
+{{--                       href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'resetpassword']) }}">Tetapan Kata Laluan</a>--}}
+{{--                </li>--}}
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 @if($staff->profile_complete == 1)
-                    <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'academic' ? 'active' : '' }}"
-                           href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'academic']) }}">
-                            @if(!$staff->academic_complete)
-                                <span class="badge badge-circle badge-outline badge-danger me-2">!</span>
-                            @endif
-                            Akademik
-                        </a>
-                    </li>
+{{--                    <li class="nav-item mt-2">--}}
+{{--                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'academic' ? 'active' : '' }}"--}}
+{{--                           href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'academic']) }}">--}}
+{{--                            @if(!$staff->academic_complete)--}}
+{{--                                <span class="badge badge-circle badge-outline badge-danger me-2">!</span>--}}
+{{--                            @endif--}}
+{{--                            Akademik--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                 @endif
             </ul>
             <!--begin::Navs-->
         </div>
     </div>
     @if($page == 'main')
-        @include('staff.profile.tabs.profile-tab')
+{{--        @include('staff.profile.tabs.profile-tab')--}}
     @elseif($page == 'academic')
         @include('staff.profile.modals.academic-modal')
         @include('staff.profile.tabs.academic-tab')
