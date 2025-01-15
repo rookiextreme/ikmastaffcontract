@@ -1,7 +1,7 @@
 @extends('layouts.backend.master')
 
 @section('title')
-    Senarai Pengguna
+    Senarai Cuti Umum
 @endsection
 
 @section('content')
