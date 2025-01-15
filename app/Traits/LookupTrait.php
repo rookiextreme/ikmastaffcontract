@@ -51,4 +51,8 @@ trait LookupTrait
     public function getGenders(){
         return DB::select('SELECT id, name FROM genders');
     }
+
+    public function getDays(){
+        return DB::select('SELECT id, display_name FROM days');
+    }
 }

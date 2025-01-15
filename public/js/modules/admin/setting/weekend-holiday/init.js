@@ -1,17 +1,17 @@
-let faqModal = new Modals({selector: '#faq-modal'});
+let whModal = new Modals({selector: '#wh-modal'});
 
 let table = new DatatableInit({
     url: `${common.getUrl()}${moduleUrl}list`,
     method: 'POST',
-    selector: '#faq-list',
-    prev: '#faq-prev',
-    next: '#faq-next',
+    selector: '#wh-list',
+    prev: '#wh-prev',
+    next: '#wh-next',
     columns: [
         {
-            data: 'question'
+            data: 'state'
         },
         {
-            data: 'answer'
+            data: 'day'
         },
         {
             data: 'action',
@@ -21,8 +21,8 @@ let table = new DatatableInit({
                            <i class="fas fa-pencil fs-4"></i>
                       </button>
                       <ul class="dropdown-menu">
-                        <li><button class="dropdown-item text-warning faq-edit">Kemaskini</button></li>
-                        <li><button class="dropdown-item text-danger faq-delete">Padam</button></li>
+                        <li><button class="dropdown-item text-warning wh-edit">Kemaskini</button></li>
+                        <li><button class="dropdown-item text-danger wh-delete">Padam</button></li>
                       </ul>
                     </div>`;
 
@@ -30,14 +30,14 @@ let table = new DatatableInit({
         }
     ]
 })
-table.setSearchButton('#faq-list-search').setupChangePage('#faq-prev', '#faq-next');
+table.setSearchButton('#wh-list-search').setupChangePage('#wh-prev', '#wh-next');
 table.run();
 
-function resetFaqForm(){
+function resetWhForm(){
     common.resetForm([
-        ['#question', 'string'],
-        ['#answer', 'string'],
+        ['#state-select', 'dropdown'],
+        ['#day-select', 'dropdown'],
     ])
 
-    common.setFormValue('#faq-id', '', 'string');
+    common.setFormValue('#wh-id', '', 'string');
 }

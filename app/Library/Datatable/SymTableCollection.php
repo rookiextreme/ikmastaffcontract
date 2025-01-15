@@ -15,7 +15,7 @@ class SymTableCollection extends SymTable
     public Request $request;
     public array $splicedCollection = [];
     public int $collectionCount = 0;
-    public int $per_page = 5;
+    public int $per_page = 10;
 
     public function __construct($collection)
     {
@@ -106,7 +106,7 @@ class SymTableCollection extends SymTable
         $data['current_page'] = $this->currentPage;
         $data['previous_page'] = ($this->currentPage - 1) == 0 ? 1 : $this->currentPage - 1;
         $data['next_page'] = $this->currentPage + 1;
-        $data['per_page'] = 5;
+        $data['per_page'] = 10;
         $data['number_of_pages'] = ceil($outputCount / $data['per_page']);
         $maxCount = $data['current_page'] * $data['per_page'];
         $data['max'] = min($maxCount, $data['total_count']);

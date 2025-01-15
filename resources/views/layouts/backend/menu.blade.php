@@ -77,6 +77,37 @@
                             <span class="menu-title">Senarai Pengguna</span>
                         </a>
                     </div>
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Tetapan</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.setting.publicholiday.index') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Cuti Umum</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.setting.weekendholiday.index') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Cuti Biasa Mengikut Negeri</span>
+                        </a>
+                    </div>
                     @endrole
                 </div>
                 <!--end::Menu-->

@@ -1,35 +1,35 @@
-$('#coursetype-add').on('click', function(){
-    resetCourseTypeForm();
-    coursetypeModal.show({
-        title: 'Tambah Jenis Kursus',
+$('#wh-add').on('click', function(){
+    resetWhForm();
+    whModal.show({
+        title: 'Tambah Cuti Biasa',
         buttons: [
             {
-                selector: '#coursetype-store-add',
+                selector: '#wh-store-add',
                 show: true
             },
             {
-                selector: '#coursetype-store-update',
+                selector: '#wh-store-update',
                 show: false
             }
         ]
     });
 })
 
-$(document).on('click','.coursetype-edit', function(){
-    resetCourseTypeForm();
+$(document).on('click','.wh-edit', function(){
+    resetWhForm();
     let id = common.getRowId(this, 'data-id');
     let data = common.getForm();
     data.append('id', id);
 
-    coursetypeModal.show({
-        title: 'Kemaskini Jenis Kursus',
+    whModal.show({
+        title: 'Kemaskini Cuti Biasa',
         buttons: [
             {
-                selector: '#coursetype-store-add',
+                selector: '#wh-store-add',
                 show: false
             },
             {
-                selector: '#coursetype-store-update',
+                selector: '#wh-store-update',
                 show: true
             }
         ],
@@ -40,8 +40,9 @@ $(document).on('click','.coursetype-edit', function(){
                 method: 'POST',
                 callback: function(r){
                     if(r.status){
-                        common.setFormValue('#name', r.data.name, 'string');
-                        common.setFormValue('#coursetype-id', r.data.id, 'string');
+                        common.setFormValue('#state-select', r.data.state_id, 'dropdown');
+                        common.setFormValue('#day-select', r.data.day_id, 'dropdown');
+                        common.setFormValue('#wh-id', r.data.id, 'string');
                     }else{
                         alerting.error(r.data);
                     }
@@ -51,14 +52,15 @@ $(document).on('click','.coursetype-edit', function(){
     });
 })
 
-$('#coursetype-store-add').on('click', () => coursetypeStoreUpdate('#coursetype-store-add'));
-$('#coursetype-store-update').on('click', () => coursetypeStoreUpdate('#coursetype-store-update'));
+$('#wh-store-add').on('click', () => whStoreUpdate('#wh-store-add'));
+$('#wh-store-update').on('click', () => whStoreUpdate('#wh-store-update'));
 
-function coursetypeStoreUpdate(selector){
+function whStoreUpdate(selector){
     common.buttonLoadOnPress(selector);
     let v = new Validscript();
 
-    v.validMix('#name', 'Nama')
+    v.validInt('#state-select', 'Negeri')
+    v.validInt('#day-select', 'Hari')
 
     if(v.checkFail()){
         alerting.formRequired();
@@ -66,7 +68,7 @@ function coursetypeStoreUpdate(selector){
         return false;
     }
 
-    v.setNewEntry('id', $('#coursetype-id').val());
+    v.setNewEntry('id', $('#wh-id').val());
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update`,
@@ -80,7 +82,7 @@ function coursetypeStoreUpdate(selector){
                     buttonColor: 'btn btn-success',
                     confirmButton: 'Close',
                     callback: function(){
-                        coursetypeModal.hide();
+                        whModal.hide();
                         table.reload();
                     }
                 })
@@ -93,12 +95,12 @@ function coursetypeStoreUpdate(selector){
     })
 }
 
-$(document).on('click', '.coursetype-delete', function(){
+$(document).on('click', '.wh-delete', function(){
     let data = common.getForm();
     data.append('id', common.getRowId(this, 'data-id'));
 
     alerting.fireSwal({
-        text: 'Padam Jenis Kursus? Semua Kursus Yang Menggunakan Jenis Kursus Akan Dipadam',
+        text: 'Padam Cuti Biasa Ini?',
         icon: 'error',
         confirmButton: 'Padam',
         buttonColor: 'btn btn-warning',

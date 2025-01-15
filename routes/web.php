@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\PublicHoliday;
+use App\Models\State;
+use Holiday\MalaysiaHoliday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
