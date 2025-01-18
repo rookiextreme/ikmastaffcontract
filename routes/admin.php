@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\Branch\AdminBranchController;
 use App\Http\Controllers\Admin\Setting\AdminPublicHolidayController;
 use App\Http\Controllers\Admin\Setting\AdminStateWeekendHolidayController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
             Route::post('/store-update', [AdminUserController::class, 'storeUpdateUser']);
             Route::post('/get-info', [AdminUserController::class, 'getInfoUser']);
             Route::post('/user-active', [AdminUserController::class, 'userActive']);
+        });
+
+        Route::group(['prefix' => 'branch'], function () {
+            Route::get('/', [AdminBranchController::class, 'index'])->name('admin.branch.index');
+            Route::post('/branch-list', [AdminBranchController::class, 'branchList']);
+            Route::post('/store-update', [AdminBranchController::class, 'storeUpdate']);
+            Route::post('/delete', [AdminBranchController::class, 'deleteBranch']);
+
+            Route::get('/{branch_id}/{page}', [AdminBranchController::class, 'branchDetails'])->name('admin.branch.details');
+            Route::post('/position-list', [AdminBranchController::class, 'positionList']);
+            Route::post('/position-store-update', [AdminBranchController::class, 'positionStoreUpdate']);
+            Route::post('/position-get-info', [AdminBranchController::class, 'positionGetInfo']);
+            Route::post('/position-delete', [AdminBranchController::class, 'positionDelete']);
         });
 
         Route::group(['prefix' => 'setting'], function () {

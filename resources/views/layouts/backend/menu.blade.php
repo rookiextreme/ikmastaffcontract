@@ -61,6 +61,25 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Penempatan</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.branch.index') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Penempatan</span>
+                        </a>
+                    </div>
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
                             <span class="menu-heading fw-bold text-uppercase fs-7">Pengguna</span>
                         </div>
                         <!--end:Menu content-->
