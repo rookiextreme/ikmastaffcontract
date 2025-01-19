@@ -4,8 +4,13 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
+use App\Models\BranchPosition;
 use App\Models\StaffAcademic;
 use App\Models\User;
+use App\Repositories\BranchPositionRepository;
+use App\Repositories\BranchRepository;
+use App\Repositories\StaffLeaveRepository;
+use App\Repositories\StaffPositionRepository;
 use App\Repositories\StaffRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
@@ -18,12 +23,19 @@ class StaffController extends Controller
 {
     use CommonTrait, LookupTrait;
     private StaffRepository $staffRepository;
+    private BranchRepository $branchRepository;
+    private BranchPositionRepository $branchPositionRepository;
+    private StaffPositionRepository $staffPositionRepository;
+    private StaffLeaveRepository $staffLeaveRepository;
 
-    public function __construct(StaffRepository $staffRepository){
+    public function __construct(StaffRepository $staffRepository, BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository, StaffPositionRepository $staffPositionRepository, StaffLeaveRepository $staffLeaveRepository){
         $this->staffRepository = $staffRepository;
-
+        $this->branchRepository = $branchRepository;
+        $this->branchPositionRepository = $branchPositionRepository;
+        $this->staffPositionRepository = $staffPositionRepository;
+        $this->staffLeaveRepository = $staffLeaveRepository;
     }
-    public function index($user_id, $page){
+    public function index($user_id, $page, Request $request){
         $staff = $this->staffRepository->getStaffProfile($user_id);
 
         $responseData = [
@@ -33,6 +45,10 @@ class StaffController extends Controller
         ];
 
         if($page == 'main'){
+            $checkPositionRecord = $this->staffPositionRepository->checkExistRecord($staff->id);
+            $this->staffLeaveRepository->checkExistRecord($checkPositionRecord->id);
+            $responseData['staff'] = $this->staffRepository->getStaffProfile($user_id);
+
             $country = $this->getCountries();
             $state = $this->getStates();
             $race = $this->getRaces();
@@ -53,6 +69,14 @@ class StaffController extends Controller
         }elseif($page == 'academic'){
             $academicQualifications = $this->getAcademicQualifications();
             $responseData['academic_qualifications'] = $academicQualifications;
+        }elseif($page == 'position'){
+            $state = $this->getStates();
+            $responseData['state_select'] = $request->state_select ?? null;
+            $responseData['branch_select'] = $request->branch_select ?? null;
+            if($request->branch_select){
+                $responseData['branch_record'] = $this->branchRepository->getBranch($request->branch_select);
+            }
+            $responseData['state'] = $state;
         }
 
         return view('staff.profile.index')->with($responseData);
@@ -114,5 +138,18 @@ class StaffController extends Controller
         $m->save();
 
         return redirect()->back()->with('success', 'Your action was successful!');
+    }
+
+    public function getBranchByState(Request $request){
+        return json_encode(['items' => $this->branchRepository->getBranchesByState($request)]);
+    }
+
+    public function getPositionByBranch(Request $request){
+        return json_encode(['items' => $this->branchPositionRepository->getPositionByBranch($request)]);
+    }
+
+    public function storeUpdatePosition(Request $request){
+        $m = $this->staffPositionRepository->storeUpdatePosition($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
 }

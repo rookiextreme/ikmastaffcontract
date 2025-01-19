@@ -98,4 +98,35 @@ class BranchPositionRepository
 
         return $data;
     }
+
+    public function getPositionByBranch(Request $request){
+        $branch_select = $request->branch_select;
+        $search = $request->search;
+
+        $m = DB::select('
+            SELECT
+            bp.id,
+            bp.position,
+            bp.grade
+            FROM branch_positions bp
+            WHERE bp.branch_id = ?
+            AND bp.deleted = false
+            '.($search ? 'AND b.name LIKE "%'.$search.'%"' : '').'
+            LIMIT 10
+        ', [
+            $branch_select,
+        ]);
+
+        $data = [];
+        if(count($m) > 0){
+            foreach($m as $branch){
+                $data[] = [
+                    'id' => $branch->id,
+                    'text' => strtoupper($branch->position).' ('.strtoupper($branch->grade).')',
+                ];
+            }
+        }
+
+        return $data;
+    }
 }

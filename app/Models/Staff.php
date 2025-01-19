@@ -42,4 +42,8 @@ class Staff extends Model
     public function getSalutation(){
         return $this->hasOne(Salutation::class, 'id', 'salutation_id');
     }
+
+    public function getStaffPosition(){
+        return $this->hasOne(StaffPosition::class, 'staff_id', 'id');
+    }
 }

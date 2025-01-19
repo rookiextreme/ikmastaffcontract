@@ -13,6 +13,10 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/get-info-academic', [StaffController::class, 'getAcademicInfo']);
             Route::post('/delete-academic', [StaffController::class, 'deleteAcademic']);
             Route::post('/reset-password', [StaffController::class, 'resetPassword'])->name('staff.reset-password');
+
+            Route::get('/get-branch-by-state', [StaffController::class, 'getBranchByState']);
+            Route::get('/get-position-by-branch', [StaffController::class, 'getPositionByBranch']);
+            Route::post('/store-update-position', [StaffController::class, 'storeUpdatePosition']);
         });
     });
 });

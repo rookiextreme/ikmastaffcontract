@@ -44,6 +44,22 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
+                                <div
+                                    class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                    <div class="fw-semibold fs-6 text-gray-700">Penempatan</div>
+                                    <!--begin::Number-->
+                                    <div class="d-flex align-items-center text-uppercase">
+                                        <div class="fs-2 fw-bold">
+                                            @if($staff->getStaffPosition->branch_position_id)
+                                            <span class="text-info">{{ $staff->getStaffPosition->getBranch->name }}</span><br>
+                                            <span class="text-success">{{ $staff->getStaffPosition->getBranchPosition->position }} ({{ $staff->getStaffPosition->getBranchPosition->grade }})</span>
+                                            @else
+                                                <span class="text-danger">Sila Pilih Jawatan</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!--end::Number-->
+                                </div>
                                 <!--end::Stat-->
                             </div>
                             <!--end::Stats-->
@@ -78,6 +94,12 @@
                             Akademik
                         </a>
                     </li>
+                    @if(Auth::user()->hasRole('super-admin|admin'))
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position' ? 'active' : '' }}"
+                               href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position']) }}">Tetapan Jawatan</a>
+                        </li>
+                    @endif
                 @endif
             </ul>
             <!--begin::Navs-->
@@ -90,10 +112,14 @@
         @include('staff.profile.tabs.academic-tab')
     @elseif($page == 'resetpassword')
         @include('staff.profile.tabs.password-tab')
+    @elseif($page == 'position')
+        @include('staff.profile.tabs.position-tab')
     @endif
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
     <input type="hidden" id="page" value="{{ $page }}">
+    <input type="hidden" id="state-select" value="{{ $state_select ?? null }}">
+    <input type="hidden" id="branch-select" value="{{ $branch_select ?? null }}">
 @endsection
 
 @section('jsExtensions')
@@ -115,6 +141,9 @@
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
         <script src="{{ asset('js/modules/staff/academic/init.js') }}"></script>
         <script src="{{ asset('js/modules/staff/academic/index.js') }}"></script>
+    @elseif($page == 'position')
+        <script src="{{ asset('js/modules/staff/position/init.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/position/index.js') }}"></script>
     @endif
 @endsection
 

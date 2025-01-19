@@ -95,4 +95,31 @@ class BranchRepository
 
         return $data;
     }
+
+    public function getBranchesByState(Request $request){
+        $state_select = $request->state_select;
+        $search = $request->search;
+
+        $m = DB::select('
+            SELECT * FROM branches b
+            WHERE b.state_id = ?
+            AND b.deleted = false
+            '.($search ? 'AND b.name LIKE "%'.$search.'%"' : '').'
+            LIMIT 10
+        ', [
+            $state_select,
+        ]);
+
+        $data = [];
+        if(count($m) > 0){
+            foreach($m as $branch){
+                $data[] = [
+                    'id' => $branch->id,
+                    'text' => $branch->name,
+                ];
+            }
+        }
+
+        return $data;
+    }
 }

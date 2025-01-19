@@ -26,7 +26,7 @@ class StaffRepository
     }
 
     public function getStaffProfile($user_id){
-        return Staff::with('getUser', 'getBumiputera', 'getCountry', 'getState', 'getGender', 'getRace', 'getReligion', 'getSalutation')->where('user_id', $user_id)->first();
+        return Staff::with('getUser', 'getBumiputera', 'getCountry', 'getState', 'getGender', 'getRace', 'getReligion', 'getSalutation', 'getStaffPosition')->where('user_id', $user_id)->first();
     }
 
     public function storeUpdateProfile(Request $request){
