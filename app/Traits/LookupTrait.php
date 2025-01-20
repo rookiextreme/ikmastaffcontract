@@ -55,4 +55,8 @@ trait LookupTrait
     public function getDays(){
         return DB::select('SELECT id, display_name FROM days');
     }
+
+    public function getLeaveCategories(){
+        return DB::select('SELECT id, name FROM leave_categories');
+    }
 }

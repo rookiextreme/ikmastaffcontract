@@ -50,14 +50,14 @@ trait CommonTrait
         $m->deleted = true;
         $m->save();
 
-        return $label.' deleted';
+        return $label.' dipadam';
     }
 
     public function setHardDelete($model, $id, $label): string {
         $m = app($model)->find($id);
         $m->delete();
 
-        return $label.' deleted';
+        return $label.' dipadam';
     }
 
     public function reverseDate($date){

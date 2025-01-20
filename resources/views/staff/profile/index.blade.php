@@ -44,8 +44,7 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
-                                <div
-                                    class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
                                     <div class="fw-semibold fs-6 text-gray-700">Penempatan</div>
                                     <!--begin::Number-->
                                     <div class="d-flex align-items-center text-uppercase">
@@ -60,6 +59,35 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
+                                @if($staff->getStaffPosition->branch_position_id)
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_total }} Hari</div>
+                                        </div>
+                                        <!--end::Number-->
+                                    </div>
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti Diambil</div>
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_taken }} Hari</div>
+                                        </div>
+                                        <!--end::Number-->
+                                    </div>
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Baki Cuti</div>
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_balance }} Hari</div>
+                                        </div>
+                                        <!--end::Number-->
+                                    </div>
+                                @endif
                                 <!--end::Stat-->
                             </div>
                             <!--end::Stats-->

@@ -56,6 +56,38 @@
                             <span class="menu-title">Profil</span>
                         </a>
                     </div>
+                    @if(Auth::user()->getStaff->getStaffPosition->getStaffLeave->leave_total != null)
+                        <div class="menu-item pt-5">
+                            <!--begin:Menu content-->
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Cuti</span>
+                            </div>
+                            <!--end:Menu content-->
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('staff.leave.request', ['user_id' => Auth::user()->id]) }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                                <span class="menu-title">Senarai Permohonan</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link"
+                               href="{{ route('staff.leave.new-request', ['user_id' => Auth::user()->id]) }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                                <span class="menu-title">Permohonan Cuti</span>
+                            </a>
+                        </div>
+                    @endif
                     @endrole
                     @role('super-admin|admin')
                     <div class="menu-item pt-5">

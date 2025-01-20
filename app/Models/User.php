@@ -59,4 +59,8 @@ class User extends Authenticatable implements LaratrustUser
     {
         $this->attributes['ic_no'] = $value;
     }
+
+    public function getStaff(){
+        return $this->hasOne(Staff::class, 'user_id', 'id');
+    }
 }

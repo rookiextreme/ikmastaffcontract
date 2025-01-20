@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Staff\Leave\StaffLeaveController;
 use App\Http\Controllers\Staff\StaffController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,15 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::get('/get-branch-by-state', [StaffController::class, 'getBranchByState']);
             Route::get('/get-position-by-branch', [StaffController::class, 'getPositionByBranch']);
             Route::post('/store-update-position', [StaffController::class, 'storeUpdatePosition']);
+            Route::post('/store-update-new-leave-balance', [StaffController::class, 'storeUpdateNewLeaveBalance']);
+        });
+
+        Route::group(['prefix' => 'leave'], function () {
+            Route::get('/request/{user_id}', [StaffLeaveController::class, 'leaveRequest'])->name('staff.leave.request');
+            Route::post('/request-list', [StaffLeaveController::class, 'requestList']);
+            Route::post('/request-delete', [StaffLeaveController::class, 'requestDelete']);
+            Route::get('/new-request/{user_id}', [StaffLeaveController::class, 'leaveNewRequest'])->name('staff.leave.new-request');
+            Route::post('/store-update-new-request', [StaffLeaveController::class, 'storeUpdateNewRequest']);
         });
     });
 });

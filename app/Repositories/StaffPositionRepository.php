@@ -36,6 +36,7 @@ class StaffPositionRepository
             $sLeave = $m->getStaffLeave;
             $sLeave->staff_position_id = $m->id;
             $sLeave->leave_total = $branchPosition->default_holiday;
+            $sLeave->leave_balance = $branchPosition->default_holiday;
             $sLeave->save();
 
             DB::commit();

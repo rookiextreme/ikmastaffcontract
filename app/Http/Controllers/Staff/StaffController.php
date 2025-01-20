@@ -152,4 +152,9 @@ class StaffController extends Controller
         $m = $this->staffPositionRepository->storeUpdatePosition($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
+
+    public function storeUpdateNewLeaveBalance(Request $request){
+        $m = $this->staffLeaveRepository->storeUpdateNewLeaveBalance($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
 }
