@@ -10,11 +10,13 @@
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h3 class="card-title">Senarai Permohonan Cuti</h3>
+                    @role('staff')
                     <div class="card-toolbar">
                         <a href="{{ route('staff.leave.new-request', ['user_id' => $user_id]) }}" type="button" class="btn btn-sm btn-success">
                             Tambah Permohonan Baru
                         </a>
                     </div>
+                    @endrole
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -55,6 +57,11 @@
         </div>
     </div>
     <input type="hidden" id="user-id" value="{{ $user_id }}">
+    <input type="hidden" id="is-super" value="{{ $is_role['superadmin'] }}">
+    <input type="hidden" id="is-admin" value="{{ $is_role['admin'] }}">
+    <input type="hidden" id="is-approval" value="{{ $is_role['approvaladmin'] }}">
+    <input type="hidden" id="is-staff" value="{{ $is_role['staff'] }}">
+
 @endsection
 
 @section('jsExtensions')
@@ -67,6 +74,10 @@
     <script>
         let moduleUrl = `staff/leave/`;
         let user_id = $('#user-id').val();
+        let is_super = $('#is-super').val();
+        let is_admin = $('#is-admin').val();
+        let is_approval = $('#is-approval').val();
+        let is_staff = $('#is-staff').val();
     </script>
 
     <script src="{{ asset('js/modules/staff/leave/request/init.js') }}"></script>

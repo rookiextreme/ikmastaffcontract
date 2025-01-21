@@ -27,6 +27,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/request-delete', [StaffLeaveController::class, 'requestDelete']);
             Route::get('/new-request/{user_id}', [StaffLeaveController::class, 'leaveNewRequest'])->name('staff.leave.new-request');
             Route::post('/store-update-new-request', [StaffLeaveController::class, 'storeUpdateNewRequest']);
+            Route::post('/request-approval', [StaffLeaveController::class, 'requestApproval']);
         });
     });
 });

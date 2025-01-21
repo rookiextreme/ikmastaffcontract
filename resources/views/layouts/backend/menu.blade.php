@@ -38,11 +38,9 @@
                     <!--end:Menu item-->
                     @role('staff')
                     <div class="menu-item pt-5">
-                        <!--begin:Menu content-->
                         <div class="menu-content">
                             <span class="menu-heading fw-bold text-uppercase fs-7">Profil</span>
                         </div>
-                        <!--end:Menu content-->
                     </div>
                     <div class="menu-item">
                         <a class="menu-link"
@@ -159,6 +157,26 @@
                             <span class="menu-title">Cuti Biasa Mengikut Negeri</span>
                         </a>
                     </div>
+                    @endrole
+                    @role('approval-admin')
+                        <div class="menu-item pt-5">
+                            <!--begin:Menu content-->
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Pengesahan Cuti</span>
+                            </div>
+                            <!--end:Menu content-->
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('approval-admin.leave.request', ['user_id' => Auth::user()->id]) }}">
+                                <span class="menu-icon">
+                                <i class="ki-duotone ki-abstract-13 fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                </i>
+                                </span>
+                                <span class="menu-title">Senarai Permohonan</span>
+                            </a>
+                        </div>
                     @endrole
                 </div>
                 <!--end::Menu-->

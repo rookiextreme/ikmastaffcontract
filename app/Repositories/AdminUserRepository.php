@@ -48,21 +48,22 @@ class AdminUserRepository
         }
 
         $m = DB::select('
-            SELECT
-            u.id,
-            u.ic_no,
-            u.name,
-            u.email,
-            u.active,
-            IF(u.active = 0, "Tidak Aktif", "Aktif") as active_display,
-            r.display_name,
-            r.name as role_name,
-            r.id as role_id
+           SELECT
+                u.id,
+                u.ic_no,
+                u.name,
+                u.email,
+                u.active,
+                IF(u.active = 0, "Tidak Aktif", "Aktif") AS active_display,
+                GROUP_CONCAT(r.display_name ORDER BY r.display_name ASC) AS role_display,  -- Concatenate roles
+                GROUP_CONCAT(r.name ORDER BY r.name ASC) AS role_name,  -- Concatenate role names
+                GROUP_CONCAT(r.id ORDER BY r.id ASC) AS role_ids  -- Concatenate role IDs
             FROM users u
             JOIN role_user ru ON ru.user_id = u.id
             JOIN roles r ON r.id = ru.role_id
             '.(!empty($rolesDrop) ? 'AND r.id IN (' . implode(',', $rolesDrop) . ')' : '').'
             '.$searchStr.'
+            GROUP BY u.id, u.ic_no, u.name, u.email, u.active;
         ', $params);
 
         return $m;
@@ -74,6 +75,11 @@ class AdminUserRepository
         $role = $request->role;
         $id = $request->id;
         $identification_no = $request->identification_no;
+        $role_arr = json_decode($request->role_arr);
+//        echo '<pre>';
+//        print_r($role_arr);
+//        echo '</pre>';
+//        die();
 
         $check = $this->userRepository->checkExist($email, $identification_no, $id);
         DB::beginTransaction();
@@ -85,15 +91,15 @@ class AdminUserRepository
                 ];
             }else if($check['status'] == 'update' || $check['status'] == 'new'){
                 $newHashed = null;
-                $this->userRepository->storeUser($check['user'], $name, $email, $role, $check['status'] == 'update');
-                $check['user']->syncRoles([$role]);
+                $this->userRepository->storeUser($check['user'], $name, $email, $role_arr, $check['status'] == 'update');
+                $check['user']->syncRoles($role_arr);
                 $check['user']->ic_no = $identification_no;
                 if($check['status'] == 'new'){
                     $newHashed = Str::random(10);
                     $check['user']->password = Hash::make($newHashed);
                 }
                 $check['user']->save();
-                if($role == 4){//peserta
+                if(in_array(4, $role_arr) == 4){//peserta
                     $checkStaff = Staff::where('user_id', $check['user']->id)->first();
 
                     if(!$checkStaff){
@@ -101,12 +107,15 @@ class AdminUserRepository
                         $this->staffRepository->setBasicStaffProfile($check['user'], $request);
                     }else{
                         $checkStaff->deleted = false;
+                        $checkStaff->save();
                     }
 
                     if($check['status'] == 'new'){
                         dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
                     }
-                }else{
+                }
+
+                if(!in_array(4, $role_arr) == 4){
                     //Applies for admin, approval-admin
                     if($check['status'] == 'new'){
                         dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
@@ -131,15 +140,16 @@ class AdminUserRepository
     public function getUser($user_id){
         $m = DB::select('
             SELECT
-            u.id,
-            u.name,
-            u.email,
-            ru.role_id,
-            u.ic_no
+                u.id,
+                u.name,
+                u.email,
+                u.ic_no,
+                GROUP_CONCAT(ru.role_id ORDER BY ru.role_id ASC) AS role_ids  -- Concatenate role_id
             FROM users u
             JOIN role_user ru ON ru.user_id = u.id
             JOIN roles r ON ru.role_id = r.id
             WHERE u.id = ?
+            GROUP BY u.id, u.name, u.email, u.ic_no;
         ', [
             $user_id
         ]);

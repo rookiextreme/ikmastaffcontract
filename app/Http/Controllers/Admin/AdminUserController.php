@@ -49,7 +49,14 @@ class AdminUserController extends Controller
             })->addColumn('email', function($data){
                 return $data->email;
             })->addColumn('role', function($data){
-                return strtoupper($data->display_name);
+                $role = explode(',', $data->role_display);
+                $str = '';
+                if(count($role) > 0){
+                    foreach($role as $r){
+                        $str .= $r.'<br>';
+                    }
+                }
+                return strtoupper($str);
             })->addColumn('active_display', function($data){
                 return strtoupper($data->active_display);
             })->make();

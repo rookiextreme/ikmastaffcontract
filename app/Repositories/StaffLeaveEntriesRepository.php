@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Jobs\StaffLeaveJob;
 use App\Models\LeaveCategory;
 use App\Models\LeaveRequestStatus;
 use App\Models\PublicHoliday;
@@ -106,7 +107,7 @@ class StaffLeaveEntriesRepository
                 $sLeave->leave_taken = $hTaken;
                 $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
                 $sLeave->save();
-
+                dispatch(new StaffLeaveJob($m->id, 'new-request'));
                 DB::commit();
             }catch (\Exception $e){
                 DB::rollBack();
@@ -125,6 +126,10 @@ class StaffLeaveEntriesRepository
 
     public function getRequestListByUserId(Request $request){
         $user_id = $request->user_id;
+        $is_super = $request->is_super;
+        $is_admin = $request->is_admin;
+        $is_approval = $request->is_approval;
+        $is_staff = $request->is_staff;
 
         $search = $request->get('search');
         $searchStr = '';
@@ -146,11 +151,12 @@ class StaffLeaveEntriesRepository
             sle.start_date,
             sle.end_date,
             sle.days,
+            sle.leave_request_status_id as status_id,
             lrs.name as l_status
             FROM staff_leave_entries sle
             JOIN staff_positions sp ON sp.id = sle.staff_position_id
             JOIN staffs s ON s.id = sp.staff_id
-            AND s.user_id = '.$user_id.'
+            '.($is_staff ? 'AND s.user_id = '.$user_id : '' ).'
             JOIN leave_request_statuses lrs ON lrs.id = sle.leave_request_status_id
             '.$searchStr.'
         ', $params);
@@ -172,6 +178,37 @@ class StaffLeaveEntriesRepository
         }catch (\Exception $e){
             DB::rollBack();
             return false;
+        }
+    }
+
+    public function approveRequest(Request $request){
+        $approve_stat = $request->approve_stat;
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try {
+            $m = StaffLeaveEntry::find($id);
+            $m->leave_request_status_id = $approve_stat == 1 ? LeaveRequestStatus::APPROVED : LeaveRequestStatus::REJECTED;
+            $m->save();
+
+            if($approve_stat == 2){
+                $sLeave = $m->getStaffLeave;
+                $sLeave->leave_balance = $sLeave->leave_balance + $m->days;
+                $sLeave->leave_taken = $sLeave->leave_taken - $m->days;
+                $sLeave->save();
+            }
+            dispatch(new StaffLeaveJob($id, $approve_stat == 1 ? 'approve' : 'reject'));
+            DB::commit();
+            return [
+                'status' => 'success',
+                'message' => $approve_stat == 1 ? 'Permohonan Diluluskan' : 'Permohonan Tidak Diluluskan'
+            ];
+        }catch (\Exception $e){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
     }
 }

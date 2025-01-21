@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-md-12 vals-row mb-4">
                         <label for="name" class="required form-label">Role</label>
-                        <select id="role" class="form-control" data-control="select2" data-dropdown-parent="#user-modal">
+                        <select id="role" class="form-control" data-control="select2" data-dropdown-parent="#user-modal" data-placeholder="Pilih Role" data-allow-clear="true" multiple="multiple">
                             <option value="">Pilih Role</option>
                             @foreach($roles as $r)
                                 <option value="{{ $r->id }}">{{ $r->display_name }}</option>

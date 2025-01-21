@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\Leave;
 use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\StaffLeaveEntry;
+use App\Models\User;
 use App\Repositories\StaffLeaveEntriesRepository;
 use App\Repositories\StaffRepository;
 use App\Traits\CommonTrait;
@@ -37,8 +38,17 @@ class StaffLeaveController extends Controller
     }
 
     public function leaveRequest($user_id){
+        $user = User::find($user_id);
+        $is_role = [
+            'superadmin' => $user->hasRole('super-admin'),
+            'admin' => $user->hasRole('admin'),
+            'approvaladmin' => $user->hasRole('approval-admin'),
+            'staff' => $user->hasRole('staff'),
+        ];
+
         return view('staff.leave.request', [
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'is_role' => $is_role
         ]);
     }
 
@@ -56,7 +66,7 @@ class StaffLeaveController extends Controller
             })->addColumn('end', function($data){
                 return $this->regularDate($data->end_date);
             })->addColumn('days', function($data){
-                return $data->days;
+                return $data->days.' Hari';
             })->addColumn('status', function($data){
                 return strtoupper($data->l_status);
             })->make();
@@ -70,5 +80,10 @@ class StaffLeaveController extends Controller
        }else{
            return $this->setResponse('WHOOPS', false);
        }
+    }
+
+    public function requestApproval(Request $request){
+        $m = $this->staffLeaveEntriesRepository->approveRequest($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
 }

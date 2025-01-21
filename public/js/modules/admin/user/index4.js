@@ -42,9 +42,21 @@ $(document).on('click','.user-edit', function(){
                     if(r.status){
                         common.setFormValue('#name', r.data.name, 'string');
                         common.setFormValue('#email', r.data.email, 'string');
-                        common.setFormValue('#role', r.data.role_id, 'dropdown');
+                        // common.setFormValue('#role', r.data.role_ids, 'dropdown');
                         common.setFormValue('#identification_no', r.data.ic_no, 'string');
                         common.setFormValue('#user-id', r.data.id, 'string');
+
+                        $('#role option').each(function() {
+                            const optionValue = $(this).val();  // Get the value of the option
+
+                            // If the option's value is in the selectedRoleIds array, select it
+                            if (r.data.role_ids.includes(parseInt(optionValue))) {
+                                $(this).prop('selected', true);
+                            } else {
+                                $(this).prop('selected', false);  // Deselect options not in selectedRoleIds
+                            }
+                        });
+                        $('#role').trigger('change');
                     }else{
                         alerting.error(r.data);
                     }
@@ -64,8 +76,8 @@ function userStoreUpdate(selector){
     v.validMix('#name', 'Nama')
     v.validEmail('#email', 'E-Mel')
     v.validInt('#identification_no', 'No. IC')
-    v.validInt('#role', 'Role', 'true')
-
+    v.validMix('#role', 'Role')
+    v.setNewEntry('role_arr', JSON.stringify($('#role').val()))
     if(v.checkFail()){
         alerting.formRequired();
         common.buttonLoadOff(selector);

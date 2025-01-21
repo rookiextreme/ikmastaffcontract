@@ -74,6 +74,6 @@
         let moduleUrl = `admin/user/`;
     </script>
 
-    <script src="{{ asset('js/modules/admin/user/init2.js') }}"></script>
-    <script src="{{ asset('js/modules/admin/user/index2.js') }}"></script>
+    <script src="{{ asset('js/modules/admin/user/init4.js') }}"></script>
+    <script src="{{ asset('js/modules/admin/user/index4.js') }}"></script>
 @endsection
