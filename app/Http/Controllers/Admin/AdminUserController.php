@@ -25,9 +25,9 @@ class AdminUserController extends Controller
 
         $rolesDrop = [];
         if($user->hasRole('super-admin')){
-            $rolesDrop = [2,3,4];
+            $rolesDrop = [2, 4, 5, 6, 7];
         }else if($user->hasRole('admin')){
-            $rolesDrop = [3, 4];
+            $rolesDrop = [4, 5, 6, 7];
         }
         $roles = Role::whereIn('id', $rolesDrop)->get();
         return view('admin.user.list', [

@@ -27,12 +27,14 @@ class BranchPositionRepository
         $m = DB::select('
             SELECT
             bp.id,
-            bp.position,
-            bp.grade,
+            p.name as position_name,
+            g.name as grade_name,
             bp.default_holiday
             FROM branch_positions bp
             JOIN branches b ON bp.branch_id = b.id
             AND bp.deleted = false AND bp.branch_id = '.$branch_id.'
+            JOIN positions p ON bp.position_id = p.id
+            JOIN grades g ON bp.grade_id = g.id
             '.$searchStr.'
         ', $params);
 
@@ -58,9 +60,9 @@ class BranchPositionRepository
 
             $m = $id ? BranchPosition::find($id) : new BranchPosition;
             $m->branch_id = $branch_id;
-            $m->position = $position_name;
+            $m->position_id = $position_name;
             $m->default_holiday = $position_holiday;
-            $m->grade = $position_grade;
+            $m->grade_id = $position_grade;
             $m->save();
             DB::commit();
         }catch (\Exception $e){
@@ -92,8 +94,8 @@ class BranchPositionRepository
         $data = [];
         $m = BranchPosition::find($id);
         $data['id'] = $m->id;
-        $data['name'] = $m->position;
-        $data['grade'] = $m->grade;
+        $data['name'] = $m->position_id;
+        $data['grade'] = $m->grade_id;
         $data['holiday'] = $m->default_holiday;
 
         return $data;
@@ -106,9 +108,11 @@ class BranchPositionRepository
         $m = DB::select('
             SELECT
             bp.id,
-            bp.position,
-            bp.grade
+            g.name as grade,
+            p.name as position
             FROM branch_positions bp
+            JOIN positions p ON bp.position_id = p.id
+            JOIN grades g ON bp.grade_id = g.id
             WHERE bp.branch_id = ?
             AND bp.deleted = false
             '.($search ? 'AND b.name LIKE "%'.$search.'%"' : '').'
@@ -122,7 +126,7 @@ class BranchPositionRepository
             foreach($m as $branch){
                 $data[] = [
                     'id' => $branch->id,
-                    'text' => strtoupper($branch->position).' ('.strtoupper($branch->grade).')',
+                    'text' => strtoupper($branch->position).' (GRED '.strtoupper($branch->grade).')',
                 ];
             }
         }

@@ -14,12 +14,22 @@
                 <div class="row">
                     <div class="col-md-12 vals-row mb-4">
                         <label for="position-name" class="required form-label">Jawatan</label>
-                        <input type="text" class="form-control text-uppercase" id="position-name" value="">
+                        <select class="form-control" id="position-name" name="position-name" data-control="select2">
+                            <option>Sila Pilih</option>
+                            @foreach($positions as $p)
+                                <option value="{{ $p->id }}" {{ $branch->position_id ? $p->id == $branch->position_id ? 'selected' : '' : '' }}>{{ $p->name }}</option>
+                            @endforeach
+                        </select>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">
                         <label for="position-grade" class="required form-label">Gred</label>
-                        <input type="text" class="form-control text-uppercase" id="position-grade" value="">
+                        <select class="form-control" id="position-grade" name="position-grade" data-control="select2">
+                            <option>Sila Pilih</option>
+                            @foreach($grades as $g)
+                                <option value="{{ $g->id }}" {{ $branch->position_id ? $g->id == $branch->grade_id ? 'selected' : '' : '' }}>{{ $g->name }}</option>
+                            @endforeach
+                        </select>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">

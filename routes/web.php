@@ -17,6 +17,8 @@ Route::match(['GET', 'POST'], '/meta-test', function (Request $request) {
     return response()->json(['status' => 'success'], 200);
 });
 
+Route::match(['GET'], '/sql-to-excel', [ProfileController::class, 'sqlToExcel']);
+
 Route::match(['GET', 'POST'], '/meta-test-verify', function (Request $request) {
     Log::info('Incoming Request:', $request->all());
     if($request->hub_challenge){

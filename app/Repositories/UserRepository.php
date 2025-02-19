@@ -16,7 +16,7 @@ class UserRepository
         $user->save();
 
         if(!$update){
-            $user->syncRoles($role);
+            $user->syncRoles([$role]);
         }
 
         return $user;

@@ -135,6 +135,30 @@
                     </div>
                     <div class="menu-item">
                         <a class="menu-link"
+                           href="{{ route('admin.setting.position.index') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Jawatan</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.setting.grade.index') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-13 fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Gred</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link"
                            href="{{ route('admin.setting.publicholiday.index') }}">
                             <span class="menu-icon">
                             <i class="ki-duotone ki-abstract-13 fs-2">

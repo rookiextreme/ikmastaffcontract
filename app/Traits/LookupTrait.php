@@ -59,4 +59,12 @@ trait LookupTrait
     public function getLeaveCategories(){
         return DB::select('SELECT id, name FROM leave_categories');
     }
+
+    public function getGrades(){
+        return DB::select('SELECT id, name FROM grades where deleted = false');
+    }
+
+    public function getPositions(){
+        return DB::select('SELECT id, name FROM positions where deleted = false');
+    }
 }

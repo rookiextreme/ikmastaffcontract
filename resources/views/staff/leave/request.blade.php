@@ -80,6 +80,6 @@
         let is_staff = $('#is-staff').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/request/init.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/request/index.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/request/init2.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/request/index2.js') }}"></script>
 @endsection

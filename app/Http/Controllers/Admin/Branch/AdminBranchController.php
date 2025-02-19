@@ -68,6 +68,12 @@ class AdminBranchController extends Controller
             $state = $this->getStates();
 
             $responseData['state'] = $state;
+        }else if($page == 'position'){
+            $positions = $this->getPositions();
+            $grades = $this->getGrades();
+
+            $responseData['positions'] = $positions;
+            $responseData['grades'] = $grades;
         }
 
         return view('admin.branch.details.index')->with($responseData);
@@ -82,9 +88,9 @@ class AdminBranchController extends Controller
                 }
             ])
             ->addColumn('position', function($data){
-                return strtoupper($data->position);
+                return strtoupper($data->position_name);
             })->addColumn('grade', function($data){
-                return strtoupper($data->grade);
+                return strtoupper($data->grade_name);
             })->addColumn('holiday', function($data){
                 return $data->default_holiday;
             })->make();

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ReligionSeeder::class,
             SalutationSeeder::class,
             UserSeeder::class,
+            NewRoleSeeder::class,
         ]);
     }
 }

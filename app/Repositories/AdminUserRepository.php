@@ -30,9 +30,9 @@ class AdminUserRepository
         $user = Auth::user();
         $rolesDrop = [];
         if($user->hasRole('super-admin')){
-            $rolesDrop = [2,3,4];
+            $rolesDrop = [2, 4, 5, 6, 7];
         }else if($user->hasRole('admin')){
-            $rolesDrop = [3, 4];
+            $rolesDrop = [4, 5, 6, 7];
         }
 
         if($search){
@@ -75,11 +75,6 @@ class AdminUserRepository
         $role = $request->role;
         $id = $request->id;
         $identification_no = $request->identification_no;
-        $role_arr = json_decode($request->role_arr);
-//        echo '<pre>';
-//        print_r($role_arr);
-//        echo '</pre>';
-//        die();
 
         $check = $this->userRepository->checkExist($email, $identification_no, $id);
         DB::beginTransaction();
@@ -91,36 +86,27 @@ class AdminUserRepository
                 ];
             }else if($check['status'] == 'update' || $check['status'] == 'new'){
                 $newHashed = null;
-                $this->userRepository->storeUser($check['user'], $name, $email, $role_arr, $check['status'] == 'update');
-                $check['user']->syncRoles($role_arr);
+                $this->userRepository->storeUser($check['user'], $name, $email, $role, $check['status'] == 'update');
+                $check['user']->syncRoles([$role]);
                 $check['user']->ic_no = $identification_no;
+
                 if($check['status'] == 'new'){
                     $newHashed = Str::random(10);
                     $check['user']->password = Hash::make($newHashed);
                 }
                 $check['user']->save();
-                if(in_array(4, $role_arr) == 4){//peserta
-                    $checkStaff = Staff::where('user_id', $check['user']->id)->first();
 
-                    if(!$checkStaff){
-                        $request->request->add(['mobile_phone' => null]);
-                        $this->staffRepository->setBasicStaffProfile($check['user'], $request);
-                    }else{
-                        $checkStaff->deleted = false;
-                        $checkStaff->save();
-                    }
+                $checkStaff = Staff::where('user_id', $check['user']->id)->first();
 
-                    if($check['status'] == 'new'){
-                        dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
-                    }
+                if (!$checkStaff) {
+                    $request->request->add(['mobile_phone' => null]);
+                    $this->staffRepository->setBasicStaffProfile($check['user'], $request);
                 }
 
-                if(!in_array(4, $role_arr) == 4){
-                    //Applies for admin, approval-admin
-                    if($check['status'] == 'new'){
-                        dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
-                    }
+                if ($check['status'] == 'new') {
+                    dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
                 }
+
                 DB::commit();
             }
         }catch (\Exception $e){

@@ -77,8 +77,8 @@
     @if($page == 'main')
         <script src="{{ asset('js/modules/admin/branch/details/main/index.js') }}"></script>
     @elseif($page == 'position')
-        <script src="{{ asset('js/modules/admin/branch/details/position/init.js') }}"></script>
-        <script src="{{ asset('js/modules/admin/branch/details/position/index.js') }}"></script>
+        <script src="{{ asset('js/modules/admin/branch/details/position/init2.js') }}"></script>
+        <script src="{{ asset('js/modules/admin/branch/details/position/index2.js') }}"></script>
     @endif
 @endsection
 

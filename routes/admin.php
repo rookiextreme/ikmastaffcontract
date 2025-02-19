@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\Branch\AdminBranchController;
 use App\Http\Controllers\Admin\Setting\AdminPublicHolidayController;
 use App\Http\Controllers\Admin\Setting\AdminStateWeekendHolidayController;
+use App\Http\Controllers\Admin\Setting\GradeSettingController;
+use App\Http\Controllers\Admin\Setting\PositionSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
@@ -41,6 +43,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
                 Route::post('/store-update', [AdminStateWeekendHolidayController::class, 'storeUpdate']);
                 Route::post('/get-info', [AdminStateWeekendHolidayController::class, 'getWeekendHoliday']);
                 Route::post('/delete', [AdminStateWeekendHolidayController::class, 'deleteWeekendHoliday']);
+            });
+
+            Route::group(['prefix' => 'position'], function () {
+                Route::get('/', [PositionSettingController::class, 'index'])->name('admin.setting.position.index');
+                Route::post('/list', [PositionSettingController::class, 'list']);
+                Route::post('/store-update', [PositionSettingController::class, 'storeUpdate']);
+                Route::post('/get-info', [PositionSettingController::class, 'getPosition']);
+                Route::post('/delete', [PositionSettingController::class, 'deletePosition']);
+            });
+
+            Route::group(['prefix' => 'grade'], function () {
+                Route::get('/', [GradeSettingController::class, 'index'])->name('admin.setting.grade.index');
+                Route::post('/list', [GradeSettingController::class, 'list']);
+                Route::post('/store-update', [GradeSettingController::class, 'storeUpdate']);
+                Route::post('/get-info', [GradeSettingController::class, 'getGrade']);
+                Route::post('/delete', [GradeSettingController::class, 'deleteGrade']);
             });
         });
     });

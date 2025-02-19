@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Branch;
 
 use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
+use App\Repositories\BranchRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
 use Illuminate\Http\Request;

@@ -33,6 +33,7 @@ class StaffPositionRepository
             $m->save();
 
             $branchPosition = BranchPosition::find($position_select);
+
             $sLeave = $m->getStaffLeave;
             $sLeave->staff_position_id = $m->id;
             $sLeave->leave_total = $branchPosition->default_holiday;
@@ -55,6 +56,6 @@ class StaffPositionRepository
     }
 
     public function getStaffPosition($staff_id){
-        return StaffPosition::with('getStaff', 'getStaffLeave')->find($staff_id);
+        return StaffPosition::with('getStaff', 'getStaffLeave')->where('staff_id', $staff_id)->first();
     }
 }

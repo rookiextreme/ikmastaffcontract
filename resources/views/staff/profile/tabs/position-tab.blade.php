@@ -18,7 +18,10 @@
                         <div class="col-md-12 mb-4 vals-row mt-4 text-uppercase">
                             JAWATAN TERKINI:<br>
                             <span class="text-info">{{ $staff->getStaffPosition->getBranch->name }}</span><br>
-                            <span class="text-success">{{ $staff->getStaffPosition->getBranchPosition->position }} ({{ $staff->getStaffPosition->getBranchPosition->grade }})</span>
+                            <span class="text-success">
+                                {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
+                                ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
+                            </span>
                         </div>
                     @endif
 
