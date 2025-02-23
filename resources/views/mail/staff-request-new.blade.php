@@ -80,6 +80,7 @@
                                     Tarikh Mula Cuti: {{ date('d-m-Y', strtotime($entry->start_date)) }}<br>
                                     Tarikh Akhir Cuti: {{ date('d-m-Y', strtotime($entry->end_date)) }}<br>
                                     Bilangan Cuti: {{ $entry->days }} Hari<br>
+                                    Pelulus: {{ $entry->getApprover->getUser->name }}
                                     <br>
                                 </td>
                             </tr>

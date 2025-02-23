@@ -14,6 +14,9 @@ let table = new DatatableInit({
     next: '#request-next',
     columns: [
         {
+            data: 'approver_name'
+        },
+        {
             data: 'start'
         },
         {
@@ -30,21 +33,8 @@ let table = new DatatableInit({
             raw: function (full) {
                 let status_id = full.status_id;
                 let btn = '-';
-                if(is_approval == 1){
-                    if(status_id == 1){
-                        btn = `
-                            <button class="btn btn-icon btn-success request-approve" data-approve="1" type="button" aria-expanded="false">
-                               <i class="fas fa-check fs-4"></i>
-                          </button>
-                          <button class="btn btn-icon btn-danger request-approve" data-approve="2" type="button" aria-expanded="false">
-                               <i class="fas fa-xmark fs-4"></i>
-                          </button>
-                        `
-                    }
-
-                }else if(is_staff == 1){
-                    if(status_id == 1) {
-                        btn = `<div class="dropdown">
+                if(status_id == 1) {
+                    btn = `<div class="dropdown">
                           <button class="btn btn-icon btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                <i class="fas fa-pencil fs-4"></i>
                           </button>
@@ -52,7 +42,6 @@ let table = new DatatableInit({
                                 <li><button class="dropdown-item text-danger request-delete">Padam Permohonan</button></li>
                           </ul>
                         </div>`
-                    }
                 }
                 return btn;
             }

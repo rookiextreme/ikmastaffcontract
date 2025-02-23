@@ -13,4 +13,8 @@ class StaffLeaveEntry extends Model
     public function getStaffLeave(){
         return $this->hasOne(StaffLeave::class,'id','staff_leave_id');
     }
+
+    public function getApprover(){
+        return $this->hasOne(Staff::class,'id','approver_id')->with('getUser');
+    }
 }

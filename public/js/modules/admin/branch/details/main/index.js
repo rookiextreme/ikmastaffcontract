@@ -13,6 +13,7 @@ function branchStoreUpdate(selector){
         return false;
     }
 
+    v.setNewEntry('hq', $('#hq').val())
     v.setNewEntry('id', $('#branch-id').val());
 
     http.fetch({

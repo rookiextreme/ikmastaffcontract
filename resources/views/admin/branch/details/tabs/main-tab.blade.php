@@ -11,18 +11,26 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6 mb-4 vals-row mt-4">
+                    <div class="col-md-4 mb-4 vals-row mt-4">
                         <label for="salutation" class="required form-label">Nama Gelaran</label>
                         <input type="text" class="form-control text-uppercase" id="name" value="{{ strtoupper($branch->name) }}">
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-6 mt-4 vals-row">
+                    <div class="col-md-4 mt-4 vals-row">
                         <label for="state" class="required form-label">Negeri</label>
                         <select class="form-control" id="state" name="state" data-control="select2">
                             <option>Please Select</option>
                             @foreach($state as $st)
                                 <option value="{{ $st->id }}" {{ $branch->state_id ? $st->id == $branch->state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
                             @endforeach
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-4 mt-4 vals-row">
+                        <label for="hq" class="required form-label">Adakah Penempatan Ini HQ?</label>
+                        <select id="hq" class="form-control" data-control="select2">
+                            <option value="0" {{ $branch->hq == false ? 'selected' : '' }}>Tidak</option>
+                            <option value="1" {{ $branch->hq == true ? 'selected' : '' }}>Ya</option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>

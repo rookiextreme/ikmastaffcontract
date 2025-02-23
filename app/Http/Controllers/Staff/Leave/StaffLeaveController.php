@@ -66,9 +66,11 @@ class StaffLeaveController extends Controller
             })->addColumn('end', function($data){
                 return $this->regularDate($data->end_date);
             })->addColumn('days', function($data){
-                return $data->days.' Hari';
+                return $data->days.' HARI';
             })->addColumn('status', function($data){
                 return strtoupper($data->l_status);
+            })->addColumn('approver_name', function($data){
+                return strtoupper($data->approver_name);
             })->make();
     }
 
@@ -85,5 +87,47 @@ class StaffLeaveController extends Controller
     public function requestApproval(Request $request){
         $m = $this->staffLeaveEntriesRepository->approveRequest($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
+
+    public function getApprover(Request $request){
+        return json_encode(['items' => $this->staffLeaveEntriesRepository->getApproverDropdown($request)]);
+    }
+
+    public function leaveApproval($user_id){
+        $user = User::find($user_id);
+        $is_role = [
+            'superadmin' => $user->hasRole('super-admin'),
+            'admin' => $user->hasRole('admin'),
+            'approvaladmin' => $user->hasRole('approval-admin'),
+            'staff' => $user->hasRole('staff'),
+        ];
+
+        return view('staff.leave.approval', [
+            'user_id' => $user_id,
+            'is_role' => $is_role
+        ]);
+    }
+
+    public function approvalList(Request $request){
+        $request->request->add(['approval' => true]);
+        $entries = $this->staffLeaveEntriesRepository->getRequestListByUserId($request);
+
+        return SymTable::of($entries)
+            ->addRowAttr([
+                'data-id' => function($data){
+                    return $data->id;
+                }
+            ])
+            ->addColumn('start', function($data){
+                return $this->regularDate($data->start_date);
+            })->addColumn('end', function($data){
+                return $this->regularDate($data->end_date);
+            })->addColumn('days', function($data){
+                return $data->days.' HARI';
+            })->addColumn('status', function($data){
+                return strtoupper($data->l_status);
+            })->addColumn('approver_name', function($data){
+                return strtoupper($data->approver_name);
+            })->make();
     }
 }

@@ -33,9 +33,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.user.list', absolute: false));
         }elseif($user->hasRole('admin')){
             return redirect()->intended(route('admin.user.list', absolute: false));
-        }elseif($user->hasRole('approval-admin')){
-            return redirect()->intended(route('approval-admin.leave.request', ['user_id' => $user->id], absolute: false));
-        }elseif($user->hasRole('staff')){
+        }elseif($user->hasRole('staff|ketua_unit|penolong_pengarah|ketua_pengarah')){
             return redirect()->intended(route('staff.profile', ['user_id' => $user->id, 'page' => 'main'], absolute: false));
         }
 

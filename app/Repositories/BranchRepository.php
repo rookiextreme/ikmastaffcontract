@@ -44,6 +44,7 @@ class BranchRepository
     public function storeUpdate(Request $request){
         $name = $request->name;
         $state = $request->state;
+        $hq = $request->hq;
         $id = $request->id;
 
         $check = $this->checkExist($name, $state, $id);
@@ -59,6 +60,7 @@ class BranchRepository
             $m = $id ? Branch::find($id) : new Branch;
             $m->name = $name;
             $m->state_id = $state;
+            $m->hq = $hq;
             $m->save();
             DB::commit();
         }catch (\Exception $e){
@@ -91,6 +93,7 @@ class BranchRepository
         $m = Branch::find($id);
         $data['id'] = $m->id;
         $data['name'] = $m->name;
+        $data['hq'] = $m->hq;
         $data['state_id'] = $m->state_id;
 
         return $data;

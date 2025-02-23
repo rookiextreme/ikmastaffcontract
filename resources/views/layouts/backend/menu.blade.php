@@ -36,56 +36,88 @@
                 <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
                      data-kt-menu="true" data-kt-menu-expand="false">
                     <!--end:Menu item-->
-                    @role('staff')
-                    <div class="menu-item pt-5">
-                        <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Profil</span>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <a class="menu-link"
-                           href="{{ route('staff.profile', ['user_id' => Auth::user(), 'page' => 'main']) }}">
-                            <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-13 fs-2">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            </i>
-                            </span>
-                            <span class="menu-title">Profil</span>
-                        </a>
-                    </div>
-                    @if(Auth::user()->getStaff->getStaffPosition->getStaffLeave->leave_total != null)
+                    @role('staff|ketua_unit|penolong_pengarah|ketua_pengarah')
                         <div class="menu-item pt-5">
-                            <!--begin:Menu content-->
                             <div class="menu-content">
-                                <span class="menu-heading fw-bold text-uppercase fs-7">Cuti</span>
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Profil</span>
                             </div>
-                            <!--end:Menu content-->
-                        </div>
-                        <div class="menu-item">
-                            <a class="menu-link" href="{{ route('staff.leave.request', ['user_id' => Auth::user()->id]) }}">
-                            <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-13 fs-2">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            </i>
-                            </span>
-                                <span class="menu-title">Senarai Permohonan</span>
-                            </a>
                         </div>
                         <div class="menu-item">
                             <a class="menu-link"
-                               href="{{ route('staff.leave.new-request', ['user_id' => Auth::user()->id]) }}">
-                            <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-13 fs-2">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            </i>
-                            </span>
-                                <span class="menu-title">Permohonan Cuti</span>
+                               href="{{ route('staff.profile', ['user_id' => Auth::user(), 'page' => 'main']) }}">
+                                <span class="menu-icon">
+                                <i class="ki-duotone ki-abstract-13 fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                </i>
+                                </span>
+                                <span class="menu-title">Profil</span>
                             </a>
                         </div>
-                    @endif
+                        @php
+                            $showCuti = false;
+                            $user = Auth::user();
+                            $position = $user->getStaff->getStaffPosition;
+
+                            if($position){
+                                if($position->getBranch->hq){
+                                    $showCuti = true;
+                                }else{
+                                    if($user->hasRole('staff')){
+                                        $showCuti = true;
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        @if($showCuti)
+                            @if(Auth::user()->getStaff->getStaffPosition->getStaffLeave->leave_total != null)
+                                <div class="menu-item pt-5">
+                                    <!--begin:Menu content-->
+                                    <div class="menu-content">
+                                        <span class="menu-heading fw-bold text-uppercase fs-7">Cuti</span>
+                                    </div>
+                                    <!--end:Menu content-->
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link" href="{{ route('staff.leave.request', ['user_id' => Auth::user()->id]) }}">
+                                            <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            </i>
+                                            </span>
+                                        <span class="menu-title">Senarai Permohonan</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link"
+                                       href="{{ route('staff.leave.new-request', ['user_id' => Auth::user()->id]) }}">
+                                            <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            </i>
+                                            </span>
+                                        <span class="menu-title">Permohonan Cuti</span>
+                                    </a>
+                                </div>
+                            @endif
+                        @endif
+                    @endrole
+                    @role('ketua_unit|penolong_pengarah|ketua_pengarah')
+                        <div class="menu-item">
+                            <a class="menu-link"
+                               href="{{ route('staff.leave.approval', ['user_id' => Auth::user()->id]) }}">
+                                                <span class="menu-icon">
+                                                <i class="ki-duotone ki-abstract-13 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                </i>
+                                                </span>
+                                <span class="menu-title">Pengesahan Cuti</span>
+                            </a>
+                        </div>
                     @endrole
                     @role('super-admin|admin')
                     <div class="menu-item pt-5">

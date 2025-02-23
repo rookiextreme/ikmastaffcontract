@@ -83,6 +83,10 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-md-12 mb-4 vals-row text-danger fw-bold">
+                            * Cuti Separuh Hari (Syarat: Tidak melebihi 4 jam tidak termasuk waktu rehat) dan perlu mendapat kelulusan Pelulus<br>
+                            * MC (Syarat: Cuti sakit, Bersalin, Kuarantin)
+                        </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-category" class="required form-label">Kategori Cuti</label>
                             <select class="form-control" id="leave-category" data-control="select2">
@@ -93,9 +97,16 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-8 mb-4 vals-row mt-4">
-                            <label for="leave-start-date" class="required form-label">Tarikh Mula Hingga Akhir Cuti</label>
+                        <div class="col-md-4 mb-4 vals-row mt-4">
+                            <label for="leave-start-range" class="required form-label">Tarikh Mula Hingga Akhir Cuti</label>
                             <input type="text" id="leave-date-range" class="form-control" value="">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-4 vals-row mt-4">
+                            <label for="leave-approver" class="required form-label">Pelulus</label>
+                            <select class="form-control" id="leave-approver">
+                                <option>Sila Pilih</option>
+                            </select>
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -116,7 +127,9 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="staff-id" value="{{ $staff->id }}"
+    <input type="hidden" id="staff-id" value="{{ $staff->id }}">
+    <input type="hidden" id="position-branch-id" value="{{ $staff->getStaffPosition->branch_id }}">
+    <input type="hidden" id="role-id" value="{{ $staff->getStaffPosition->branch_id }}">
 @endsection
 
 @section('jsExtensions')
@@ -129,6 +142,6 @@
         let staff_id = $('#staff-id').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/new-request/init.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/new-request/index.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/init2.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/index2.js') }}"></script>
 @endsection

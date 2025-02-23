@@ -37,6 +37,7 @@ function resetBranchForm(){
     common.resetForm([
         ['#name', 'string'],
         ['#state', 'dropdown'],
+        ['#hq', 'dropdown'],
     ])
 
     common.setFormValue('#branch-id', '', 'string');

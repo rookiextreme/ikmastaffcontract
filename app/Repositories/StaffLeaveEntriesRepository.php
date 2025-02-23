@@ -6,6 +6,7 @@ use App\Jobs\StaffLeaveJob;
 use App\Models\LeaveCategory;
 use App\Models\LeaveRequestStatus;
 use App\Models\PublicHoliday;
+use App\Models\Staff;
 use App\Models\StaffLeaveEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,7 @@ class StaffLeaveEntriesRepository
         $staff_id = $request->staff_id;
         $leave_category = $request->leave_category;
         $leave_date_range = $request->leave_date_range;
+        $leave_approver = $request->leave_approver;
 
         $getLeaveCategory = LeaveCategory::find($leave_category);
         $staffPosition = $this->staffPositionRepository->getStaffPosition($staff_id);
@@ -96,6 +98,7 @@ class StaffLeaveEntriesRepository
                 $m = new StaffLeaveEntry();
                 $m->staff_position_id = $staffPosition->id;
                 $m->staff_leave_id = $staffPosition->getStaffLeave->id;
+                $m->approver_id = $leave_approver;
                 $m->leave_category_id = $leave_category;
                 $m->start_date = $date['start'];
                 $m->end_date = $date['end'];
@@ -126,10 +129,7 @@ class StaffLeaveEntriesRepository
 
     public function getRequestListByUserId(Request $request){
         $user_id = $request->user_id;
-        $is_super = $request->is_super;
-        $is_admin = $request->is_admin;
-        $is_approval = $request->is_approval;
-        $is_staff = $request->is_staff;
+        $approval = $request->approval;
 
         $search = $request->get('search');
         $searchStr = '';
@@ -152,11 +152,14 @@ class StaffLeaveEntriesRepository
             sle.end_date,
             sle.days,
             sle.leave_request_status_id as status_id,
-            lrs.name as l_status
+            lrs.name as l_status,
+            u.name as approver_name
             FROM staff_leave_entries sle
             JOIN staff_positions sp ON sp.id = sle.staff_position_id
             JOIN staffs s ON s.id = sp.staff_id
-            '.($is_staff ? 'AND s.user_id = '.$user_id : '' ).'
+            JOIN staffs sa ON sa.id = sle.approver_id
+            JOIN users u ON u.id = sa.user_id
+            '.($approval == true ? 'AND sa.user_id = '.$user_id : 'AND s.user_id = '.$user_id).'
             JOIN leave_request_statuses lrs ON lrs.id = sle.leave_request_status_id
             '.$searchStr.'
         ', $params);
@@ -211,4 +214,58 @@ class StaffLeaveEntriesRepository
             ];
         }
     }
+
+    public function getApproverDropdown(Request $request){
+        $staff_id = $request->staff_id;
+        $branch_id = $request->branch_id;
+        $search = $request->search;
+
+        $staff = Staff::select('id', 'user_id')->find($staff_id);
+        $user = $staff->getUser;
+
+        $findApproverByRole = null;
+
+        if($user->hasRole('staff')){
+            $findApproverByRole = '(5)';
+        }elseif($user->hasRole('ketua_unit')){
+            $findApproverByRole = '(6, 7)';
+        }elseif($user->hasRole('penolong_pengarah')){
+            $findApproverByRole = '(7)';
+        }
+
+        if($user)
+        $m = DB::select('
+            SELECT
+            s.id,
+            u.name,
+            sp.branch_position_id,
+            ru.role_id
+            FROM staffs s
+            JOIN users u ON u.id = s.user_id
+            JOIN staff_positions sp ON sp.staff_id = s.id
+            JOIN branches b ON b.id = sp.branch_id
+            JOIN role_user ru ON ru.user_id = u.id
+            WHERE b.id = ?
+            AND sp.deleted = false
+            '.($findApproverByRole != null ? 'AND ru.role_id IN '.$findApproverByRole : '').'
+            '.($search ? 'AND u.name LIKE "%'.$search.'%"' : '').'
+            LIMIT 10
+        ', [
+            $branch_id,
+        ]);
+
+        $data = [];
+        if(count($m) > 0){
+            foreach($m as $staff){
+                $data[] = [
+                    'id' => $staff->id,
+                    'text' => strtoupper($staff->name),
+                ];
+            }
+        }
+
+        return $data;
+    }
 }
+
+

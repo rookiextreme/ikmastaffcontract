@@ -3,6 +3,8 @@ $('#store-update-leave-new-request').on('click', function(){
     let v = new Validscript()
     v.validMix('#leave-date-range', 'Julat Cuti')
     v.validInt('#leave-category', 'Kategori Cuti', true)
+    v.validInt('#leave-approver', 'Pelulus', true)
+
     if (v.checkFail()) {
         alerting.formRequired();
         return false;

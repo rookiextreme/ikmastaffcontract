@@ -27,6 +27,14 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
+                    <div class="col-md-12 vals-row mb-4">
+                        <label for="hq" class="required form-label">Adakah Penempatan Ini HQ?</label>
+                        <select id="hq" class="form-control" data-control="select2" data-dropdown-parent="#branch-modal">
+                            <option value="0">Tidak</option>
+                            <option value="1">Ya</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
