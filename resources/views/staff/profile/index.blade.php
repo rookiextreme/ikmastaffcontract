@@ -51,7 +51,12 @@
                                         <div class="fs-2 fw-bold">
                                             @if($staff->getStaffPosition->branch_position_id)
                                             <span class="text-info">{{ $staff->getStaffPosition->getBranch->name }}</span><br>
-                                            <span class="text-success">{{ $staff->getStaffPosition->getBranchPosition->position }} ({{ $staff->getStaffPosition->getBranchPosition->grade }})</span>
+                                            <span class="text-success">
+                                                <span class="text-success">
+                                                    {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
+                                                    ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
+                                                </span>
+                                            </span>
                                             @else
                                                 <span class="text-danger">Sila Pilih Jawatan</span>
                                             @endif
