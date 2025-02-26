@@ -14,10 +14,10 @@ let table = new DatatableInit({
     next: '#approval-next',
     columns: [
         {
-            data: 'start'
+            data: 'name'
         },
         {
-            data: 'end'
+            data: 'h_date'
         },
         {
             data: 'days'
