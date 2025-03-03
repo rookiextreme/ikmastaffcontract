@@ -8,6 +8,7 @@ $('#update-profile').on('click', function(){
     v.validMix('#city', 'Daerah')
     v.validInt('#postal-code', 'Poskod')
     v.validInt('#country', 'Negara', true)
+    v.validMix('#blood-type', 'Jenis Darah', true)
 
     v.validInt('#gender', 'Jantina', true)
     v.validInt('#religion', 'Agama', true)

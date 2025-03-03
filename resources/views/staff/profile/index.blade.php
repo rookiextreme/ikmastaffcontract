@@ -168,8 +168,8 @@
     </script>
 
     @if($page == 'main')
-        <script src="{{ asset('js/modules/staff/profile/init.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/profile/index.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/profile/init2.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/profile/index2.js') }}"></script>
     @elseif($page == 'academic')
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
         <script src="{{ asset('js/modules/staff/academic/init.js') }}"></script>

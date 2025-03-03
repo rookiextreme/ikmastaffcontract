@@ -51,6 +51,7 @@ class StaffRepository
         $gender = $request->gender;
         $salutation = $request->salutation;
         $religion = $request->religion;
+        $blood_type = $request->blood_type;
 
         $staff_id = $request->staff_id;
 
@@ -58,6 +59,7 @@ class StaffRepository
         try{
             $staff = Staff::find($staff_id);
             $staff->address = $address;
+            $staff->blood_type = $blood_type;
             $staff->city = $city;
             $staff->postal_code = $postal_code;
             $staff->race_id = $race;

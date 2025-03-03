@@ -174,6 +174,17 @@
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
+                <div class="col-md-4 mb-4 vals-row mt-4">
+                    <label for="blood-type" class="required form-label">Jenis Darah</label>
+                    <select class="form-control" id="blood-type" name="blood-type" data-control="select2">
+                        <option>Please Select</option>
+                        <option value="A" {{ $staff->blood_type == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B" {{ $staff->blood_type == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="AB" {{ $staff->blood_type == 'AB' ? 'selected' : '' }}>AB</option>
+                        <option value="O" {{ $staff->blood_type == 'O' ? 'selected' : '' }}>O</option>
+                    </select>
+                    <div class="invalid-feedback"></div>
+                </div>
             </div>
             <div class="card-footer d-flex justify-content-end py-6 px-9">
                 @php
