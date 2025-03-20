@@ -28,6 +28,7 @@ class StaffLeaveEntriesRepository
         $leave_category = $request->leave_category;
         $leave_date_range = $request->leave_date_range;
         $leave_approver = $request->leave_approver;
+        $leave_reason = $request->leave_reason;
 
         $getLeaveCategory = LeaveCategory::find($leave_category);
         $staffPosition = $this->staffPositionRepository->getStaffPosition($staff_id);
@@ -104,6 +105,7 @@ class StaffLeaveEntriesRepository
                 $m->end_date = $date['end'];
                 $m->days = $hTaken;
                 $m->leave_request_status_id = LeaveRequestStatus::PENDING;
+                $m->reason = $leave_reason;
                 $m->save();
 
                 $sLeave = $staffPosition->getStaffLeave;
@@ -152,6 +154,8 @@ class StaffLeaveEntriesRepository
             sle.end_date,
             sle.days,
             sle.leave_request_status_id as status_id,
+            sle.reason,
+            sle.created_at,
             lrs.name as l_status,
             u.name as approver_name,
             ustaff.name as request_by

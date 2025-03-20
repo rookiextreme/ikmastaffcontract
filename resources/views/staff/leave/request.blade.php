@@ -26,14 +26,14 @@
                                 </div>
                                 <table class="table table-bordered text-center align-middle" id="request-list">
                                     <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
-                                        <th style="width: 10%">Pelulus</th>
-                                        <th style="width: 15%">Tarikh Mula</th>
-                                        <th style="width: 15%">Tarikh Akhir</th>
-                                        <th style="width: 20%">Jumlah Hari</th>
-                                        <th style="width: 20%">Status</th>
-                                        <th style="width: 10%">Tindakan</th>
-                                    </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
+                                            <th style="width: 10%">Pelulus</th>
+                                            <th style="width: 15%">Tarikh Cuti/<br>Tarikh Permohonan</th>
+                                            <th style="width: 20%">Jumlah Hari</th>
+                                            <th style="width: 15%">Sebab Bercuti</th>
+                                            <th style="width: 20%">Status</th>
+                                            <th style="width: 10%">Tindakan</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -79,6 +79,6 @@
         let is_staff = $('#is-staff').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/request/init4.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/request/index4.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/request/init5.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/request/index5.js') }}"></script>
 @endsection

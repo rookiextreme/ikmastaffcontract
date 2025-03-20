@@ -18,4 +18,3 @@ $('#bumiputera').on('change', function(){
     ])
 })
 
-

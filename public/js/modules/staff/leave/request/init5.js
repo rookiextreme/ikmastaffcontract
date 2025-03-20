@@ -17,13 +17,13 @@ let table = new DatatableInit({
             data: 'approver_name'
         },
         {
-            data: 'start'
-        },
-        {
-            data: 'end'
+            data: 'dates'
         },
         {
             data: 'days'
+        },
+        {
+            data: 'reason'
         },
         {
             data: 'status'

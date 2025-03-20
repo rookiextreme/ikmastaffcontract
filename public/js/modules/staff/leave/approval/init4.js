@@ -23,6 +23,9 @@ let table = new DatatableInit({
             data: 'days'
         },
         {
+            data: 'reason'
+        },
+        {
             data: 'status'
         },
         {
@@ -32,14 +35,16 @@ let table = new DatatableInit({
                 let btn = '-';
 
                 if(status_id == 1){
-                    btn = `
-                            <button class="btn btn-icon btn-success approval-approve" data-approve="1" type="button" aria-expanded="false">
-                               <i class="fas fa-check fs-4"></i>
-                          </button>
-                          <button class="btn btn-icon btn-danger approval-approve" data-approve="2" type="button" aria-expanded="false">
-                               <i class="fas fa-xmark fs-4"></i>
-                          </button>
-                        `
+                    btn = `<div class="dropdown">
+                      <button class="btn btn-icon btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           <i class="fas fa-pencil fs-4"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        ${btn}
+                        <li><button class="dropdown-item text-success approval-approve" data-approve="1">Sahkan Cuti</button></li>
+                        <li><button class="dropdown-item text-danger approval-approve" data-approve="2">Tidak Sahkan Cuti</button></li>
+                      </ul>
+                    </div>`;
                 }
                 return btn;
             }

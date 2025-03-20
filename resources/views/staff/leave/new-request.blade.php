@@ -109,6 +109,11 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
+                        <div class="col-md-12 mb-4 vals-row mt-4">
+                            <label for="leave-reason" class="form-label">Sebab bercuti</label>
+                            <textarea id="leave-reason" rows="5" class="form-control"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -142,6 +147,6 @@
         let staff_id = $('#staff-id').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/new-request/init2.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/new-request/index2.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}"></script>
 @endsection

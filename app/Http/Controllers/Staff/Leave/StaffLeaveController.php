@@ -61,16 +61,16 @@ class StaffLeaveController extends Controller
                     return $data->id;
                 }
             ])
-            ->addColumn('start', function($data){
-                return $this->regularDate($data->start_date);
-            })->addColumn('end', function($data){
-                return $this->regularDate($data->end_date);
+            ->addColumn('dates', function($data){
+                return $this->regularDate($data->start_date).'<br> Hingga <br> '.$this->regularDate($data->end_date).'<br><br><b class="text-success">'.$this->regularDate($data->created_at).'<b></b>';
             })->addColumn('days', function($data){
                 return $data->days.' HARI';
             })->addColumn('status', function($data){
                 return strtoupper($data->l_status);
             })->addColumn('approver_name', function($data){
                 return strtoupper($data->approver_name);
+            })->addColumn('reason', function($data){
+                return $data->reason ? strtoupper($data->reason) : '-';
             })->make();
     }
 
@@ -119,7 +119,7 @@ class StaffLeaveController extends Controller
                 }
             ])
             ->addColumn('name', function($data){
-                return strtoupper($data->request_by);
+                return strtoupper($data->request_by).'<br> <b class="text-success">'.$this->regularDate($data->created_at).'<b>';
             })->addColumn('h_date', function($data){
                 return $this->regularDate($data->start_date).' <br>Hingga<br> '.$this->regularDate($data->end_date);
             })->addColumn('days', function($data){
@@ -128,6 +128,8 @@ class StaffLeaveController extends Controller
                 return strtoupper($data->l_status);
             })->addColumn('approver_name', function($data){
                 return strtoupper($data->approver_name);
+            })->addColumn('reason', function($data){
+                return $data->reason ? strtoupper($data->reason) : '-';
             })->make();
     }
 }

@@ -22,9 +22,10 @@
                                 <table class="table table-bordered text-center align-middle" id="approval-list">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
-                                        <th style="width: 30%">Nama Pemohon</th>
-                                        <th style="width: 20%">Tarikh Cuti</th>
-                                        <th style="width: 20%">Jumlah Hari</th>
+                                        <th style="width: 20%">Nama Pemohon/<br>Tarikh Permohonan</th>
+                                        <th style="width: 15%">Tarikh Cuti</th>
+                                        <th style="width: 15%">Jumlah Hari</th>
+                                        <th style="width: 20%">Sebab Bercuti</th>
                                         <th style="width: 20%">Status</th>
                                         <th style="width: 10%">Tindakan</th>
                                     </tr>
@@ -73,6 +74,6 @@
         let is_staff = $('#is-staff').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/approval/init2.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/approval/index2.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}"></script>
 @endsection

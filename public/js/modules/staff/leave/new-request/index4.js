@@ -10,6 +10,7 @@ $('#store-update-leave-new-request').on('click', function(){
         return false;
     }
     v.setNewEntry('staff_id', staff_id)
+    v.setNewEntry('leave_reason', $('#leave-reason').val())
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update-new-request`,
