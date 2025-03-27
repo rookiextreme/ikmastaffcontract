@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             SalutationSeeder::class,
             UserSeeder::class,
             NewRoleSeeder::class,
+            DaySeeder::class,
+            WeekendHolidaySeeder::class,
+            LeaveCategorySeeder::class,
+            LeaveRequestStatusSeeder::class,
         ]);
     }
 }
