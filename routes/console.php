@@ -70,4 +70,4 @@ Schedule::call(function(){
             }
         }
     }
-})->everyFiveSeconds();
+})->yearlyOn(1,1, 0.00);
