@@ -64,10 +64,10 @@ Schedule::call(function(){
                     }
                 }
             }catch (Exception $e){
-//                echo '<pre>';
-//                print_r($e->getMessage());
-//                echo '</pre>';
+                echo '<pre>';
+                print_r($e->getMessage());
+                echo '</pre>';
             }
         }
     }
-})->yearlyOn(1,1, 0.00);
+})->everyMinute(1,1, 0.00);
