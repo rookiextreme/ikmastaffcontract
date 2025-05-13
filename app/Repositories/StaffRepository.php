@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Staff;
 use App\Models\StaffAcademic;
+use App\Models\StaffFamily;
 use App\Models\User;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
@@ -194,6 +195,76 @@ class StaffRepository
         $data['professional_certification'] = $m->professional_certification;
         $data['professional_certification_date'] = $m->professional_certification_date ? $this->regularDate($m->professional_certification_date) : null;
         $data['overall_grade'] = $m->overall_grade;
+        return $data;
+    }
+
+    public function getFamilyList(Request $request){
+        $staff_id = $request->staff_id;
+
+        $model = DB::select('
+            SELECT
+            sf.id,
+            sf.name,
+            sf.dob,
+            sf.email,
+            sf.gender,
+            sf.phone
+            FROM staff_families sf
+            JOIN staffs s ON s.id = sf.staff_id
+            AND sf.staff_id = ?
+            LIMIT 100
+        ',[
+            $staff_id
+        ]);
+
+        return $model;
+    }
+
+    public function storeUpdateFamily(Request $request){
+        $fam_name = $request->fam_name;
+        $fam_email = $request->fam_email;
+        $fam_gender = $request->fam_gender;
+        $fam_phone = $request->fam_phone;
+        $fam_dob = $request->fam_dob;
+        $id = $request->id;
+        $staff_id = $request->staff_id;
+
+        DB::beginTransaction();
+        try{
+            $m = $id ? StaffFamily::find($id) : new StaffFamily;
+            $m->staff_id = $staff_id;
+            $m->name = $fam_name;
+            $m->email = $fam_email;
+            $m->gender = $fam_gender;
+            $m->phone = $fam_phone;
+            $m->dob = $fam_dob ? $this->reverseDate($fam_dob) : null;
+            $m->save();
+
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Rekod Maklumat Keluarga '.($id ? 'Dikemaskini' : 'Ditambah'),
+        ];
+    }
+
+    public function getFamily($id){
+        $data = [];
+
+        $m = StaffFamily::find($id);
+        $data['id'] = $m->id;
+        $data['name'] = $m->name;
+        $data['gender'] = $m->gender;
+        $data['phone'] = $m->phone;
+        $data['email'] = $m->email;
+        $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;
         return $data;
     }
 }

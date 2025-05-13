@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\BranchPosition;
 use App\Models\StaffAcademic;
+use App\Models\StaffFamily;
 use App\Models\User;
 use App\Repositories\BranchPositionRepository;
 use App\Repositories\BranchRepository;
@@ -14,6 +15,7 @@ use App\Repositories\StaffPositionRepository;
 use App\Repositories\StaffRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -156,5 +158,41 @@ class StaffController extends Controller
     public function storeUpdateNewLeaveBalance(Request $request){
         $m = $this->staffLeaveRepository->storeUpdateNewLeaveBalance($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
+
+    public function familyList(Request $request){
+        $model = $this->staffRepository->getFamilyList($request);
+
+        return SymTable::of($model)
+            ->addRowAttr([
+                'data-id' => function($data){
+                    return $data->id;
+                }
+            ])
+            ->addColumn('name', function($data){
+                return $data->name.'<br>Umur '.(Carbon::parse($data->dob)->age);
+            })
+            ->addColumn('email', function($data){
+                return $data->email.'<br>'.$data->phone;;
+            })
+            ->addColumn('gender', function($data){
+                return $data->gender;
+            })
+            ->addColumn('grade', function($data){
+                return $data->overall_grade ?? '-';
+            })->make();
+    }
+
+    public function storeUpdateFamily(Request $request){
+        $m = $this->staffRepository->storeUpdateFamily($request);
+        return $this->setDataResponse($m, !($m['status'] == 'error'));
+    }
+
+    public function getFamilyInfo(Request $request) : JsonResponse{
+        return $this->setDataResponse($this->staffRepository->getFamily($request->id));
+    }
+
+    public function deleteFamily(Request $request) : JsonResponse{
+        return $this->setResponse($this->setHardDelete(StaffFamily::class, $request->id, 'Maklumat Keluarga'));
     }
 }

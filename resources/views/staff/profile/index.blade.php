@@ -108,15 +108,16 @@
             <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
                 <!--begin::Nav item-->
                 <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'profile' ? 'active' : '' }}"
+                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'main' ? 'active' : '' }}"
                        href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'main']) }}">Rekod Peribadi</a>
                 </li>
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'resetpassword' ? 'active' : '' }}"
-                       href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'resetpassword']) }}">Tetapan Kata Laluan</a>
-                </li>
-                <!--end::Nav item-->
-                <!--begin::Nav item-->
+
+                @if($staff->profile_complete == 1)
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'family' ? 'active' : '' }}"
+                           href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'family']) }}">Maklumat Keluarga</a>
+                    </li>
+                @endif
                 @if($staff->profile_complete == 1)
                     <li class="nav-item mt-2">
                         <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'academic' ? 'active' : '' }}"
@@ -134,6 +135,10 @@
                         </li>
                     @endif
                 @endif
+                <li class="nav-item mt-2">
+                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'resetpassword' ? 'active' : '' }}"
+                       href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'resetpassword']) }}">Tetapan Kata Laluan</a>
+                </li>
             </ul>
             <!--begin::Navs-->
         </div>
@@ -147,6 +152,9 @@
         @include('staff.profile.tabs.password-tab')
     @elseif($page == 'position')
         @include('staff.profile.tabs.position-tab')
+    @elseif($page == 'family')
+        @include('staff.profile.modals.family-modal')
+        @include('staff.profile.tabs.family-tab')
     @endif
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
@@ -177,6 +185,10 @@
     @elseif($page == 'position')
         <script src="{{ asset('js/modules/staff/position/init.js') }}"></script>
         <script src="{{ asset('js/modules/staff/position/index.js') }}"></script>
+    @elseif($page == 'family')
+        <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/init.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/index.js') }}"></script>
     @endif
 @endsection
 

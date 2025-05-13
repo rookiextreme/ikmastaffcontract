@@ -19,6 +19,11 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::get('/get-position-by-branch', [StaffController::class, 'getPositionByBranch']);
             Route::post('/store-update-position', [StaffController::class, 'storeUpdatePosition']);
             Route::post('/store-update-new-leave-balance', [StaffController::class, 'storeUpdateNewLeaveBalance']);
+
+            Route::post('/family-list', [StaffController::class, 'familyList']);
+            Route::post('/store-update-family', [StaffController::class, 'storeUpdateFamily']);
+            Route::post('/get-info-family', [StaffController::class, 'getFamilyInfo']);
+            Route::post('/delete-family', [StaffController::class, 'deleteFamily']);
         });
 
         Route::group(['prefix' => 'leave'], function () {
