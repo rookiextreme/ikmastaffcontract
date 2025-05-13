@@ -173,10 +173,10 @@ class StaffController extends Controller
                 return $data->name.'<br>Umur '.(Carbon::parse($data->dob)->age);
             })
             ->addColumn('email', function($data){
-                return $data->email.'<br>'.$data->phone;;
+                return $data->email.'<br>'.$data->phone;
             })
-            ->addColumn('gender', function($data){
-                return $data->gender;
+            ->addColumn('relation', function($data){
+                return $data->relation;
             })
             ->addColumn('grade', function($data){
                 return $data->overall_grade ?? '-';

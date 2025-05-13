@@ -187,8 +187,8 @@
         <script src="{{ asset('js/modules/staff/position/index.js') }}"></script>
     @elseif($page == 'family')
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/family/init.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/family/index.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/init2.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/index2.js') }}"></script>
     @endif
 @endsection
 

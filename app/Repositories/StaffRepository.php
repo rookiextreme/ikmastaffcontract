@@ -208,7 +208,8 @@ class StaffRepository
             sf.dob,
             sf.email,
             sf.gender,
-            sf.phone
+            sf.phone,
+            sf.relation
             FROM staff_families sf
             JOIN staffs s ON s.id = sf.staff_id
             AND sf.staff_id = ?
@@ -223,7 +224,7 @@ class StaffRepository
     public function storeUpdateFamily(Request $request){
         $fam_name = $request->fam_name;
         $fam_email = $request->fam_email;
-        $fam_gender = $request->fam_gender;
+        $fam_relation = $request->fam_relation;
         $fam_phone = $request->fam_phone;
         $fam_dob = $request->fam_dob;
         $id = $request->id;
@@ -235,8 +236,9 @@ class StaffRepository
             $m->staff_id = $staff_id;
             $m->name = $fam_name;
             $m->email = $fam_email;
-            $m->gender = $fam_gender;
+            $m->relation = $fam_relation;
             $m->phone = $fam_phone;
+            $m->gender = 1;
             $m->dob = $fam_dob ? $this->reverseDate($fam_dob) : null;
             $m->save();
 
@@ -261,7 +263,7 @@ class StaffRepository
         $m = StaffFamily::find($id);
         $data['id'] = $m->id;
         $data['name'] = $m->name;
-        $data['gender'] = $m->gender;
+        $data['relation'] = $m->relation;
         $data['phone'] = $m->phone;
         $data['email'] = $m->email;
         $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;

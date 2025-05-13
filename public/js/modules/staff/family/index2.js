@@ -40,7 +40,7 @@ $(document).on('click','.fam-edit', function(){
                 method: 'POST',
                 callback: function(r){
                     if(r.status){
-                        common.setFormValue('#fam-gender', r.data.gender, 'dropdown')
+                        common.setFormValue('#fam-relation', r.data.relation, 'dropdown')
                         common.setFormValue('#fam-name', r.data.name, 'string')
                         common.setFormValue('#fam-email', r.data.email, 'string')
                         common.setFormValue('#fam-dob', r.data.dob, 'string')
@@ -61,7 +61,7 @@ $('#fam-store-update').on('click', () => famStoreUpdate('#fam-store-update'));
 function famStoreUpdate(selector){
     common.buttonLoadOnPress(selector);
     let v = new Validscript('ms');
-    v.validString('#fam-gender', 'Jantina', true)
+    v.validString('#fam-relation', 'Hubungan', true)
     v.validMix('#fam-name', 'Nama')
     v.validMix('#fam-email', 'E-mail')
     v.validRegularDate('#fam-dob', 'Tarikh Lahir')

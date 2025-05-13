@@ -22,7 +22,7 @@ let table = new DatatableInit({
             data: 'email'
         },
         {
-            data: 'gender'
+            data: 'relation'
         },
         {
             data: 'action',
@@ -46,7 +46,7 @@ table.run();
 
 function resetFamForm(){
     common.resetForm([
-        ['#fam-gender', 'dropdown'],
+        ['#fam-relation', 'dropdown'],
         ['#fam-name', 'string'],
         ['#fam-email', 'string'],
         ['#fam-phone', 'string'],

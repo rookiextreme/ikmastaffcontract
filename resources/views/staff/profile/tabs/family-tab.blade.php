@@ -27,7 +27,7 @@
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
                                         <th style="width: 40%">Nama/Umur</th>
                                         <th style="width: 30%">Email/No. Telefon</th>
-                                        <th style="width: 20%">Jantina</th>
+                                        <th style="width: 20%">Hubungan</th>
                                         <th style="width: 10%">Tindakan</th>
                                     </tr>
                                     </thead>
