@@ -53,6 +53,17 @@
                                 </span>
                                 <span class="menu-title">Profil</span>
                             </a>
+
+                            <a class="menu-link"
+                               href="{{ route('staff.profile', ['user_id' => Auth::user(), 'page' => 'resetpassword']) }}">
+                                <span class="menu-icon">
+                                <i class="ki-duotone ki-abstract-13 fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                </i>
+                                </span>
+                                <span class="menu-title">Tetapan Kata Laluan</span>
+                            </a>
                         </div>
                         @php
                             $showCuti = false;
