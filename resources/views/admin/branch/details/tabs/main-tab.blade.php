@@ -19,7 +19,7 @@
                     <div class="col-md-4 mt-4 vals-row">
                         <label for="state" class="required form-label">Negeri</label>
                         <select class="form-control" id="state" name="state" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($state as $st)
                                 <option value="{{ $st->id }}" {{ $branch->state_id ? $st->id == $branch->state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
                             @endforeach

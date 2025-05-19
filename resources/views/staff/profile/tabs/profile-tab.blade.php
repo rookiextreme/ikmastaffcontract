@@ -17,7 +17,7 @@
                     <div class="col-md-2 mb-4 vals-row mt-4">
                         <label for="salutation" class="required form-label">Nama Gelaran</label>
                         <select class="form-control" id="salutation" name="salutation" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($salutation as $st)
                                 <option value="{{ $st->id }}" {{ $staff->salutation_id ? $st->id == $staff->salutation_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
                             @endforeach
@@ -47,7 +47,7 @@
                     <div class="col-md-3 mt-4 vals-row">
                         <label for="gender" class="required form-label">Jantina</label>
                         <select class="form-control" id="gender" name="gender" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($gender as $gd)
                                 <option value="{{ $gd->id }}" {{ $staff->gender_id ? $gd->id == $staff->gender_id ? 'selected' : '' : '' }}>{{ $gd->name }}</option>
                             @endforeach
@@ -57,7 +57,7 @@
                     <div class="col-md-3 mb-4 vals-row mt-4">
                         <label for="religion" class="required form-label">Agama</label>
                         <select class="form-control" id="religion" name="religion" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($religion as $rg)
                                 <option value="{{ $rg->id }}" {{ $staff->religion_id ? $rg->id == $staff->religion_id ? 'selected' : '' : '' }}>{{ $rg->name }}</option>
                             @endforeach
@@ -67,7 +67,7 @@
                     <div class="col-md-3 mb-4 vals-row mt-4">
                         <label for="marital" class="required form-label">Taraf Perkahwinan</label>
                         <select class="form-control" id="marital" name="marital" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($marital_status as $ms)
                                 <option value="{{ $ms->id }}" {{ $staff->marital_status_id ? $ms->id == $staff->marital_status_id ? 'selected' : '' : '' }}>{{ $ms->name }}</option>
                             @endforeach
@@ -87,7 +87,7 @@
                     <div class="col-md-3 mt-4 vals-row mt-4">
                         <label for="birth-country" class="required form-label">Negara Lahir</label>
                         <select class="form-control" id="birth-country" name="birth_country" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($country as $cou)
                                 <option value="{{ $cou->id }}" {{ $staff->birth_country_id ? $cou->id == $staff->birth_country_id ? 'selected' : '' : ''}}>{{ $cou->name }}</option>
                             @endforeach
@@ -97,7 +97,7 @@
                     <div class="col-md-3 mt-4 vals-row">
                         <label for="birth-state" class="required form-label">Negeri Lahir</label>
                         <select class="form-control" id="birth-state" name="birth_state" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($state as $st)
                                 <option value="{{ $st->id }}" {{ $staff->birth_state_id ? $st->id == $staff->birth_state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
                             @endforeach
@@ -124,7 +124,7 @@
                     <div class="col-md-2 mb-4 vals-row mt-4">
                         <label for="blood-type" class="required form-label">Jenis Darah</label>
                         <select class="form-control" id="blood-type" name="blood-type" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             <option value="A" {{ $staff->blood_type == 'A' ? 'selected' : '' }}>A</option>
                             <option value="B" {{ $staff->blood_type == 'B' ? 'selected' : '' }}>B</option>
                             <option value="AB" {{ $staff->blood_type == 'AB' ? 'selected' : '' }}>AB</option>
@@ -170,7 +170,7 @@
                     <div class="col-md-3 mt-4 vals-row mt-4">
                         <label for="country" class="required form-label">Negara</label>
                         <select class="form-control" id="country" name="country" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($country as $cou)
                                 <option value="{{ $cou->id }}" {{ $staff->country_id ? $cou->id == $staff->country_id ? 'selected' : '' : ''}}>{{ $cou->name }}</option>
                             @endforeach
@@ -180,7 +180,7 @@
                     <div class="col-md-3 mt-4 vals-row">
                         <label for="state" class="required form-label">Negeri</label>
                         <select class="form-control" id="state" name="state" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($state as $st)
                                 <option value="{{ $st->id }}" {{ $staff->state_id ? $st->id == $staff->state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
                             @endforeach

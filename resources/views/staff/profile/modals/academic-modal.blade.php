@@ -15,7 +15,7 @@
                     <div class="col-md-4 mb-4 vals-row">
                         <label for="qualification" class="required form-label">Tahap Pendidikan</label>
                         <select class="form-control" id="qualification" data-control="select2">
-                            <option>Please Select</option>
+                            <option>Sila Pilih</option>
                             @foreach($academic_qualifications as $aq)
                                 <option value="{{ $aq->id }}">{{ $aq->name }}</option>
                             @endforeach
