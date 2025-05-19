@@ -183,10 +183,10 @@
 <script src="{{ asset('js/custom/common.js') }}"></script>
 <script src="{{ asset('js/custom/backend-custom/alerts.js') }}"></script>
 <script src="{{ asset('js/custom/http.js') }}"></script>
-<script src="{{ asset('js/custom/validscript5.js') }}"></script>
+<script src="{{ asset('js/custom/validscript6.js') }}"></script>
 <script>
     let common = new Common().init(window.location.origin);
-    let alerting = new Alerts('en');
+    let alerting = new Alerts('ms');
     let http = new Http();
 </script>
 <!--end::Global Javascript Bundle-->

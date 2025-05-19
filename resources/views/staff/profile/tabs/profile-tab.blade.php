@@ -39,41 +39,6 @@
                         <input type="text" class="form-control" id="email" name="email" value="{{ $staff->getUser->email }}" disabled>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-12 vals-row mt-4">
-                        <label for="address" class="required form-label">Alamat</label>
-                        <textarea class="form-control text-uppercase" rows="4" id="address">{{$staff->address }}</textarea>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="col-md-4 mb-4 vals-row mt-4">
-                        <label for="city" class="required form-label">Daerah</label>
-                        <input type="text" class="form-control" id="city" name="city" value="{{ $staff->city }}">
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="col-md-2 mb-4 vals-row mt-4">
-                        <label for="postal-code" class="required form-label">Poskod</label>
-                        <input type="text" class="form-control" id="postal-code" name="postal_code" value="{{ $staff->postal_code }}">
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="col-md-3 mt-4 vals-row mt-4">
-                        <label for="country" class="required form-label">Negara</label>
-                        <select class="form-control" id="country" name="country" data-control="select2">
-                            <option>Please Select</option>
-                            @foreach($country as $cou)
-                                <option value="{{ $cou->id }}" {{ $staff->country_id ? $cou->id == $staff->country_id ? 'selected' : '' : ''}}>{{ $cou->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="col-md-3 mt-4 vals-row">
-                        <label for="state" class="required form-label">Negeri</label>
-                        <select class="form-control" id="state" name="state" data-control="select2">
-                            <option>Please Select</option>
-                            @foreach($state as $st)
-                                <option value="{{ $st->id }}" {{ $staff->state_id ? $st->id == $staff->state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="invalid-feedback"></div>
-                    </div>
                     <div class="col-md-3 mb-4 vals-row mt-4">
                         <label for="mobile-phone" class="required form-label">No. Telefon</label>
                         <input type="text" class="form-control" id="mobile-phone" name="mobile_phone" value="{{ $staff->phone_no }}">
@@ -141,7 +106,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 mt-4 vals-row">
+                    <div class="col-md-2 mt-4 vals-row">
                         <label for="race" class="required form-label">Bangsa</label>
                         <select class="form-control" id="race" name="race" data-control="select2">
                             <option>Sila Pilih</option>
@@ -156,8 +121,17 @@
                         <input type="text" class="form-control" id="race-other" name="race_other" value="{{ $staff->other_race }}" {{ $staff->other_race ? '' : 'disabled' }}>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="row">
+                    <div class="col-md-2 mb-4 vals-row mt-4">
+                        <label for="blood-type" class="required form-label">Jenis Darah</label>
+                        <select class="form-control" id="blood-type" name="blood-type" data-control="select2">
+                            <option>Please Select</option>
+                            <option value="A" {{ $staff->blood_type == 'A' ? 'selected' : '' }}>A</option>
+                            <option value="B" {{ $staff->blood_type == 'B' ? 'selected' : '' }}>B</option>
+                            <option value="AB" {{ $staff->blood_type == 'AB' ? 'selected' : '' }}>AB</option>
+                            <option value="O" {{ $staff->blood_type == 'O' ? 'selected' : '' }}>O</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
                     <div class="col-md-4 mt-4 vals-row">
                         <label for="bumiputera" class="required form-label">Bumiputera</label>
                         <select class="form-control" id="bumiputera" name="bumiputera" data-control="select2">
@@ -168,22 +142,51 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-4 mb-4 vals-row mt-4">
-                        <label for="bumiputera-other" class="required form-label">Lain-Lain, Nyatakan</label>
-                        <input type="text" class="form-control" id="bumiputera-other" name="bumiputera_other" value="{{ $staff->bumiputera_other }}" {{ $staff->bumiputera_other ? '' : 'disabled' }}>
+                </div>
+                <div class="row">
+
+{{--                    <div class="col-md-4 mb-4 vals-row mt-4">--}}
+{{--                        <label for="bumiputera-other" class="required form-label">Lain-Lain, Nyatakan</label>--}}
+{{--                        <input type="text" class="form-control" id="bumiputera-other" name="bumiputera_other" value="{{ $staff->bumiputera_other }}" {{ $staff->bumiputera_other ? '' : 'disabled' }}>--}}
+{{--                        <div class="invalid-feedback"></div>--}}
+{{--                    </div>--}}
+                </div>
+                <div class="row">
+                    <div class="col-md-12 vals-row mt-4">
+                        <label for="address" class="required form-label">Alamat</label>
+                        <textarea class="form-control text-uppercase" rows="4" id="address">{{$staff->address }}</textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4 vals-row mt-4">
-                    <label for="blood-type" class="required form-label">Jenis Darah</label>
-                    <select class="form-control" id="blood-type" name="blood-type" data-control="select2">
-                        <option>Please Select</option>
-                        <option value="A" {{ $staff->blood_type == 'A' ? 'selected' : '' }}>A</option>
-                        <option value="B" {{ $staff->blood_type == 'B' ? 'selected' : '' }}>B</option>
-                        <option value="AB" {{ $staff->blood_type == 'AB' ? 'selected' : '' }}>AB</option>
-                        <option value="O" {{ $staff->blood_type == 'O' ? 'selected' : '' }}>O</option>
-                    </select>
-                    <div class="invalid-feedback"></div>
+                    <div class="col-md-4 mb-4 vals-row mt-4">
+                        <label for="city" class="required form-label">Daerah</label>
+                        <input type="text" class="form-control" id="city" name="city" value="{{ $staff->city }}">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-2 mb-4 vals-row mt-4">
+                        <label for="postal-code" class="required form-label">Poskod</label>
+                        <input type="text" class="form-control" id="postal-code" name="postal_code" value="{{ $staff->postal_code }}">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-3 mt-4 vals-row mt-4">
+                        <label for="country" class="required form-label">Negara</label>
+                        <select class="form-control" id="country" name="country" data-control="select2">
+                            <option>Please Select</option>
+                            @foreach($country as $cou)
+                                <option value="{{ $cou->id }}" {{ $staff->country_id ? $cou->id == $staff->country_id ? 'selected' : '' : ''}}>{{ $cou->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-3 mt-4 vals-row">
+                        <label for="state" class="required form-label">Negeri</label>
+                        <select class="form-control" id="state" name="state" data-control="select2">
+                            <option>Please Select</option>
+                            @foreach($state as $st)
+                                <option value="{{ $st->id }}" {{ $staff->state_id ? $st->id == $staff->state_id ? 'selected' : '' : '' }}>{{ $st->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-end py-6 px-9">

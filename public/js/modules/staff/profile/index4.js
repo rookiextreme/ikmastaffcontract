@@ -42,9 +42,9 @@ $('#update-profile').on('click', function(){
         v.validMix('#race-other', 'Lain-lain')
     }
 
-    if($('#bumiputera').find(':selected').attr('data-other') == 1){
-        v.validMix('#bumiputera-other', 'Lain-lain')
-    }
+    // if($('#bumiputera').find(':selected').attr('data-other') == 1){
+    //     v.validMix('#bumiputera-other', 'Lain-lain')
+    // }
 
     if (v.checkFail()) {
         alerting.formRequired();

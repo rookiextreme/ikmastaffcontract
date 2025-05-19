@@ -149,7 +149,7 @@ Validscript.prototype.getValueAndKey = function(selector){
 Validscript.prototype.regTest = function(selector, reg, keyVal, label, dropdown = false, skipEmpty = false){
     if(!skipEmpty){
         if(keyVal.value === ''){
-            this.setInValidStatus(`Field Is Required`, selector);
+            this.setInValidStatus(this.language == 'ms' ? 'Medan Ini Diperlukan' : `Field Is Required`, selector);
             this.pass = false;
             return false;
         }

@@ -33,7 +33,7 @@ trait LookupTrait
     }
 
     public function getBumiputeras(){
-        return DB::select('SELECT id, name, other_flag FROM bumiputeras');
+        return DB::select('SELECT id, name, other_flag FROM bumiputeras WHERE other_flag = 0');
     }
 
     public function getMaritalStatus(){
