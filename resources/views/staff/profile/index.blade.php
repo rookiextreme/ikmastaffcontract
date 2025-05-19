@@ -180,15 +180,15 @@
         <script src="{{ asset('js/modules/staff/profile/index2.js') }}"></script>
     @elseif($page == 'academic')
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/academic/init.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/academic/index.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/academic/init2.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/academic/index2.js') }}"></script>
     @elseif($page == 'position')
         <script src="{{ asset('js/modules/staff/position/init.js') }}"></script>
         <script src="{{ asset('js/modules/staff/position/index.js') }}"></script>
     @elseif($page == 'family')
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/family/init2.js') }}"></script>
-        <script src="{{ asset('js/modules/staff/family/index2.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/init4.js') }}"></script>
+        <script src="{{ asset('js/modules/staff/family/index4.js') }}"></script>
     @endif
 @endsection
 

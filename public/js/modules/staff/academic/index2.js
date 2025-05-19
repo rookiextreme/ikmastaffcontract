@@ -72,7 +72,6 @@ function academicStoreUpdate(selector){
     v.validMix('#institution-name', 'Nama Institusi')
     v.validMix('#institution-location', 'Lokasi Institusi')
     v.validMix('#major-specialization', 'Pengkhususan Major')
-    v.validMix('#minor-specialization', 'Pengkhususan Minor')
 
     if($('#profession-cert-date').val() != ''){
         v.validRegularDate('#profession-cert-date', 'Tarikh Penganugerahaan')
@@ -93,6 +92,7 @@ function academicStoreUpdate(selector){
     }
 
     v.setNewEntry('id', $('#academic-id').val());
+    v.setNewEntry('minor_specialization;', $('#minor-specialization').val());
     v.setNewEntry('staff_id', staff_id)
 
     http.fetch({

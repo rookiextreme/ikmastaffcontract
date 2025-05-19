@@ -1,7 +1,7 @@
 @extends('layouts.backend.master')
 
 @section('title')
-    Senarai Permohonan Cuti
+    Status Permohonan Cuti
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Senarai Permohonan Cuti</h3>
+                    <h3 class="card-title">Status Permohonan Cuti</h3>
                     <div class="card-toolbar">
                         <a href="{{ route('staff.leave.new-request', ['user_id' => $user_id]) }}" type="button" class="btn btn-sm btn-success">
                             Tambah Permohonan Baru

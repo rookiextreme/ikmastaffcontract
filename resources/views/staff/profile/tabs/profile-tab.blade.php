@@ -152,7 +152,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4 mb-4 vals-row mt-4">
-                        <label for="race-other" class="required form-label">Lain-Lain</label>
+                        <label for="race-other" class="required form-label">Lain-Lain, Nyatakan</label>
                         <input type="text" class="form-control" id="race-other" name="race_other" value="{{ $staff->other_race }}" {{ $staff->other_race ? '' : 'disabled' }}>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -169,7 +169,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4 mb-4 vals-row mt-4">
-                        <label for="bumiputera-other" class="required form-label">Lain-Lain</label>
+                        <label for="bumiputera-other" class="required form-label">Lain-Lain, Nyatakan</label>
                         <input type="text" class="form-control" id="bumiputera-other" name="bumiputera_other" value="{{ $staff->bumiputera_other }}" {{ $staff->bumiputera_other ? '' : 'disabled' }}>
                         <div class="invalid-feedback"></div>
                     </div>

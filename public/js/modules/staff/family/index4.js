@@ -63,7 +63,6 @@ function famStoreUpdate(selector){
     let v = new Validscript('ms');
     v.validString('#fam-relation', 'Hubungan', true)
     v.validMix('#fam-name', 'Nama')
-    v.validMix('#fam-email', 'E-mail')
     v.validRegularDate('#fam-dob', 'Tarikh Lahir')
     v.validMix('#fam-phone', 'No. Telefon')
 
@@ -73,7 +72,7 @@ function famStoreUpdate(selector){
         return false;
     }
 
-    v.setNewEntry('id', $('#fam-id').val());
+    v.setNewEntry('fam_email', $('#fam-email').val());
     v.setNewEntry('staff_id', staff_id)
 
     http.fetch({
