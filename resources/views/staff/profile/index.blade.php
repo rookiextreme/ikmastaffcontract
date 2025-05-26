@@ -64,6 +64,18 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
+                                <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                    <div class="fw-semibold fs-6 text-gray-700">Tarikh Lantikan</div>
+                                    <!--begin::Number-->
+                                    <div class="d-flex align-items-center text-uppercase">
+                                        <div class="fs-2 fw-bold">
+                                            <div class="col-md-12 vals-row mt-4">
+                                                <input type="text" id="appointed-date" class="form-control" value="{{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Number-->
+                                </div>
                                 @if($staff->getStaffPosition->branch_position_id)
                                     <div
                                         class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
@@ -175,6 +187,36 @@
         let staff_id = $('#staff-id').val();
         let user_id = $('#user-id').val();
         let page = $('#page').val();
+        $("#appointed-date").flatpickr({
+            dateFormat: "d-m-Y",
+        });
+
+        $('#appointed-date').on('change', function(e){
+            let v = common.getForm(false)
+            v.append('date', $(this).val())
+            v.append('staff_id', user_id)
+
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}store-update-appointed`,
+                data: v,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                window.location.reload()
+                            }
+                        })
+                    }else{
+                        alerting.error(r.data);
+                    }
+                }
+            })
+        })
     </script>
 
     @if($page == 'main')

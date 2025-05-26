@@ -269,4 +269,23 @@ class StaffRepository
         $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;
         return $data;
     }
+
+    public function setAppointedDate(Request $request){
+        $date = $request->date;
+        $staff_id = $request->staff_id;
+
+        $m = $this->getStaffProfile($staff_id);
+//        echo '<pre>';
+//        print_r($m);
+//        echo '</pre>';
+//        die();
+        $m->date_appointed = $date ? $this->reverseDate($date) : null;
+        $m->save();
+
+        return [
+            'status' => 'success',
+            'message' => 'Tarikh Pelantikan Dikemaskini',
+        ];
+
+    }
 }

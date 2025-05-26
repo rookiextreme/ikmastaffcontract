@@ -195,4 +195,9 @@ class StaffController extends Controller
     public function deleteFamily(Request $request) : JsonResponse{
         return $this->setResponse($this->setHardDelete(StaffFamily::class, $request->id, 'Maklumat Keluarga'));
     }
+
+    public function storeUpdateAppointed(Request $request){
+        $m = $this->staffRepository->setAppointedDate($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
 }
