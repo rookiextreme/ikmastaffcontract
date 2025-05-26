@@ -27,6 +27,34 @@
                         </div>
                         <!--end::User-->
                     </div>
+                    <div class="d-flex flex-wrap flex-stack">
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-column flex-grow-1 pe-8">
+                            <!--begin::Stats-->
+                            <div class="d-flex flex-wrap">
+                                <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                    <div class="fw-semibold fs-6 text-gray-700">Penempatan</div>
+                                    <!--begin::Number-->
+                                    <div class="d-flex align-items-center text-uppercase">
+                                        <div class="fs-2 fw-bold">
+                                            @if($staff->getStaffPosition->branch_position_id)
+                                                <span class="text-info">{{ $staff->getStaffPosition->getBranch->name }}</span><br>
+                                                <span class="text-success">
+                                                <span class="text-success">
+                                                    {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
+                                                    ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
+                                                </span>
+                                            </span>
+                                            @else
+                                                <span class="text-danger">Sila Pilih Jawatan</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!--end::Number-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--end::Title-->
                     <!--begin::Stats-->
                     <div class="d-flex flex-wrap flex-stack">
@@ -44,26 +72,7 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
-                                <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                    <div class="fw-semibold fs-6 text-gray-700">Penempatan</div>
-                                    <!--begin::Number-->
-                                    <div class="d-flex align-items-center text-uppercase">
-                                        <div class="fs-2 fw-bold">
-                                            @if($staff->getStaffPosition->branch_position_id)
-                                            <span class="text-info">{{ $staff->getStaffPosition->getBranch->name }}</span><br>
-                                            <span class="text-success">
-                                                <span class="text-success">
-                                                    {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
-                                                    ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
-                                                </span>
-                                            </span>
-                                            @else
-                                                <span class="text-danger">Sila Pilih Jawatan</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <!--end::Number-->
-                                </div>
+
                                 <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
                                     <div class="fw-semibold fs-6 text-gray-700">Tarikh Lantikan</div>
                                     <!--begin::Number-->
@@ -76,7 +85,19 @@
                                     </div>
                                     <!--end::Number-->
                                 </div>
-                                @if($staff->getStaffPosition->branch_position_id)
+
+                                <!--end::Stat-->
+                            </div>
+                            <!--end::Stats-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    @if($staff->getStaffPosition->branch_position_id)
+                        <div class="d-flex flex-wrap flex-stack">
+                            <!--begin::Wrapper-->
+                            <div class="d-flex flex-column flex-grow-1 pe-8">
+                                <!--begin::Stats-->
+                                <div class="d-flex flex-wrap">
                                     <div
                                         class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
                                         <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
@@ -104,13 +125,10 @@
                                         </div>
                                         <!--end::Number-->
                                     </div>
-                                @endif
-                                <!--end::Stat-->
+                                </div>
                             </div>
-                            <!--end::Stats-->
                         </div>
-                        <!--end::Wrapper-->
-                    </div>
+                    @endif
                     <!--end::Stats-->
                 </div>
                 <!--end::Info-->
