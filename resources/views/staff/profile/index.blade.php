@@ -79,7 +79,13 @@
                                     <div class="d-flex align-items-center text-uppercase">
                                         <div class="fs-2 fw-bold">
                                             <div class="col-md-12 vals-row mt-4">
-                                                <input type="text" id="appointed-date" class="form-control" value="{{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}">
+                                                @role('super-admin|admin')
+                                                    <input type="text" id="appointed-date" class="form-control" value="{{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}">
+                                                @endrole
+                                                @role('approval-admin|staff|ketua_unit|penolong_pengarah|ketua_pengarah')
+                                                    {{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}
+                                                @endrole
+
                                             </div>
                                         </div>
                                     </div>
