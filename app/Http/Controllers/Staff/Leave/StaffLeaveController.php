@@ -129,7 +129,7 @@ class StaffLeaveController extends Controller
             })->addColumn('approver_name', function($data){
                 return strtoupper($data->approver_name);
             })->addColumn('reason', function($data){
-                return $data->reason ? strtoupper($data->reason) : '-';
+                return '<b class="text-primary text-decoration-underline">'.ucwords($data->leave_category).'</b><br>'.($data->reason ? strtoupper($data->reason) : '-');
             })->make();
     }
 }

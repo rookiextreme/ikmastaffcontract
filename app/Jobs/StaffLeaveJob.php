@@ -40,6 +40,12 @@ class StaffLeaveJob implements ShouldQueue
                     ->subject('Permohonan Cuti Anda Sedang Diproses');
                 $message->from('no-reply@ikma.gov.my', 'No-Reply @ IKMa');
             });
+
+            Mail::send('mail.staff-request-new-to-approver', ['user' => $user, 'entry' => $entry], function($message) use ($user, $type, $entry){
+                $message->to($entry->getApprover->getUser->email, $entry->getApprover->getUser->name)
+                    ->subject('Permohonan Cuti Baru Oleh '.ucwords(strtolower($user->name)));
+                $message->from('no-reply@ikma.gov.my', 'No-Reply @ IKMa');
+            });
         }
     }
 }

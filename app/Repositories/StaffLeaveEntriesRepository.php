@@ -158,7 +158,8 @@ class StaffLeaveEntriesRepository
             sle.created_at,
             lrs.name as l_status,
             u.name as approver_name,
-            ustaff.name as request_by
+            ustaff.name as request_by,
+            lc.name as leave_category
             FROM staff_leave_entries sle
             JOIN staff_positions sp ON sp.id = sle.staff_position_id
             JOIN staffs s ON s.id = sp.staff_id
@@ -167,6 +168,7 @@ class StaffLeaveEntriesRepository
             JOIN users ustaff ON ustaff.id = s.user_id
             '.($approval == true ? 'AND sa.user_id = '.$user_id : 'AND s.user_id = '.$user_id).'
             JOIN leave_request_statuses lrs ON lrs.id = sle.leave_request_status_id
+            JOIN leave_categories lc ON lc.id = sle.leave_category_id
             '.$searchStr.'
         ', $params);
 //        echo '<pre>';

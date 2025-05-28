@@ -85,7 +85,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-4 vals-row text-danger fw-bold">
                             * Cuti Separuh Hari (Syarat: Tidak melebihi 4 jam tidak termasuk waktu rehat) dan perlu mendapat kelulusan Pelulus<br>
-                            * MC (Syarat: Cuti sakit, Bersalin, Kuarantin)
+                            * Cuti Sakit (Syarat: Cuti sakit, Bersalin, Kuarantin)
                         </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-category" class="required form-label">Kategori Cuti</label>
