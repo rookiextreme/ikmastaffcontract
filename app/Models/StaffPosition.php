@@ -14,6 +14,10 @@ class StaffPosition extends Model
         return $this->hasOne(StaffLeave::class,'staff_position_id','id');
     }
 
+    public function getStaffLeaveEntries(){
+        return $this->hasMany(StaffLeaveEntry::class,'staff_position_id','id');
+    }
+
     public function getBranch(){
         return $this->hasOne(Branch::class,'id','branch_id');
     }

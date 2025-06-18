@@ -56,6 +56,6 @@ class StaffPositionRepository
     }
 
     public function getStaffPosition($staff_id){
-        return StaffPosition::with('getStaff', 'getStaffLeave')->where('staff_id', $staff_id)->first();
+        return StaffPosition::with('getStaff', 'getStaffLeave', 'getStaffLeaveEntries')->where('staff_id', $staff_id)->first();
     }
 }

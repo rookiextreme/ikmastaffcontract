@@ -33,8 +33,17 @@ class StaffLeaveRepository
         try{
             $leave = $m->getStaffLeave;
             $leave->leave_total = $new_leave_balance;
+            $leave->leave_taken = 0;
+            $leave->leave_balance = $new_leave_balance;
             $leave->save();
 
+            $getOldEntries = $m->getStaffLeaveEntries;
+            if(count($getOldEntries) > 0){
+                foreach($getOldEntries as $oldEntry){
+                    $oldEntry->old = true;
+                    $oldEntry->save();
+                }
+            }
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();

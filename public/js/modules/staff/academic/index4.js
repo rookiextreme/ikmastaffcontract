@@ -47,7 +47,8 @@ $(document).on('click','.academic-edit', function(){
                         common.setFormValue('#major-specialization', r.data.major_specialization, 'string');
                         common.setFormValue('#minor-specialization', r.data.minor_specialization, 'string');
                         common.setFormValue('#profession-cert', r.data.professional_certification, 'string');
-                        common.setFormValue('#profession-cert-date', r.data.professional_certification_date, 'string');
+                        common.setFormValue('#profession-cert-date-start', r.data.professional_certification_date_start, 'string');
+                        common.setFormValue('#profession-cert-date-end', r.data.professional_certification_date_end, 'string');
                         common.setFormValue('#overall-grade', r.data.overall_grade, 'string');
 
                         common.setFormValue('#academic-id', r.data.id, 'string');
@@ -71,10 +72,19 @@ function academicStoreUpdate(selector){
     v.validMix('#cert-name', 'Nama Sijil')
     v.validMix('#institution-name', 'Nama Institusi')
     v.validMix('#institution-location', 'Lokasi Institusi')
-    v.validMix('#major-specialization', 'Pengkhususan Major')
+    v.validUpload('#cert-upload', 'Fail Sijil', ['pdf', 'jpeg', 'jpg', 'png'], 'cert_upload', $('#academic-id').val() != '')
+    v.validUpload('#cert-pro-upload', 'Fail Sijil Professional', ['pdf', 'jpeg', 'jpg', 'png'], 'cert_pro_upload', true)
 
-    if($('#profession-cert-date').val() != ''){
-        v.validRegularDate('#profession-cert-date', 'Tarikh Penganugerahaan')
+    if($('#major-specialization').val() != ''){
+        v.validMix('#major-specialization', 'Pengkhususan Major')
+    }
+
+    if($('#profession-cert-date-start').val() != ''){
+        v.validRegularDate('#profession-cert-date-start', 'Tarikh Sah Laku Mula')
+    }
+
+    if($('#profession-cert-date-end').val() != ''){
+        v.validRegularDate('#profession-cert-date-end', 'Tarikh Sah Laku Tamat')
     }
 
     if($('#profession-cert').val() != ''){

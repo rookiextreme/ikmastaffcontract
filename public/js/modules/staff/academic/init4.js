@@ -1,6 +1,7 @@
-$("#profession-cert-date").flatpickr({
+$("#profession-cert-date-start, #profession-cert-date-end").flatpickr({
     dateFormat: "d-m-Y",
 });
+
 
 let academicModal = new Modals({selector: '#academic-modal'});
 
@@ -56,7 +57,8 @@ function resetAcademicForm(){
         ['#major-specialization', 'string'],
         ['#minor-specialization', 'string'],
         ['#profession-cert', 'string'],
-        ['#profession-cert-date', 'string'],
+        ['#profession-cert-date-start', 'string'],
+        ['#profession-cert-date-end', 'string'],
         ['#overall-grade', 'string'],
     ])
 

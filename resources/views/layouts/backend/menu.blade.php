@@ -36,6 +36,26 @@
                 <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
                      data-kt-menu="true" data-kt-menu-expand="false">
                     <!--end:Menu item-->
+                    @role('super-admin|admin')
+                        <div class="menu-item pt-5">
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Profil</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link"
+                               href="{{ route('staff.profile', ['user_id' => Auth::user(), 'page' => 'resetpassword']) }}">
+                                    <span class="menu-icon">
+                                    <i class="ki-duotone ki-abstract-13 fs-2">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                    </i>
+                                    </span>
+                                <span class="menu-title">Tetapan Kata Laluan</span>
+                            </a>
+                        </div>
+                    @endrole
+
                     @role('staff|ketua_unit|penolong_pengarah|ketua_pengarah')
                         <div class="menu-item pt-5">
                             <div class="menu-content">

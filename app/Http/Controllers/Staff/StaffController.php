@@ -102,7 +102,13 @@ class StaffController extends Controller
                 return $data->institution_name;
             })
             ->addColumn('certificate', function($data){
-                return $data->certificate_name;
+                $pro = $data->certification_professional ? '<a class="text-warning" target="_blank" href="'.asset('uploads/staff/academics/cert_pro/'.$data->certification_professional).'">Papar Sijil</a>' : '';
+                $cert = $data->certificate_file ? '<br><a target="_blank" href="'.asset('uploads/staff/academics/cert/'.$data->certificate_file).'">Papar Sijil Professional</a>' : '';
+
+                if($pro == null && $cert == null){
+                    return '-';
+                }
+                return $pro.$cert;
             })
             ->addColumn('specialization', function($data){
                 return '<span class="text-primary">'.ucwords($data->major_specialization).'</span>'.($data->minor_specialization ? '<br><span class="text-info">'.ucwords($data->minor_specialization).'</span>' : '');

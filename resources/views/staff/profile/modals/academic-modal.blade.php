@@ -12,6 +12,13 @@
 
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-md-5 vals-row mb-4">
+                        <label for="cert-name" class="required form-label">Fail Sijil (PDF, JPG, JPEG)</label>
+                        <input type="file" class="form-control text-uppercase" id="cert-upload" value="">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4 mb-4 vals-row">
                         <label for="qualification" class="required form-label">Tahap Pendidikan</label>
                         <select class="form-control" id="qualification" data-control="select2">
@@ -38,7 +45,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-6 vals-row mb-4">
-                        <label for="major-specialization" class="required form-label">Bidang Pengkhuhusan Major</label>
+                        <label for="major-specialization" class="form-label">Bidang Pengkhuhusan Major</label>
                         <input type="text" class="form-control text-uppercase" id="major-specialization" value="">
                         <div class="invalid-feedback"></div>
                     </div>
@@ -53,9 +60,21 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4 vals-row mb-4">
-                        <label for="profession-cert-date" class="form-label">Tarikh Penganugerahaan</label>
-                        <input type="text" class="form-control text-uppercase" id="profession-cert-date" value="">
+                        <label for="profession-cert-date" class="form-label">Tarikh Sah Laku Mula</label>
+                        <input type="text" class="form-control text-uppercase" id="profession-cert-date-start" value="">
                         <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="profession-cert-date" class="form-label">Tarikh Sah Laku Tamat</label>
+                        <input type="text" class="form-control text-uppercase" id="profession-cert-date-end" value="">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 vals-row mb-4">
+                            <label for="cert-name" class="required form-label">Fail Sijil Professional(PDF, JPG, JPEG)</label>
+                            <input type="file" class="form-control text-uppercase" id="cert-pro-upload" value="">
+                            <div class="invalid-feedback"></div>
+                        </div>
                     </div>
                     <div class="col-md-4 vals-row mb-4">
                         <label for="overall-grade" class="form-label">Gred Keseluruhan</label>

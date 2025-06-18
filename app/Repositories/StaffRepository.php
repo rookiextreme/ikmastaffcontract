@@ -127,7 +127,9 @@ class StaffRepository
             ac.major_specialization,
             ac.minor_specialization,
             ac.overall_grade,
-            aq.name as qualification
+            aq.name as qualification,
+            certificate_file,
+            certification_professional
             FROM staff_academics ac
             JOIN academic_qualifications aq ON aq.id = ac.academic_qualification_id
             AND ac.staff_id = ?
@@ -146,9 +148,12 @@ class StaffRepository
         $institution_location = $request->institution_location;
         $major_specialization = $request->major_specialization;
         $minor_specialization = $request->minor_specialization;
-        $profession_cert_date = $request->profession_cert_date;
+        $profession_cert_date_start = $request->profession_cert_date_start;
+        $profession_cert_date_end = $request->profession_cert_date_end;
         $profession_cert = $request->profession_cert;
         $overall_grade = $request->overall_grade;
+        $cert_upload = $request->file('cert_upload');
+        $cert_pro_upload = $request->file('cert_pro_upload');
         $id = $request->id;
         $staff_id = $request->staff_id;
 
@@ -163,8 +168,18 @@ class StaffRepository
             $m->major_specialization = $major_specialization;
             $m->minor_specialization = $minor_specialization;
             $m->professional_certification = $profession_cert;
-            $m->professional_certification_date = $profession_cert_date ? $this->reverseDate($profession_cert_date) : null;
+            $m->professional_certification_date_start = $profession_cert_date_start ? $this->reverseDate($profession_cert_date_start) : null;
+            $m->professional_certification_date_end = $profession_cert_date_end ? $this->reverseDate($profession_cert_date_end) : null;
             $m->overall_grade = $overall_grade;
+            if($cert_upload){
+                $up = $this->uploadImage($cert_upload, 'uploads/staff/academics/cert');
+                $m->certificate_file = $up;
+            }
+
+            if($cert_pro_upload){
+                $up = $this->uploadImage($cert_pro_upload, 'uploads/staff/academics/cert_pro');
+                $m->certification_professional = $up;
+            }
             $m->save();
 
             $complete = StaffAcademic::where('staff_id', $staff_id)->count();
@@ -199,7 +214,8 @@ class StaffRepository
         $data['major_specialization'] = $m->major_specialization;
         $data['minor_specialization'] = $m->minor_specialization;
         $data['professional_certification'] = $m->professional_certification;
-        $data['professional_certification_date'] = $m->professional_certification_date ? $this->regularDate($m->professional_certification_date) : null;
+        $data['professional_certification_date_start'] = $m->professional_certification_date_start ? $this->regularDate($m->professional_certification_date_start) : null;
+        $data['professional_certification_date_end'] = $m->professional_certification_date_end ? $this->regularDate($m->professional_certification_date_end) : null;
         $data['overall_grade'] = $m->overall_grade;
         return $data;
     }

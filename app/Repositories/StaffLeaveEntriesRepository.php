@@ -169,6 +169,7 @@ class StaffLeaveEntriesRepository
             '.($approval == true ? 'AND sa.user_id = '.$user_id : 'AND s.user_id = '.$user_id).'
             JOIN leave_request_statuses lrs ON lrs.id = sle.leave_request_status_id
             JOIN leave_categories lc ON lc.id = sle.leave_category_id
+            AND sle.old = 0
             '.$searchStr.'
         ', $params);
 //        echo '<pre>';
