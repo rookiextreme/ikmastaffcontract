@@ -10,11 +10,11 @@ $('#race').on('change', function(){
     ])
 })
 
-$('#bumiputera').on('change', function(){
-    $('#bumiputera-other').attr('disabled', $(this).find(':selected').attr('data-other') == 1 ? false : true).val('');
-
-    common.resetForm([
-        ['#bumiputera-other', 'string'],
-    ])
-})
+// $('#bumiputera').on('change', function(){
+//     $('#bumiputera-other').attr('disabled', $(this).find(':selected').attr('data-other') == 1 ? false : true).val('');
+//
+//     common.resetForm([
+//         ['#bumiputera-other', 'string'],
+//     ])
+// })
 

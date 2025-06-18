@@ -14,6 +14,13 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    <div class="col-md-4 vals-row mt-4">
+                        <label for="name" class="required form-label">Gambar Profil</label>
+                        <input type="file" class="form-control text-uppercase" id="profile-picture" value="">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-2 mb-4 vals-row mt-4">
                         <label for="salutation" class="required form-label">Nama Gelaran</label>
                         <select class="form-control" id="salutation" name="salutation" data-control="select2">
@@ -24,6 +31,7 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
+
                     <div class="col-md-4 vals-row mt-4">
                         <label for="name" class="required form-label">Nama</label>
                         <input type="text" class="form-control text-uppercase" id="name" name="name" value="{{ $staff->getUser->name }}">
@@ -134,7 +142,7 @@
                     </div>
                     <div class="col-md-4 mt-4 vals-row">
                         <label for="bumiputera" class="required form-label">Bumiputera</label>
-                        <select class="form-control" id="bumiputera" name="bumiputera" data-control="select2">
+                        <select class="form-control" id="bumiputera" data-control="select2">
                             <option>Sila Pilih</option>
                             @foreach($bumiputera as $bp)
                                 <option data-other="{{ $bp->other_flag }}" value="{{ $bp->id }}" {{ $staff->bumiputera_id ? $bp->id == $staff->bumiputera_id ? 'selected' : '' : '' }}>{{ $bp->name }}</option>

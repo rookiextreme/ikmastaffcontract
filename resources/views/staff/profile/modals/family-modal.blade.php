@@ -19,6 +19,26 @@
                             <option value="Perempuan">Isteri</option>
                             <option value="Ibu">Ibu</option>
                             <option value="Bapa">Bapa</option>
+                            <option value="Ibu Saudara">Ibu Saudara</option>
+                            <option value="Bapa Saudara">Bapa Saudara</option>
+                            <option value="Saudara Kandung">Saudara Kandung</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-12 vals-row mb-4">
+                        <label for="fam-count" class="form-label">Anak Yang Ke? (Jika Hubungan Yang Dipilih Adalah Anak)</label>
+                        <select class="form-select" data-control="select2" id="fam-count">
+                            <option value="0">Sila Pilih</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -28,7 +48,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">
-                        <label for="fam-email" class="required form-label">E-mail</label>
+                        <label for="fam-email" class="form-label">E-mail</label>
                         <input type="text" class="form-control" id="fam-email" value="">
                         <div class="invalid-feedback"></div>
                     </div>

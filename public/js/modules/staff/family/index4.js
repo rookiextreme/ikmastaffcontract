@@ -45,6 +45,8 @@ $(document).on('click','.fam-edit', function(){
                         common.setFormValue('#fam-email', r.data.email, 'string')
                         common.setFormValue('#fam-dob', r.data.dob, 'string')
                         common.setFormValue('#fam-phone', r.data.phone, 'string')
+                        common.setFormValue('#fam-count', r.data.child_count, 'dropdown')
+                        $('#fam-count').attr('disabled', r.data.relation == 'Anak' ? false : true)
                         common.setFormValue('#fam-id', r.data.id, 'string');
                     }else{
                         alerting.error(r.data);
@@ -66,6 +68,10 @@ function famStoreUpdate(selector){
     v.validRegularDate('#fam-dob', 'Tarikh Lahir')
     v.validMix('#fam-phone', 'No. Telefon')
 
+    if($('#fam-relation').val() == 'Anak'){
+        v.validInt('#fam-count', 'Anak Yang Ke?', true)
+    }
+
     if(v.checkFail()){
         alerting.formRequired();
         common.buttonLoadOff(selector);
@@ -73,6 +79,7 @@ function famStoreUpdate(selector){
     }
 
     v.setNewEntry('fam_email', $('#fam-email').val());
+    v.setNewEntry('id', $('#fam-id').val());
     v.setNewEntry('staff_id', staff_id)
 
     http.fetch({

@@ -15,15 +15,15 @@ class RacesSeeder extends Seeder
     {
         $data = [
             [
-                'Malay',
+                'Melayu',
                 false
             ],
             [
-                'Chinese',
+                'Cina',
                 false
             ],
             [
-                'Indian',
+                'India',
                 false
             ],
             [

@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-md-12 vals-row mb-4">
                         <label for="name" class="required form-label">Nama</label>
-                        <input type="text" class="form-control text-uppercase" id="name" value="">
+                        <input type="text" class="form-control" id="name" value="">
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">

@@ -125,7 +125,20 @@
     <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
         <!--begin::Menu wrapper-->
         <div class="cursor-pointer symbol symbol-35px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-            <img src="{{ asset('assets/images/user-profile.png') }}" class="rounded-3" alt="user" />
+            @role('super-admin|admin')
+                <img src="{{ asset('assets/images/user-profile.png') }}" class="rounded-3" alt="user" />
+            @endrole
+            @role('staff|ketua_unit|penolong_pengarah|ketua_pengarah')
+                @if(Auth::user()->getStaff)
+                    @if(Auth::user()->getStaff->profile_picture)
+                        <img src="{{ asset('uploads/staff/profile_picture/'.Auth::user()->getStaff->profile_picture) }}" class="rounded-3" alt="user" />
+                    @else
+                        <img src="{{ asset('assets/images/user-profile.png') }}" class="rounded-3" alt="user" />
+                    @endif
+                @else
+                    <img src="{{ asset('assets/images/user-profile.png') }}" class="rounded-3" alt="user" />
+                @endif
+            @endrole
         </div>
         <!--begin::User account menu-->
         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">

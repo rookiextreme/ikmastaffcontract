@@ -87,7 +87,7 @@
                                     Sila Log Masuk Dengan E-Mel Dan Kata Laluan Di Atas <br><br>
 
                                     @if($user->hasRole('super-admin|admin|approval-admin'))
-                                        <a href="{{ route('admin.course.list') }}">Klik Disini</a> Dan Log Masuk
+                                        <a href="{{ route('staff.profile', ['user_id' => $user->id, 'page' => 'main']) }}">Klik Disini</a> Dan Log Masuk
                                     @elseif($user->hasRole('staff'))
                                         <a href="{{ route('staff.profile', ['user_id' => $user->id, 'page' => 'main']) }}">Klik Disini</a> Dan Log Masuk
                                     @endif

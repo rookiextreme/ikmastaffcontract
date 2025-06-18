@@ -53,6 +53,7 @@ class StaffRepository
         $salutation = $request->salutation;
         $religion = $request->religion;
         $blood_type = $request->blood_type;
+        $profile_picture = $request->file('profile_picture');
 
         $staff_id = $request->staff_id;
 
@@ -78,6 +79,11 @@ class StaffRepository
             $staff->gender_id = $gender;
             $staff->salutation_id = $salutation;
             $staff->religion_id = $religion;
+
+            if($profile_picture){
+                $up = $this->uploadImage($profile_picture, 'uploads/staff/profile_picture');
+                $staff->profile_picture = $up;
+            }
 
             $existUser = $this->userRepository->checkExist($email, $identification_no, $staff->user_id);
             if($existUser['status'] == 'exist'){
@@ -227,6 +233,7 @@ class StaffRepository
         $fam_relation = $request->fam_relation;
         $fam_phone = $request->fam_phone;
         $fam_dob = $request->fam_dob;
+        $fam_count = $request->fam_count;
         $id = $request->id;
         $staff_id = $request->staff_id;
 
@@ -240,6 +247,7 @@ class StaffRepository
             $m->phone = $fam_phone;
             $m->gender = 1;
             $m->dob = $fam_dob ? $this->reverseDate($fam_dob) : null;
+            $m->child_count = $fam_relation == 'Anak' ? $fam_count : 0;
             $m->save();
 
             DB::commit();
@@ -266,6 +274,7 @@ class StaffRepository
         $data['relation'] = $m->relation;
         $data['phone'] = $m->phone;
         $data['email'] = $m->email;
+        $data['child_count'] = $m->child_count;
         $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;
         return $data;
     }

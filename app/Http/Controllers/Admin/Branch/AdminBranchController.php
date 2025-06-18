@@ -41,7 +41,7 @@ class AdminBranchController extends Controller
                 }
             ])
             ->addColumn('branch', function($data){
-                return strtoupper($data->branch);
+                return ucwords(strtolower($data->branch));
             })->addColumn('state', function($data){
                 return $data->state;
             })->make();

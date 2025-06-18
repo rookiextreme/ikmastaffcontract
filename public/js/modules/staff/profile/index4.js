@@ -15,6 +15,7 @@ $('#update-profile').on('click', function(){
     v.validRegularDate('#dob', 'Tarikh Lahir')
     v.validMix('#birth-certificate', 'No. Sijil Lahir')
     v.validInt('#birth-country', 'Negara Lahir', true)
+    v.validUpload('#profile-picture', 'Gambar Profil', ['jpg', 'png', 'jpeg'], 'profile_picture', true)
 
     if(v.getFormDataByKey('country') == 106){
         v.validInt('#state', 'Negeri', true)

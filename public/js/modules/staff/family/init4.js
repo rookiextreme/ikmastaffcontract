@@ -50,9 +50,19 @@ function resetFamForm(){
         ['#fam-name', 'string'],
         ['#fam-email', 'string'],
         ['#fam-phone', 'string'],
+        ['#fam-count', 'dropdown'],
         ['#fam-dob', 'string'],
-
     ])
+
+    $('#fam-count').attr('disabled', false)
 
     common.setFormValue('#fam-id', '', 'string');
 }
+
+$('#fam-relation').on('change', function() {
+    if ($(this).val() === 'Anak') {
+        $('#fam-count').prop('disabled', false);
+    } else {
+        $('#fam-count').prop('disabled', true);
+    }
+});

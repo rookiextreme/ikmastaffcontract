@@ -15,13 +15,13 @@ class LeaveCategorySeeder extends Seeder
     {
         $data = [
             [
-                'Cuti Tahunan',
+                'Cuti Rehat',
                 true,
                 false,
                 false
             ],
             [
-                'Cuti Separuh Hari',
+                'Kebenaran Keluar Pejabat',
                 false,
                 true,
                 false
