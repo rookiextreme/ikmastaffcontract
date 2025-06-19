@@ -1,3 +1,62 @@
+$(document).on('click', '.approval-change', function(){
+    let id = common.getRowId(this, 'data-id');
+    let requester = common.getRowId(this, 'data-requester');
+    let requester_branch = common.getRowId(this, 'data-branch');
+
+    $('#requester-id').val(requester)
+    $('#requester-branch-id').val(requester_branch)
+    $('#leave-id').val(id)
+
+    approverModal.show({
+        title: 'Ubah Pelulus',
+        buttons: [
+            {
+                selector: '#approver-store-update',
+                show: true
+            }
+        ],
+    });
+})
+
+$('#approver-store-update').on('click', function(){
+    common.buttonLoadOnPress('#approver-store-update');
+    let v = new Validscript('ms');
+
+    v.validInt('#approver-pick', '', true)
+
+    if(v.checkFail()){
+        alerting.formRequired();
+        common.buttonLoadOff('#approver-store-update');
+        return false;
+    }
+
+    v.setNewEntry('id', $('#leave-id').val());
+
+    http.fetch({
+        url: `${common.getUrl()}${moduleUrl}update-approver`,
+        data: v.data,
+        method: 'POST',
+        callback: function(r){
+            if(r.status){
+                alerting.fireSwal({
+                    text: r.data.message,
+                    icon: 'success',
+                    buttonColor: 'btn btn-success',
+                    confirmButton: 'Close',
+                    callback: function(){
+                        approverModal.hide();
+                        table.reload();
+                    }
+                })
+            }else{
+                alerting.error(r.data);
+            }
+
+            common.buttonLoadOff('#approver-store-update');
+        }
+    })
+})
+
 $(document).on('click', '.approval-delete', function(){
     let data = common.getForm();
     data.append('id', common.getRowId(this, 'data-id'));

@@ -11,6 +11,7 @@ use App\Repositories\StaffRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StaffLeaveController extends Controller
 {
@@ -53,6 +54,7 @@ class StaffLeaveController extends Controller
     }
 
     public function requestList(Request $request){
+
         $entries = $this->staffLeaveEntriesRepository->getRequestListByUserId($request);
 
         return SymTable::of($entries)
@@ -111,15 +113,22 @@ class StaffLeaveController extends Controller
     public function approvalList(Request $request){
         $request->request->add(['approval' => true]);
         $entries = $this->staffLeaveEntriesRepository->getRequestListByUserId($request);
+        $is_admin = Auth::user()->hasRole('admin');
 
         return SymTable::of($entries)
             ->addRowAttr([
                 'data-id' => function($data){
                     return $data->id;
+                },
+                'data-requester' =>  function($data){
+                    return $data->requester_id;
+                },
+                'data-branch' =>  function($data){
+                    return $data->branch_id;
                 }
             ])
-            ->addColumn('name', function($data){
-                return strtoupper($data->request_by).'<br> <b class="text-success">'.$this->regularDate($data->created_at).'<b>';
+            ->addColumn('name', function($data) use ($is_admin){
+                return strtoupper($data->request_by).'<br> <b class="text-success">'.$this->regularDate($data->created_at).'<b>'.($is_admin ? '<br><b class="text-info">'.ucwords(strtolower($data->approver_name)).'</b>' : '').'</b></b>';
             })->addColumn('h_date', function($data){
                 return $this->regularDate($data->start_date).' <br>Hingga<br> '.$this->regularDate($data->end_date);
             })->addColumn('days', function($data){
@@ -131,5 +140,10 @@ class StaffLeaveController extends Controller
             })->addColumn('reason', function($data){
                 return '<b class="text-primary text-decoration-underline">'.ucwords($data->leave_category).'</b><br>'.($data->reason ? strtoupper($data->reason) : '-');
             })->make();
+    }
+
+    public function updateApprover(Request $request){
+        $m = $this->staffLeaveEntriesRepository->approverUpdate($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
 }

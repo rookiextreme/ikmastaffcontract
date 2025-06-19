@@ -56,6 +56,25 @@
                         </div>
                     @endrole
 
+                    @role('admin')
+                        <div class="menu-item pt-5">
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Cuti</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link"
+                               href="{{ route('staff.leave.approval', ['user_id' => Auth::user()->id]) }}">
+                                                    <span class="menu-icon">
+                                                    <i class="ki-duotone ki-abstract-13 fs-2">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    </i>
+                                                    </span>
+                                <span class="menu-title">Pengesahan Cuti</span>
+                            </a>
+                        </div>
+                    @endrole
                     @role('staff|ketua_unit|penolong_pengarah|ketua_pengarah')
                         <div class="menu-item pt-5">
                             <div class="menu-content">

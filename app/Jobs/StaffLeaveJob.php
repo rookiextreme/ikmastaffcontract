@@ -46,6 +46,8 @@ class StaffLeaveJob implements ShouldQueue
                     ->subject('Permohonan Cuti Baru Oleh '.ucwords(strtolower($user->name)));
                 $message->from('no-reply@ikma.gov.my', 'No-Reply @ IKMa');
             });
+        }elseif ($this->type == 'approver-change'){
+
         }
     }
 }

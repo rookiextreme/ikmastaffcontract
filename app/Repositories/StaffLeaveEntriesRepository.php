@@ -9,6 +9,7 @@ use App\Models\PublicHoliday;
 use App\Models\Staff;
 use App\Models\StaffLeaveEntry;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StaffLeaveEntriesRepository
@@ -137,7 +138,7 @@ class StaffLeaveEntriesRepository
         $searchStr = '';
 
         if($search){
-            $searchStr = 'WHERE b.name LIKE ? OR s.name LIKE ?';
+            $searchStr = 'WHERE ustaff.name LIKE ? OR u.name LIKE ?';
             $params = [
                 '%'.$search.'%',
                 '%'.$search.'%',
@@ -146,6 +147,8 @@ class StaffLeaveEntriesRepository
             $params = [
             ];
         }
+
+        $adminBypass = Auth::user()->hasRole('admin') ? '' : ($approval ? 'AND sa.user_id = '.$user_id : 'AND s.user_id = '.$user_id);
 
         $m = DB::select('
             SELECT
@@ -159,14 +162,16 @@ class StaffLeaveEntriesRepository
             lrs.name as l_status,
             u.name as approver_name,
             ustaff.name as request_by,
-            lc.name as leave_category
+            lc.name as leave_category,
+            sp.branch_id,
+            sp.staff_id as requester_id
             FROM staff_leave_entries sle
             JOIN staff_positions sp ON sp.id = sle.staff_position_id
             JOIN staffs s ON s.id = sp.staff_id
             JOIN staffs sa ON sa.id = sle.approver_id
             JOIN users u ON u.id = sa.user_id
             JOIN users ustaff ON ustaff.id = s.user_id
-            '.($approval == true ? 'AND sa.user_id = '.$user_id : 'AND s.user_id = '.$user_id).'
+            '.$adminBypass.'
             JOIN leave_request_statuses lrs ON lrs.id = sle.leave_request_status_id
             JOIN leave_categories lc ON lc.id = sle.leave_category_id
             AND sle.old = 0
@@ -277,6 +282,28 @@ class StaffLeaveEntriesRepository
         }
 
         return $data;
+    }
+
+    public function approverUpdate(Request $request){
+        $approver_pick = $request->approver_pick;
+        $id = $request->id;
+
+        $entry = StaffLeaveEntry::find($id);
+
+        if($entry->approver_id == $approver_pick){
+            return [
+                'status' => 'error',
+                'message' => 'Pelulus Ini Sudah Dipilih Untuk Permohonan Ini'
+            ];
+        }
+
+        $entry->approver_id = $approver_pick;
+        $entry->save();
+        dispatch(new StaffLeaveJob($entry->id, 'new-request'));
+        return [
+            'status' => 'success',
+            'message' => 'Pelulus Diubah'
+        ];
     }
 }
 

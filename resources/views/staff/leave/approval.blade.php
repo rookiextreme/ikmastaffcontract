@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.backend.master')
 
 @section('title')
@@ -22,7 +23,12 @@
                                 <table class="table table-bordered text-center align-middle" id="approval-list">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
-                                        <th style="width: 20%">Nama Pemohon/<br>Tarikh Permohonan</th>
+                                        <th style="width: 20%">
+                                            Nama Pemohon/<br>Tarikh Permohonan
+                                            @if(Auth::user()->hasRole('admin'))
+                                                /<br>Pelulus
+                                            @endif
+                                        </th>
                                         <th style="width: 15%">Tarikh Cuti</th>
                                         <th style="width: 15%">Jumlah Hari</th>
                                         <th style="width: 20%">Sebab Bercuti</th>
@@ -55,6 +61,7 @@
     <input type="hidden" id="is-admin" value="{{ $is_role['admin'] }}">
     <input type="hidden" id="is-approval" value="{{ $is_role['approvaladmin'] }}">
     <input type="hidden" id="is-staff" value="{{ $is_role['staff'] }}">
+    @include('staff.leave.modals.approver-change')
 
 @endsection
 
@@ -74,6 +81,6 @@
         let is_staff = $('#is-staff').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}?v=2"></script>
 @endsection
