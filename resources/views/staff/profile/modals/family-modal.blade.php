@@ -19,6 +19,8 @@
                             <option value="Perempuan">Isteri</option>
                             <option value="Ibu">Ibu</option>
                             <option value="Bapa">Bapa</option>
+                            <option value="Ibu">Ibu Mertua</option>
+                            <option value="Bapa">Bapa Mertua</option>
                             <option value="Ibu Saudara">Ibu Saudara</option>
                             <option value="Bapa Saudara">Bapa Saudara</option>
                             <option value="Saudara Kandung">Saudara Kandung</option>
