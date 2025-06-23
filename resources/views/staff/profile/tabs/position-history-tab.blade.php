@@ -58,7 +58,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="2" class="text-center">
+                                            <td colspan="3" class="text-center">
                                                 Tiada Sejarah Jawatan
                                             </td>
                                         </tr>
