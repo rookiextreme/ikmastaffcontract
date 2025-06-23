@@ -46,4 +46,8 @@ class Staff extends Model
     public function getStaffPosition(){
         return $this->hasOne(StaffPosition::class, 'staff_id', 'id');
     }
+
+    public function getStaffPositionHistory(){
+        return $this->hasMany(StaffPositionHistory::class, 'staff_id', 'id')->orderBy('id', 'desc');
+    }
 }

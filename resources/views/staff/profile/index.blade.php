@@ -175,6 +175,10 @@
                             <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position' ? 'active' : '' }}"
                                href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position']) }}">Tetapan Jawatan</a>
                         </li>
+                            <li class="nav-item mt-2">
+                                <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position_history' ? 'active' : '' }}"
+                                   href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position_history']) }}">Sejarah Jawatan</a>
+                            </li>
                     @endif
                 @endif
                 @if(Auth::user()->hasRole('super-admin|admin'))
@@ -196,6 +200,8 @@
         @include('staff.profile.tabs.password-tab')
     @elseif($page == 'position')
         @include('staff.profile.tabs.position-tab')
+    @elseif($page == 'position_history')
+        @include('staff.profile.tabs.position-history-tab')
     @elseif($page == 'family')
         @include('staff.profile.modals.family-modal')
         @include('staff.profile.tabs.family-tab')
