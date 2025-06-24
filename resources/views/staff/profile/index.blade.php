@@ -46,6 +46,8 @@
                                                         {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
                                                         ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
                                                     </span>
+                                                    <br>
+                                                    <span class="{{ $staff->work_status == 1 ? 'text-danger' : 'text-success' }}">{{ $staff->work_status == 1 ? 'Perkhidmatan Tamat' : 'Perkhidmatan Aktif'  }}</span>
                                                 </span>
                                                 @else
                                                     <span class="text-danger">Sila Pilih Jawatan</span>
@@ -89,6 +91,18 @@
                                                         {{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}
                                                     @endrole
 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Number-->
+                                    </div>
+                                    <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Status Kerja</div>
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center text-uppercase">
+                                            <div class="fs-2 fw-bold">
+                                                <div class="col-md-12 vals-row mt-4">
+                                                    <button class="btn btn-{{ $staff->work_status == 0 ? 'danger' :'success' }}" id="set-work-status">{{ $staff->work_status == 0 ? 'Tamat Perkhidmatan' : 'Aktifkan Pekhidmatan' }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -253,6 +267,42 @@
                 }
             })
         })
+
+        $('#set-work-status').on('click', function(e){
+            let v = common.getForm(false)
+            v.append('staff_id', user_id)
+
+            alerting.fireSwal({
+                text: 'Adakah Anda Pasti?',
+                icon: 'error',
+                confirmButton: 'Ya',
+                buttonColor: 'btn btn-warning',
+                showCancelButton: true,
+                callback: function(){
+                    http.fetch({
+                        url: `${common.getUrl()}${moduleUrl}store-update-work-status`,
+                        data: v,
+                        method: 'POST',
+                        callback: function(r){
+                            if(r.status){
+                                alerting.fireSwal({
+                                    text: r.data.message,
+                                    icon: 'success',
+                                    buttonColor: 'btn btn-success',
+                                    confirmButton: 'Close',
+                                    callback: function(){
+                                        window.location.reload()
+                                    }
+                                })
+                            }else{
+                                alerting.error(r.data);
+                            }
+                        }
+                    })
+                }
+            })
+        })
+
     </script>
 
     @if($page == 'main')

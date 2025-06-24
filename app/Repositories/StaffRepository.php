@@ -313,4 +313,18 @@ class StaffRepository
         ];
 
     }
+
+    public function setWorkStatus(Request $request){
+        $staff_id = $request->staff_id;
+
+        $m = $this->getStaffProfile($staff_id);
+        $old = $m->work_status;
+        $m->work_status = !$old;
+        $m->save();
+
+        return [
+            'status' => 'success',
+            'message' => 'Status Perkhidmatan Dikemaskini',
+        ];
+    }
 }

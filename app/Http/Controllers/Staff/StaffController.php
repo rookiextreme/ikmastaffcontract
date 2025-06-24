@@ -206,4 +206,9 @@ class StaffController extends Controller
         $m = $this->staffRepository->setAppointedDate($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
+
+    public function storeUpdateWorkStatus(Request $request){
+        $m = $this->staffRepository->setWorkStatus($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
 }

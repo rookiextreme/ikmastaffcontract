@@ -46,9 +46,13 @@
                                                 </td>
                                                 <td>
                                                     @if($x == 0)
-                                                        <span class="text-success">Ya</span>
+                                                        @if($staff->work_status == 1)
+                                                            <span class="text-danger">Tamat</span>
+                                                        @else
+                                                            <span class="text-success">Ya</span>
+                                                        @endif
                                                     @else
-                                                        -
+                                                        <span class="text-danger">Tamat</span>
                                                     @endif
                                                 </td>
                                             </tr>

@@ -25,6 +25,8 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/store-update-family', [StaffController::class, 'storeUpdateFamily']);
             Route::post('/get-info-family', [StaffController::class, 'getFamilyInfo']);
             Route::post('/delete-family', [StaffController::class, 'deleteFamily']);
+            Route::post('/store-update-work-status', [StaffController::class, 'storeUpdateWorkStatus']);
+
         });
 
         Route::group(['prefix' => 'leave'], function () {
