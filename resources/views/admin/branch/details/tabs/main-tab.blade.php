@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-4 vals-row mt-4">
                         <label for="salutation" class="required form-label">Nama Gelaran</label>
-                        <input type="text" class="form-control" id="name" value="{{ ucwords(strtolower($branch->name)) }}">
+                        <input type="text" class="form-control" id="name" value="{{ $branch->name }}">
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4 mt-4 vals-row">
