@@ -1,3 +1,7 @@
+$("#position-start-date").flatpickr({
+    dateFormat: "d-m-Y",
+});
+
 $('#state-select').on('change', function (){
     window.location.href = `${common.getUrl()}${moduleUrl}${user_id}/${page}?state_select=${$(this).val()}`;
 })

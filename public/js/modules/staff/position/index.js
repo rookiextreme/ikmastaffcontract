@@ -4,6 +4,7 @@ $('#update-position').on('click', function(){
     v.validInt('#state-select', 'Negeri', true)
     v.validInt('#branch-select', 'Penempatan', true)
     v.validInt('#position-select', 'Jawatan/Gred', true)
+    v.validRegularDate('#position-start-date', 'Tarikh Mula Lantikan')
 
     if (v.checkFail()) {
         alerting.formRequired();

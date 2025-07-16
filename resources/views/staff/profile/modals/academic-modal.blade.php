@@ -44,17 +44,17 @@
                         <textarea class="form-control" id="institution-location"></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-6 vals-row mb-4">
+                    <div class="col-md-6 vals-row mb-4" style="display:none">
                         <label for="major-specialization" class="form-label">Bidang Pengkhuhusan Major</label>
                         <input type="text" class="form-control text-uppercase" id="major-specialization" value="">
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-6 vals-row mb-4">
+                    <div class="col-md-6 vals-row mb-4" style="display:none">
                         <label for="minor-specialization" class="form-label">Bidang Pengkhuhusan Minor (Jika Ada)</label>
                         <input type="text" class="form-control text-uppercase" id="minor-specialization" value="">
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-4 vals-row mb-4">
+                    <div class="col-md-4 vals-row mb-4" style="display:none">
                         <label for="profession-cert" class="form-label">Kelayakan Sijil Professional</label>
                         <input type="text" class="form-control text-uppercase" id="profession-cert" value="">
                         <div class="invalid-feedback"></div>
@@ -69,18 +69,19 @@
                         <input type="text" class="form-control text-uppercase" id="profession-cert-date-end" value="">
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-5 vals-row mb-4">
-                            <label for="cert-name" class="required form-label">Fail Sijil Professional(PDF, JPG, JPEG)</label>
-                            <input type="file" class="form-control text-uppercase" id="cert-pro-upload" value="">
-                            <div class="invalid-feedback"></div>
-                        </div>
-                    </div>
                     <div class="col-md-4 vals-row mb-4">
                         <label for="overall-grade" class="form-label">Gred Keseluruhan</label>
                         <input type="text" class="form-control text-uppercase" id="overall-grade" value="">
                         <div class="invalid-feedback"></div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4 vals-row mb-4" style="display:none">
+                            <label for="cert-name" class="required form-label">Fail Sijil Professional(PDF, JPG, JPEG)</label>
+                            <input type="file" class="form-control text-uppercase" id="cert-pro-upload" value="">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">

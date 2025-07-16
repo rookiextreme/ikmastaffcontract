@@ -73,11 +73,11 @@ function academicStoreUpdate(selector){
     v.validMix('#institution-name', 'Nama Institusi')
     v.validMix('#institution-location', 'Lokasi Institusi')
     v.validUpload('#cert-upload', 'Fail Sijil', ['pdf', 'jpeg', 'jpg', 'png'], 'cert_upload', $('#academic-id').val() != '')
-    v.validUpload('#cert-pro-upload', 'Fail Sijil Professional', ['pdf', 'jpeg', 'jpg', 'png'], 'cert_pro_upload', true)
+    // v.validUpload('#cert-pro-upload', 'Fail Sijil Professional', ['pdf', 'jpeg', 'jpg', 'png'], 'cert_pro_upload', true)
 
-    if($('#major-specialization').val() != ''){
-        v.validMix('#major-specialization', 'Pengkhususan Major')
-    }
+    // if($('#major-specialization').val() != ''){
+    //     v.validMix('#major-specialization', 'Pengkhususan Major')
+    // }
 
     if($('#profession-cert-date-start').val() != ''){
         v.validRegularDate('#profession-cert-date-start', 'Tarikh Sah Laku Mula')
@@ -87,9 +87,9 @@ function academicStoreUpdate(selector){
         v.validRegularDate('#profession-cert-date-end', 'Tarikh Sah Laku Tamat')
     }
 
-    if($('#profession-cert').val() != ''){
-        v.validMix('#profession-cert', 'Kelayakan Sijil')
-    }
+    // if($('#profession-cert').val() != ''){
+    //     v.validMix('#profession-cert', 'Kelayakan Sijil')
+    // }
 
     if($('#overall-grade').val() != ''){
         v.validMix('#overall-grade', 'Gred Keseluruhan')

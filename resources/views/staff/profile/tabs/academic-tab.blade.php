@@ -25,9 +25,9 @@
                                 <table class="table table-bordered text-center align-middle" id="academic-list">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
+                                        <th style="width: 30%">Tahap Pendidikan</th>
                                         <th style="width: 30%">Institusi</th>
                                         <th style="width: 20%">Sijil</th>
-                                        <th style="width: 30%">Pengkhususan</th>
                                         <th style="width: 10%">Gred Keseluruhan</th>
                                         <th style="width: 10%">Tindakan</th>
                                     </tr>

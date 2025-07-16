@@ -44,14 +44,15 @@
                                                     {{ $gsp->getBranchPosition->getGrade->name }}
                                                 </td>
                                                 <td>
-                                                    @if($x == 0)
-                                                        @if($staff->work_status == 1)
+                                                    @if($gsp->active)
+                                                        <span class="text-success">Aktif</span>
+                                                    @else
+                                                        @if($gsp->end_date)
                                                             <span class="text-danger">Tamat</span>
                                                         @else
-                                                            <span class="text-success">Ya</span>
+                                                            <span class="text-warning">-</span>
                                                         @endif
-                                                    @else
-                                                        <span class="text-danger">Tamat</span>
+
                                                     @endif
                                                 </td>
                                                 @if(Auth::user()->hasRole('super-admin|admin'))
@@ -62,6 +63,7 @@
                                                             </button>
                                                             <ul class="dropdown-menu">
                                                                 <li><button class="dropdown-item text-warning position-edit">Tarikh Lantikan Dan Tamat</button></li>
+                                                                <li><button class="dropdown-item text-success position-active">Tetap Sebagai Jawatan Aktif</button></li>
                                                             </ul>
                                                         </div>
                                                     </td>

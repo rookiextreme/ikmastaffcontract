@@ -78,33 +78,33 @@
                                         <!--end::Number-->
                                     </div>
                                     @if($staff->getStaffPosition->branch_position_id)
-                                    <div
-                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
-                                        <!--begin::Number-->
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_total }} Hari</div>
+                                        <div
+                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                            <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
+                                            <!--begin::Number-->
+                                            <div class="d-flex align-items-center">
+                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_total }} Hari</div>
+                                            </div>
+                                            <!--end::Number-->
                                         </div>
-                                        <!--end::Number-->
-                                    </div>
-                                    <div
-                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti Diambil</div>
-                                        <!--begin::Number-->
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_taken }} Hari</div>
+                                        <div
+                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                            <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti Diambil</div>
+                                            <!--begin::Number-->
+                                            <div class="d-flex align-items-center">
+                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_taken }} Hari</div>
+                                            </div>
+                                            <!--end::Number-->
                                         </div>
-                                        <!--end::Number-->
-                                    </div>
-                                    <div
-                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                        <div class="fw-semibold fs-6 text-gray-700">Baki Cuti</div>
-                                        <!--begin::Number-->
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_balance }} Hari</div>
+                                        <div
+                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                            <div class="fw-semibold fs-6 text-gray-700">Baki Cuti</div>
+                                            <!--begin::Number-->
+                                            <div class="d-flex align-items-center">
+                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_balance }} Hari</div>
+                                            </div>
+                                            <!--end::Number-->
                                         </div>
-                                        <!--end::Number-->
-                                    </div>
                                     @endif
                                     <!--end::Stat-->
                                 </div>
@@ -271,19 +271,19 @@
         <script src="{{ asset('js/modules/staff/profile/index4.js') }}?v=2"></script>
     @elseif($page == 'academic')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/academic/init4.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/academic/index4.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/academic/init4.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/academic/index4.js') }}?v=4"></script>
     @elseif($page == 'position')
-        <script src="{{ asset('js/modules/staff/position/init.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/position/index.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/position/init.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/position/index.js') }}?v=4"></script>
     @elseif($page == 'family')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
         <script src="{{ asset('js/modules/staff/family/init4.js') }}?v=4"></script>
         <script src="{{ asset('js/modules/staff/family/index4.js') }}?v=4"></script>
     @elseif($page == 'position_history')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=1"></script>
-        <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=1"></script>
+        <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=2"></script>
     @endif
 @endsection
 

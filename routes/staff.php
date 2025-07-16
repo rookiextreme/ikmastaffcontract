@@ -28,6 +28,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/store-update-work-status', [StaffController::class, 'storeUpdateWorkStatus']);
             Route::post('/get-info-position-history', [StaffController::class, 'getPositionHistoryInfo']);
             Route::post('/store-update-position-history-date', [StaffController::class, 'storeUpdatePositionHistoryDate']);
+            Route::post('/set-position-as-active', [StaffController::class, 'setPositionAsActive']);
         });
 
         Route::group(['prefix' => 'leave'], function () {

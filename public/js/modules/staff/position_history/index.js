@@ -74,3 +74,31 @@ function pStoreUpdate(selector){
         }
     })
 }
+
+$(document).on('click','.position-active', function(){
+    resetHistoryForm();
+    let id = common.getRowId(this, 'data-id');
+    let data = common.getForm();
+    data.append('id', id);
+
+    http.fetch({
+        url: `${common.getUrl()}${moduleUrl}set-position-as-active`,
+        data: data,
+        method: 'POST',
+        callback: function(r){
+            if(r.status){
+                alerting.fireSwal({
+                    text: r.data.message,
+                    icon: 'success',
+                    buttonColor: 'btn btn-success',
+                    confirmButton: 'Close',
+                    callback: function(){
+                        window.location.reload()
+                    }
+                })
+            }else{
+                alerting.error(r.data);
+            }
+        }
+    });
+})

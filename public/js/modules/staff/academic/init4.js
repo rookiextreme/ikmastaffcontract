@@ -17,13 +17,13 @@ let table = new DatatableInit({
     next: '#academic-next',
     columns: [
         {
+            data: 'level'
+        },
+        {
             data: 'institution'
         },
         {
             data: 'certificate'
-        },
-        {
-            data: 'specialization'
         },
         {
             data: 'grade'

@@ -25,7 +25,7 @@
                         </div>
                     @endif
 
-                    <div class="col-md-4 mb-4 vals-row mt-4">
+                    <div class="col-md-3 mb-4 vals-row mt-4">
                         <label for="state-select" class="required form-label">Pilih Negeri</label>
                         <select class="form-control" id="state-select" data-control="select2">
                             <option>Sila Pilih</option>
@@ -36,7 +36,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     @if(isset($state_select))
-                        <div class="col-md-4 mb-4 vals-row mt-4">
+                        <div class="col-md-3 mb-4 vals-row mt-4">
                             <label for="branch-select" class="required form-label">Pilih Penempatan</label>
                             <select class="form-control" id="branch-select">
                                 @if(isset($branch_record))
@@ -50,11 +50,16 @@
                         </div>
                     @endif
                     @if(isset($branch_select))
-                        <div class="col-md-4 mb-4 vals-row mt-4">
+                        <div class="col-md-3 mb-4 vals-row mt-4">
                             <label for="position-select" class="required form-label">Pilih Jawatan/Gred</label>
                             <select class="form-control" id="position-select">
                                 <option>Sila Pilih</option>
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-3 mb-4 vals-row mt-4">
+                            <label for="position-start-date" class="required form-label">Tarikh Mula Lantikan</label>
+                            <input type="text" class="form-control" id="position-start-date" value="">
                             <div class="invalid-feedback"></div>
                         </div>
                     @endif

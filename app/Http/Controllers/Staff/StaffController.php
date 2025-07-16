@@ -98,12 +98,15 @@ class StaffController extends Controller
                     return $data->id;
                 }
             ])
+            ->addColumn('level', function($data){
+                return $data->qualification;
+            })
             ->addColumn('institution', function($data){
                 return $data->institution_name;
             })
             ->addColumn('certificate', function($data){
                 $pro = $data->certification_professional ? '<a class="text-warning" target="_blank" href="'.asset('uploads/staff/academics/cert_pro/'.$data->certification_professional).'">Papar Sijil</a>' : '';
-                $cert = $data->certificate_file ? '<br><a target="_blank" href="'.asset('uploads/staff/academics/cert/'.$data->certificate_file).'">Papar Sijil Professional</a>' : '';
+                $cert = $data->certificate_file ? '<br><a target="_blank" href="'.asset('uploads/staff/academics/cert/'.$data->certificate_file).'">Papar Sijil</a>' : '';
 
                 if($pro == null && $cert == null){
                     return '-';
@@ -223,4 +226,8 @@ class StaffController extends Controller
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
 
+    public function setPositionAsActive(Request $request){
+        $m = $this->staffPositionRepository->setPositionAsActive($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
 }

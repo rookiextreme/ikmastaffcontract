@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Staff;
 use App\Models\StaffAcademic;
 use App\Models\StaffFamily;
+use App\Models\StaffPosition;
 use App\Models\StaffPositionHistory;
 use App\Models\User;
 use App\Traits\CommonTrait;
@@ -351,7 +352,17 @@ class StaffRepository
         $m = StaffPositionHistory::find($id);
         $m->start_date = $p_start ? $this->reverseDate($p_start) : null;
         $m->end_date = $p_end ? $this->reverseDate($p_end) : null;
+        $m->active = $p_end ? false : true;
         $m->save();
+
+        $checkIfHaveActive = StaffPositionHistory::where('staff_id', $m->staff_id)->where('active', true)->first();
+
+        if(!$checkIfHaveActive){
+            $staffPosition = StaffPosition::where('staff_id', $m->staff_id)->first();
+            $staffPosition->branch_position_id = $m->active == true ? $m->branch_position_id : null;
+            $staffPosition->branch_id = $m->active == true ? $m->branch_id : null;
+            $staffPosition->save();
+        }
 
         return [
             'status' => 'success',

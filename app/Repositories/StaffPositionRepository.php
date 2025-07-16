@@ -25,6 +25,7 @@ class StaffPositionRepository
         $staff_id = $request->staff_id;
         $branch_select = $request->branch_select;
         $position_select = $request->position_select;
+        $position_start_date = $request->position_start_date;
 
         DB::beginTransaction();
         try{
@@ -39,9 +40,11 @@ class StaffPositionRepository
             $sLeave->staff_position_id = $m->id;
             $sLeave->leave_total = $branchPosition->default_holiday;
             $sLeave->leave_balance = $branchPosition->default_holiday;
+            $sLeave->mc_total = 14;
+            $sLeave->mc_balance = 14;
             $sLeave->save();
 
-            $this->storeUpdateToHistory($m);
+            $this->storeUpdateToHistory($m, $position_start_date);
 
             DB::commit();
         }catch (\Exception $e){
@@ -62,27 +65,40 @@ class StaffPositionRepository
         return StaffPosition::with('getStaff', 'getStaffLeave', 'getStaffLeaveEntries')->where('staff_id', $staff_id)->first();
     }
 
-    public function storeUpdateToHistory(StaffPosition $sp){
-        $checkHistory = StaffPositionHistory::where('staff_id', $sp->staff_id)->orderBy('id', 'desc')->first();
+    public function storeUpdateToHistory(StaffPosition $sp, $start_date = null){
+        $checkHistory = new StaffPositionHistory();
+        $checkHistory->staff_id = $sp->staff_id;
+        $checkHistory->branch_position_id = $sp->branch_position_id;
+        $checkHistory->branch_id = $sp->branch_id;
+        $checkHistory->start_date = $start_date ? date('Y-m-d', strtotime($start_date)) : null;
+        $checkHistory->active = true;
+        $checkHistory->save();
+    }
 
-        $needCreate = false;
-        if($checkHistory){
-            $bp = $checkHistory->branch_position_id;
-            $b = $checkHistory->branch_id;
+    public function setPositionAsActive(Request $request){
+        $id = $request->id;
 
-            if($bp != $sp->branch_position_id || $b != $sp->branch_id){
-                $needCreate = true;
+        $m = StaffPositionHistory::find($id);
+        $m->active = true;
+        $m->save();
+
+        $getOtherPosition = StaffPositionHistory::where('staff_id', $m->staff_id)->where('id', '!=', $m->id)->get();
+
+        if(count($getOtherPosition) > 0){
+            foreach($getOtherPosition as $otherPosition){
+                $otherPosition->active = false;
+                $otherPosition->save();
             }
-        }else{
-            $needCreate = true;
         }
 
-        if($needCreate){
-            $checkHistory = new StaffPositionHistory();
-            $checkHistory->staff_id = $sp->staff_id;
-            $checkHistory->branch_position_id = $sp->branch_position_id;
-            $checkHistory->branch_id = $sp->branch_id;
-            $checkHistory->save();
-        }
+        $staffPosition = StaffPosition::where('staff_id', $m->staff_id)->first();
+        $staffPosition->branch_position_id = $m->branch_position_id;
+        $staffPosition->branch_id = $m->branch_id;
+        $staffPosition->save();
+
+        return [
+            'status' => 'success',
+            'message' => 'Jawatan Ditetapkan Sebagai Aktif'
+        ];
     }
 }
