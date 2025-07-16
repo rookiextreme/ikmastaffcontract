@@ -50,18 +50,27 @@ let table = new DatatableInit({
                 if(status_id == 1){
                     let adminChange = '';
                     if(is_admin){
-                        adminChange += `<li><button class="dropdown-item text-info approval-change">Tukar Pelulus</button></li>`
+                        adminChange += `<li><button class="dropdown-item text-primary approval-change">Tukar Pelulus</button></li>`
                     }
                     btn = `<div class="dropdown">
                       <button class="btn btn-icon btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                            <i class="fas fa-pencil fs-4"></i>
                       </button>
                       <ul class="dropdown-menu">
-                        ${btn}
+
                         ${adminChange}
                         ${changeBtn}
                         <li><button class="dropdown-item text-success approval-approve" data-approve="1">Sahkan Cuti</button></li>
                         <li><button class="dropdown-item text-danger approval-approve" data-approve="2">Tidak Sahkan Cuti</button></li>
+                      </ul>
+                    </div>`;
+                }else{
+                    btn = `<div class="dropdown">
+                      <button class="btn btn-icon btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           <i class="fas fa-pencil fs-4"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        ${changeBtn}
                       </ul>
                     </div>`;
                 }

@@ -81,6 +81,6 @@
         let is_staff = $('#is-staff').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}?v=2"></script>
-    <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}?v=4"></script>
+    <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}?v=4"></script>
 @endsection
