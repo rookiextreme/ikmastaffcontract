@@ -130,7 +130,12 @@ class StaffLeaveController extends Controller
             ->addColumn('name', function($data) use ($is_admin){
                 return strtoupper($data->request_by).'<br> <b class="text-success">'.$this->regularDate($data->created_at).'<b>'.($is_admin ? '<br><b class="text-info">'.ucwords(strtolower($data->approver_name)).'</b>' : '').'</b></b>';
             })->addColumn('h_date', function($data){
-                return $this->regularDate($data->start_date).' <br>Hingga<br> '.$this->regularDate($data->end_date);
+                $timeShow = '';
+
+                if($data->is_half_day){
+                    $timeShow = '<br>'.date("g:i a", strtotime($data->start_time)).' - '.date("g:i a", strtotime($data->end_time));
+                }
+                return $this->regularDate($data->start_date).' <br>Hingga<br> '.$this->regularDate($data->end_date).'<br><b class="text-success">'.$data->leave_category.'<b></b>'.$timeShow;
             })->addColumn('days', function($data){
                 return $data->days.' HARI';
             })->addColumn('status', function($data){
@@ -138,7 +143,11 @@ class StaffLeaveController extends Controller
             })->addColumn('approver_name', function($data){
                 return strtoupper($data->approver_name);
             })->addColumn('reason', function($data){
-                return '<b class="text-primary text-decoration-underline">'.ucwords($data->leave_category).'</b><br>'.($data->reason ? strtoupper($data->reason) : '-');
+                $show_mc = '';
+                if($data->is_mc){
+                    $show_mc = '<br>'.'<a target="_blank" href="'.url('uploads/staff/mc/'.$data->mc_upload).'">Papar</a>';
+                }
+                return '<b class="text-primary text-decoration-underline">'.(ucwords($data->leave_category).'</b><br>'.($data->reason ? strtoupper($data->reason) : '-')).$show_mc;
             })->make();
     }
 

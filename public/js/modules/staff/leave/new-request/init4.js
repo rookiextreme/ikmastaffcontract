@@ -37,3 +37,23 @@ $('#leave-approver').select2({
         }
     },
 });
+
+$('#leave-category').on('change', function() {
+    let selected = $(this).find(':selected');
+    let is_mc = selected.attr('data-mc');
+    let is_full = selected.attr('data-full');
+    let is_half = selected.attr('data-half');
+
+    if (is_mc == '1') {
+        // MC selected
+        $('#leave-start-time, #leave-end-time').prop('disabled', true);
+        $('#leave-mc').prop('disabled', false);
+    } else if (is_half == '1') {
+        // Half-day selected
+        $('#leave-start-time, #leave-end-time').prop('disabled', false);
+        $('#leave-mc').prop('disabled', true);
+    } else {
+        // All others
+        $('#leave-start-time, #leave-end-time, #leave-mc').prop('disabled', true);
+    }
+});

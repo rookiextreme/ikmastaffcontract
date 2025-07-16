@@ -107,17 +107,17 @@
                         </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-start-time" class="required form-label">Masa Mula</label>
-                            <input type="text" class="form-control" id="leave-start-time" value="">
+                            <input type="text" class="form-control" id="leave-start-time" value="" disabled>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-end-time" class="required form-label">Masa Tamat</label>
-                            <input type="text" class="form-control" id="leave-end-time" value="">
+                            <input type="text" class="form-control" id="leave-end-time" value="" disabled>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-mc" class="required form-label">Lampiran (MC)</label>
-                            <input type="file" class="form-control" id="leave-mc" value="">
+                            <input type="file" class="form-control" id="leave-mc" value="" disabled>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-12 mb-4 vals-row mt-4">
@@ -158,6 +158,6 @@
         let staff_id = $('#staff-id').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}?v=2"></script>
-    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}?v=4"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}?v=4"></script>
 @endsection

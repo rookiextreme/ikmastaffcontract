@@ -149,7 +149,7 @@ class StaffLeaveEntriesRepository
                     $sLeave->mc_taken = $hTaken;
                     $sLeave->mc_balance = $sLeave->mc_balance - $hTaken;
                 }elseif($getLeaveCategory->is_half_day == true){
-                    
+
                 }else{
                     $sLeave->leave_taken = $hTaken;
                     $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
@@ -198,14 +198,20 @@ class StaffLeaveEntriesRepository
             sle.id,
             sle.start_date,
             sle.end_date,
+            sle.start_time,
+            sle.end_time,
             sle.days,
             sle.leave_request_status_id as status_id,
             sle.reason,
             sle.created_at,
+            sle.mc_upload,
             lrs.name as l_status,
             u.name as approver_name,
             ustaff.name as request_by,
             lc.name as leave_category,
+            lc.is_half_day,
+            lc.is_mc,
+            lc.is_full_day,
             sp.branch_id,
             sp.staff_id as requester_id
             FROM staff_leave_entries sle
