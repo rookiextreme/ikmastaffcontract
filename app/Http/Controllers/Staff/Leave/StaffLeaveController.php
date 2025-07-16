@@ -64,7 +64,7 @@ class StaffLeaveController extends Controller
                 }
             ])
             ->addColumn('dates', function($data){
-                return $this->regularDate($data->start_date).'<br> Hingga <br> '.$this->regularDate($data->end_date).'<br><br><b class="text-success">'.$this->regularDate($data->created_at).'<b></b>';
+                return $this->regularDate($data->start_date).'<br> Hingga <br> '.$this->regularDate($data->end_date).'<br><br><b class="text-success">'.$this->regularDate($data->created_at).'<b></b><br>'.$data->leave_category;
             })->addColumn('days', function($data){
                 return $data->days.' HARI';
             })->addColumn('status', function($data){

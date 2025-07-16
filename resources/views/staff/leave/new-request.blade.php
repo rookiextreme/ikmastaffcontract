@@ -83,16 +83,12 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12 mb-4 vals-row text-danger fw-bold">
-                            * Cuti Separuh Hari (Syarat: Tidak melebihi 4 jam tidak termasuk waktu rehat) dan perlu mendapat kelulusan Pelulus<br>
-                            * Cuti Sakit (Syarat: Cuti sakit, Bersalin, Kuarantin)
-                        </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
                             <label for="leave-category" class="required form-label">Kategori Cuti</label>
                             <select class="form-control" id="leave-category" data-control="select2">
                                 <option>Sila Pilih</option>
                                 @foreach($leaveCategory as $lc)
-                                    <option value="{{ $lc->id }}">{{ $lc->name }}</option>
+                                    <option value="{{ $lc->id }}" data-mc="{{ $lc->is_mc }}" data-full="{{ $lc->is_full_day }}" data-half="{{ $lc->is_half_day }}">{{ $lc->name }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback"></div>
@@ -107,6 +103,21 @@
                             <select class="form-control" id="leave-approver">
                                 <option>Sila Pilih</option>
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-4 vals-row mt-4">
+                            <label for="leave-start-time" class="required form-label">Masa Mula</label>
+                            <input type="text" class="form-control" id="leave-start-time" value="">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-4 vals-row mt-4">
+                            <label for="leave-end-time" class="required form-label">Masa Tamat</label>
+                            <input type="text" class="form-control" id="leave-end-time" value="">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-4 vals-row mt-4">
+                            <label for="leave-mc" class="required form-label">Lampiran (MC)</label>
+                            <input type="file" class="form-control" id="leave-mc" value="">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-12 mb-4 vals-row mt-4">
@@ -147,6 +158,6 @@
         let staff_id = $('#staff-id').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}"></script>
-    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}?v=2"></script>
 @endsection

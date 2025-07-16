@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Staff;
 use App\Models\StaffAcademic;
 use App\Models\StaffFamily;
+use App\Models\StaffPositionHistory;
 use App\Models\User;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
@@ -231,7 +232,8 @@ class StaffRepository
             sf.email,
             sf.gender,
             sf.phone,
-            sf.relation
+            sf.relation,
+            sf.death_date
             FROM staff_families sf
             JOIN staffs s ON s.id = sf.staff_id
             AND sf.staff_id = ?
@@ -250,6 +252,7 @@ class StaffRepository
         $fam_phone = $request->fam_phone;
         $fam_dob = $request->fam_dob;
         $fam_count = $request->fam_count;
+        $fam_death = $request->fam_death;
         $id = $request->id;
         $staff_id = $request->staff_id;
 
@@ -264,6 +267,7 @@ class StaffRepository
             $m->gender = 1;
             $m->dob = $fam_dob ? $this->reverseDate($fam_dob) : null;
             $m->child_count = $fam_relation == 'Anak' ? $fam_count : 0;
+            $m->death_date = $this->reverseDate($fam_death);
             $m->save();
 
             DB::commit();
@@ -292,6 +296,7 @@ class StaffRepository
         $data['email'] = $m->email;
         $data['child_count'] = $m->child_count;
         $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;
+        $data['death'] = $m->death_date ? $this->regularDate($m->death_date) : null;
         return $data;
     }
 
@@ -325,6 +330,32 @@ class StaffRepository
         return [
             'status' => 'success',
             'message' => 'Status Perkhidmatan Dikemaskini',
+        ];
+    }
+
+    public function getPositionHistoryInfo($id){
+        $data = [];
+
+        $m = StaffPositionHistory::find($id);
+        $data['id'] = $m->id;
+        $data['start_date'] = $m->start_date;
+        $data['end_date'] = $m->end_date;
+        return $data;
+    }
+
+    public function storeUpdatePositionHistoryDate(Request $request){
+        $id = $request->id;
+        $p_start = $request->p_start;
+        $p_end = $request->p_end;
+
+        $m = StaffPositionHistory::find($id);
+        $m->start_date = $p_start ? $this->reverseDate($p_start) : null;
+        $m->end_date = $p_end ? $this->reverseDate($p_end) : null;
+        $m->save();
+
+        return [
+            'status' => 'success',
+            'message' => 'Tarikh Dikemaskini',
         ];
     }
 }

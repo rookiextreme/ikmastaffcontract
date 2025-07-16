@@ -28,8 +28,8 @@
                                     <thead>
                                         <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
                                             <th style="width: 10%">Pelulus</th>
-                                            <th style="width: 15%">Tarikh Cuti/<br>Tarikh Permohonan</th>
-                                            <th style="width: 20%">Jumlah Hari</th>
+                                            <th style="width: 20%">Tarikh Cuti/<br>Tarikh Permohonan/<br>Jenis</th>
+                                            <th style="width: 15%">Jumlah Hari</th>
                                             <th style="width: 15%">Sebab Bercuti</th>
                                             <th style="width: 20%">Status</th>
                                             <th style="width: 10%">Tindakan</th>

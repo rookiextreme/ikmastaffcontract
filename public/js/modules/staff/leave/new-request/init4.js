@@ -6,6 +6,18 @@ $("#leave-date-range").flatpickr({
     minDate: "today"
 });
 
+$("#leave-start-time").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+});
+
+$("#leave-end-time").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+});
+
 $('#leave-approver').select2({
     ajax: {
         url: `${common.getUrl()}${moduleUrl}get-approver`,

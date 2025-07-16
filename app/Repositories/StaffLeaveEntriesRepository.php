@@ -8,12 +8,15 @@ use App\Models\LeaveRequestStatus;
 use App\Models\PublicHoliday;
 use App\Models\Staff;
 use App\Models\StaffLeaveEntry;
+use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StaffLeaveEntriesRepository
 {
+    use CommonTrait;
+
     private StaffPositionRepository $staffPositionRepository;
     public function __construct(StaffPositionRepository $staffPositionRepository)
     {
@@ -30,11 +33,35 @@ class StaffLeaveEntriesRepository
         $leave_date_range = $request->leave_date_range;
         $leave_approver = $request->leave_approver;
         $leave_reason = $request->leave_reason;
+        $leave_start_time = $request->leave_start_time;
+        $leave_end_time = $request->leave_end_time;
 
         $getLeaveCategory = LeaveCategory::find($leave_category);
         $staffPosition = $this->staffPositionRepository->getStaffPosition($staff_id);
         $getBranchState = $staffPosition->getBranch->getState;
         $getWeekend = $getBranchState->getWeekendHoliday;
+        $leave_mc = $request->file('leave_mc');
+
+        if($getLeaveCategory->is_half_day){
+            $start = \DateTime::createFromFormat('H:i', $leave_start_time);
+            $end = \DateTime::createFromFormat('H:i', $leave_end_time);
+
+
+            if ($end < $start) {
+                $end->modify('+1 day');
+            }
+
+            $interval = $start->diff($end);
+
+            $hours = $interval->h;
+
+            if($hours > 4){
+                return [
+                    'status' => 'error',
+                    'message' => 'Masa Tidak Boleh Melebihi 4 Jam'
+                ];
+            }
+        }
 
         $getRangeArr = explode(' to ', $leave_date_range);
 
@@ -104,14 +131,29 @@ class StaffLeaveEntriesRepository
                 $m->leave_category_id = $leave_category;
                 $m->start_date = $date['start'];
                 $m->end_date = $date['end'];
+                if($getLeaveCategory->is_half_day == true){
+                    $m->start_time = $leave_start_time;
+                    $m->end_time = $leave_end_time;
+                }
                 $m->days = $hTaken;
                 $m->leave_request_status_id = LeaveRequestStatus::PENDING;
                 $m->reason = $leave_reason;
+                if($leave_mc){
+                    $up = $this->uploadImage($leave_mc, public_path('uploads/staff/mc'));
+                    $m->mc_upload = $up;
+                }
                 $m->save();
 
                 $sLeave = $staffPosition->getStaffLeave;
-                $sLeave->leave_taken = $hTaken;
-                $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
+                if($getLeaveCategory->is_mc == true){
+                    $sLeave->mc_taken = $hTaken;
+                    $sLeave->mc_balance = $sLeave->mc_balance - $hTaken;
+
+                }else{
+                    $sLeave->leave_taken = $hTaken;
+                    $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
+                }
+
                 $sLeave->save();
                 dispatch(new StaffLeaveJob($m->id, 'new-request'));
                 DB::commit();

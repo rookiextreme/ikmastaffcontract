@@ -47,6 +47,7 @@ $(document).on('click','.fam-edit', function(){
                         common.setFormValue('#fam-phone', r.data.phone, 'string')
                         common.setFormValue('#fam-count', r.data.child_count, 'dropdown')
                         $('#fam-count').attr('disabled', r.data.relation == 'Anak' ? false : true)
+                        common.setFormValue('#fam-death', r.data.death, 'string')
                         common.setFormValue('#fam-id', r.data.id, 'string');
                     }else{
                         alerting.error(r.data);
@@ -78,6 +79,7 @@ function famStoreUpdate(selector){
         return false;
     }
 
+    v.setNewEntry('fam_death', $('#fam-death').val());
     v.setNewEntry('fam_email', $('#fam-email').val());
     v.setNewEntry('id', $('#fam-id').val());
     v.setNewEntry('staff_id', staff_id)

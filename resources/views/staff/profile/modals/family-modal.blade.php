@@ -16,13 +16,15 @@
                         <label for="fam-relation" class="required form-label">Hubungan</label>
                         <select class="form-control" id="fam-relation" data-control="select2">
                             <option value="Anak">Anak</option>
-                            <option value="Perempuan">Isteri</option>
+                            <option value="Suami">Suami</option>
+                            <option value="Isteri">Isteri</option>
                             <option value="Ibu">Ibu</option>
                             <option value="Bapa">Bapa</option>
-                            <option value="Ibu">Ibu Mertua</option>
-                            <option value="Bapa">Bapa Mertua</option>
-                            <option value="Ibu Saudara">Ibu Saudara</option>
-                            <option value="Bapa Saudara">Bapa Saudara</option>
+                            <option value="Adik-beradik">Adik-beradik</option>
+                            <option value="Datuk">Datuk</option>
+                            <option value="Nenek">Nenek</option>
+                            <option value="Ibu Mertua">Ibu Mertua</option>
+                            <option value="Bapa Mertua">Bapa Mertua</option>
                             <option value="Saudara Kandung">Saudara Kandung</option>
                         </select>
                         <div class="invalid-feedback"></div>
@@ -62,6 +64,11 @@
                     <div class="col-md-12 vals-row mb-4">
                         <label for="fam-dob" class="required form-label">Tarikh Lahir</label>
                         <input type="text" class="form-control text-uppercase" id="fam-dob" value="">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-12 vals-row mb-4">
+                        <label for="fam-death" class="required form-label">Tarikh Kematian</label>
+                        <input type="text" class="form-control text-uppercase" id="fam-death" value="">
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>

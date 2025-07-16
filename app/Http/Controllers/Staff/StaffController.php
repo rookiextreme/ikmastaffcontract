@@ -186,6 +186,8 @@ class StaffController extends Controller
             })
             ->addColumn('grade', function($data){
                 return $data->overall_grade ?? '-';
+            })->addColumn('death', function($data){
+                return $data->death_date ? $this->regularDate($data->death_date) : '-';
             })->make();
     }
 
@@ -211,4 +213,14 @@ class StaffController extends Controller
         $m = $this->staffRepository->setWorkStatus($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
     }
+
+    public function getPositionHistoryInfo(Request $request) : JsonResponse{
+        return $this->setDataResponse($this->staffRepository->getPositionHistoryInfo($request->id));
+    }
+
+    public function storeUpdatePositionHistoryDate(Request $request){
+        $m = $this->staffRepository->storeUpdatePositionHistoryDate($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
+
 }

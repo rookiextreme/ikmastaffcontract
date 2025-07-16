@@ -37,17 +37,17 @@
                                     <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
                                         <div class="fw-semibold fs-6 text-gray-700">Penempatan</div>
                                         <!--begin::Number-->
-                                        <div class="d-flex align-items-center text-uppercase">
+                                        <div class="d-flex align-items-center ">
                                             <div class="fw-bold">
                                                 @if($staff->getStaffPosition->branch_position_id)
                                                     <span>{{ $staff->getStaffPosition->getBranch->name }}</span><br>
                                                     <span>
-                                                    <span>
+                                                    <span class="text-uppercase">
                                                         {{ $staff->getStaffPosition->getBranchPosition->getPosition->name ?? '' }}
                                                         ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
                                                     </span>
                                                     <br>
-                                                    <span class="{{ $staff->work_status == 1 ? 'text-danger' : 'text-success' }}">{{ $staff->work_status == 1 ? 'Perkhidmatan Tamat' : 'Perkhidmatan Aktif'  }}</span>
+                                                    <span class="text-uppercase {{ $staff->work_status == 1 ? 'text-danger' : 'text-success' }}">{{ $staff->work_status == 1 ? 'Perkhidmatan Tamat' : 'Perkhidmatan Aktif'  }}</span>
                                                 </span>
                                                 @else
                                                     <span class="text-danger">Sila Pilih Jawatan</span>
@@ -77,81 +77,41 @@
                                         </div>
                                         <!--end::Number-->
                                     </div>
-
-                                    <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                        <div class="fw-semibold fs-6 text-gray-700">Tarikh Lantikan</div>
+                                    @if($staff->getStaffPosition->branch_position_id)
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
                                         <!--begin::Number-->
-                                        <div class="d-flex align-items-center text-uppercase">
-                                            <div class="fs-2 fw-bold">
-                                                <div class="col-md-12 vals-row mt-4">
-                                                    @role('super-admin|admin')
-                                                        <input type="text" id="appointed-date" class="form-control" value="{{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}">
-                                                    @endrole
-                                                    @role('approval-admin|staff|ketua_unit|penolong_pengarah|ketua_pengarah')
-                                                        {{ $staff->date_appointed ? date('d-m-Y', strtotime($staff->date_appointed)) : '' }}
-                                                    @endrole
-
-                                                </div>
-                                            </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_total }} Hari</div>
                                         </div>
                                         <!--end::Number-->
                                     </div>
-                                    <div class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                        <div class="fw-semibold fs-6 text-gray-700">Status Kerja</div>
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti Diambil</div>
                                         <!--begin::Number-->
-                                        <div class="d-flex align-items-center text-uppercase">
-                                            <div class="fs-2 fw-bold">
-                                                <div class="col-md-12 vals-row mt-4">
-                                                    <button class="btn btn-{{ $staff->work_status == 0 ? 'danger' :'success' }}" id="set-work-status">{{ $staff->work_status == 0 ? 'Tamat Perkhidmatan' : 'Aktifkan Pekhidmatan' }}</button>
-                                                </div>
-                                            </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_taken }} Hari</div>
                                         </div>
                                         <!--end::Number-->
                                     </div>
-
+                                    <div
+                                        class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
+                                        <div class="fw-semibold fs-6 text-gray-700">Baki Cuti</div>
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_balance }} Hari</div>
+                                        </div>
+                                        <!--end::Number-->
+                                    </div>
+                                    @endif
                                     <!--end::Stat-->
                                 </div>
                                 <!--end::Stats-->
                             </div>
                             <!--end::Wrapper-->
                         </div>
-                        @if($staff->getStaffPosition->branch_position_id)
-                            <div class="d-flex flex-wrap flex-stack">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column flex-grow-1 pe-8">
-                                    <!--begin::Stats-->
-                                    <div class="d-flex flex-wrap">
-                                        <div
-                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                            <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti</div>
-                                            <!--begin::Number-->
-                                            <div class="d-flex align-items-center">
-                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_total }} Hari</div>
-                                            </div>
-                                            <!--end::Number-->
-                                        </div>
-                                        <div
-                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                            <div class="fw-semibold fs-6 text-gray-700">Jumlah Cuti Diambil</div>
-                                            <!--begin::Number-->
-                                            <div class="d-flex align-items-center">
-                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_taken }} Hari</div>
-                                            </div>
-                                            <!--end::Number-->
-                                        </div>
-                                        <div
-                                            class="border border-gray-300 border-dashed rounded min-w-auto py-3 px-4 me-6 mb-3">
-                                            <div class="fw-semibold fs-6 text-gray-700">Baki Cuti</div>
-                                            <!--begin::Number-->
-                                            <div class="d-flex align-items-center">
-                                                <div class="fs-2 fw-bold">{{ $staff->getStaffPosition->getStaffLeave->leave_balance }} Hari</div>
-                                            </div>
-                                            <!--end::Number-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                     @endif
                     <!--end::Stats-->
                 </div>
@@ -189,11 +149,11 @@
                             <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position' ? 'active' : '' }}"
                                href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position']) }}">Tetapan Jawatan</a>
                         </li>
-                            <li class="nav-item mt-2">
-                                <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position_history' ? 'active' : '' }}"
-                                   href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position_history']) }}">Sejarah Jawatan</a>
-                            </li>
                     @endif
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position_history' ? 'active' : '' }}"
+                           href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position_history']) }}">Sejarah Perkhidmatan</a>
+                    </li>
                 @endif
                 @if(Auth::user()->hasRole('super-admin|admin'))
                     <li class="nav-item mt-2">
@@ -215,6 +175,7 @@
     @elseif($page == 'position')
         @include('staff.profile.tabs.position-tab')
     @elseif($page == 'position_history')
+        @include('staff.profile.modals.position-history-date-modal')
         @include('staff.profile.tabs.position-history-tab')
     @elseif($page == 'family')
         @include('staff.profile.modals.family-modal')
@@ -317,8 +278,12 @@
         <script src="{{ asset('js/modules/staff/position/index.js') }}?v=2"></script>
     @elseif($page == 'family')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/family/init4.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/family/index4.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/family/init4.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/family/index4.js') }}?v=4"></script>
+    @elseif($page == 'position_history')
+        <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=1"></script>
+        <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=1"></script>
     @endif
 @endsection
 

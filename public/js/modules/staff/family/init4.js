@@ -2,6 +2,10 @@ $("#fam-dob").flatpickr({
     dateFormat: "d-m-Y",
 });
 
+$("#fam-death").flatpickr({
+    dateFormat: "d-m-Y",
+});
+
 let famModal = new Modals({selector: '#fam-modal'});
 
 let famData = common.getForm(false)
@@ -23,6 +27,9 @@ let table = new DatatableInit({
         },
         {
             data: 'relation'
+        },
+        {
+            data: 'death'
         },
         {
             data: 'action',
@@ -52,6 +59,7 @@ function resetFamForm(){
         ['#fam-phone', 'string'],
         ['#fam-count', 'dropdown'],
         ['#fam-dob', 'string'],
+        ['#fam-death', 'string'],
     ])
 
     $('#fam-count').attr('disabled', false)
