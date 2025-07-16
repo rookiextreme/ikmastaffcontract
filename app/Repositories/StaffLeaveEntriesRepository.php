@@ -148,7 +148,7 @@ class StaffLeaveEntriesRepository
                 $sLeave = $staffPosition->getStaffLeave;
                 if($getLeaveCategory->is_mc == true){
                     $sLeave->mc_taken = $hTaken;
-                    $sLeave->mc_balance = $sLeave->mc_balance - $hTaken;
+                    $sLeave->mc_balance = $sLeave->mc_balance + $hTaken;
                 }elseif($getLeaveCategory->is_half_day == true){
 
                 }else{
