@@ -137,7 +137,7 @@ class StaffLeaveController extends Controller
                 }
                 return $this->regularDate($data->start_date).' <br>Hingga<br> '.$this->regularDate($data->end_date).'<br><b class="text-success">'.$data->leave_category.'<b></b>'.$timeShow;
             })->addColumn('days', function($data){
-                return $data->days.' HARI';
+                return $data->is_half_day ? '-' : $data->days.' HARI';
             })->addColumn('status', function($data){
                 return strtoupper($data->l_status);
             })->addColumn('approver_name', function($data){

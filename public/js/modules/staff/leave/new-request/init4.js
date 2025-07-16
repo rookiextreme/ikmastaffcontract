@@ -3,7 +3,7 @@ $("#leave-date-range").flatpickr({
     altFormat: "d-m-Y",
     dateFormat: "Y-m-d",
     mode: "range",
-    minDate: "today"
+    // minDate: "today"
 });
 
 $("#leave-start-time").flatpickr({
