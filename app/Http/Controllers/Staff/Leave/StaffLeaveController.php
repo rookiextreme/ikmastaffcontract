@@ -64,7 +64,12 @@ class StaffLeaveController extends Controller
                 }
             ])
             ->addColumn('dates', function($data){
-                return $this->regularDate($data->start_date).'<br> Hingga <br> '.$this->regularDate($data->end_date).'<br><br><b class="text-success">'.$this->regularDate($data->created_at).'<b></b><br>'.$data->leave_category;
+                $timeShow = '';
+
+                if($data->is_half_day){
+                    $timeShow = '<br>'.date("g:i a", strtotime($data->start_time)).' - '.date("g:i a", strtotime($data->end_time));
+                }
+                return $this->regularDate($data->start_date).'<br> Hingga <br> '.$this->regularDate($data->end_date).'<br><br><b class="text-success">'.$this->regularDate($data->created_at).'<b></b><br>'.$data->leave_category.$timeShow;
             })->addColumn('days', function($data){
                 return $data->days.' HARI';
             })->addColumn('status', function($data){
