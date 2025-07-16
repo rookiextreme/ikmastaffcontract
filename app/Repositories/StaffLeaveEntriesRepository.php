@@ -7,6 +7,7 @@ use App\Models\LeaveCategory;
 use App\Models\LeaveRequestStatus;
 use App\Models\PublicHoliday;
 use App\Models\Staff;
+use App\Models\StaffLeave;
 use App\Models\StaffLeaveEntry;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
@@ -353,6 +354,59 @@ class StaffLeaveEntriesRepository
             'status' => 'success',
             'message' => 'Pelulus Diubah'
         ];
+    }
+
+    public function leaveRequestChangeCategory(Request $request){
+        $change_to = $request->change_to;
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try{
+            $staffEntry = StaffLeaveEntry::find($id);
+            $getStaffPosition = $staffEntry->getStaffPosition;
+            $getMc = LeaveCategory::where('is_mc', true)->first();
+            $getAnnual = LeaveCategory::where('is_full_day', true)->first();
+            $getStaffLeave = StaffLeave::where('staff_position_id', $getStaffPosition->id)->first();
+            $currentDay = $staffEntry->days;
+
+            if($change_to == 'mc'){
+                $staffEntry->leave_category_id = $getMc->id;
+                $staffEntry->save();
+
+                $getStaffLeave->leave_taken = $getStaffLeave->leave_taken - $currentDay;
+                $getStaffLeave->leave_balance = $getStaffLeave->leave_balance + $currentDay;
+                $getStaffLeave->mc_taken = $getStaffLeave->mc_taken + $currentDay;
+                $getStaffLeave->mc_balance = $getStaffLeave->mc_balance - $currentDay;
+                $getStaffLeave->save();
+            }
+
+            if($change_to == 'annual'){
+                $staffEntry->leave_category_id = $getAnnual->id;
+                $staffEntry->save();
+                $getStaffLeave->leave_taken = $getStaffLeave->leave_taken + $currentDay;
+                $getStaffLeave->leave_balance = $getStaffLeave->leave_balance - $currentDay;
+                $getStaffLeave->mc_taken = $getStaffLeave->mc_taken - $currentDay;
+                $getStaffLeave->mc_balance = $getStaffLeave->mc_balance + $currentDay;
+                $getStaffLeave->save();
+            }
+
+            DB::commit();
+            return [
+                'status' => 'success',
+                'message' => 'Permohonan Diubah Kepada '.($change_to == 'annual' ? 'Cuti Rehat' : 'Cuti Sakit'),
+            ];
+        }catch (\Exception $e){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+
+        echo '<pre>';
+        print_r($request->all());
+        echo '</pre>';
+        die();
     }
 }
 

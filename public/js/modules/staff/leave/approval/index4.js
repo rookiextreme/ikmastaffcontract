@@ -129,3 +129,41 @@ $(document).on('click', '.approval-approve', function(){
         }
     })
 })
+
+$(document).on('click', '.leave-change-category', function(){
+    let changeTo = $(this).attr('data-change')
+
+    let data = common.getForm(false)
+    data.append('change_to', changeTo)
+    data.append('id', common.getRowId(this, 'data-id'))
+
+    alerting.fireSwal({
+        text: changeTo == 'mc' ? 'Ubah Kepada Cuti Sakit?' : 'Ubah Kepada Cuti Rehat?',
+        icon: changeTo == 'mc' ? 'warning' : 'warning',
+        confirmButton: 'Ya',
+        buttonColor: 'btn btn-warning',
+        showCancelButton: true,
+        callback: function(){
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}leave-request-change-category`,
+                data: data,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                table.reload();
+                            }
+                        })
+                    }else{
+                        alerting.error(r.data);
+                    }
+                }
+            });
+        }
+    })
+})

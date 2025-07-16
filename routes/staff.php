@@ -43,6 +43,8 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/approval-list', [StaffLeaveController::class, 'approvalList']);
             Route::get('/get-approver-options', [StaffLeaveController::class, 'approverOptions']);
             Route::post('/update-approver', [StaffLeaveController::class, 'updateApprover']);
+            Route::post('/leave-request-change-category', [StaffLeaveController::class, 'leaveRequestChangeCategory']);
+
         });
     });
 });

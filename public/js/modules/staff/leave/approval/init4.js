@@ -33,8 +33,19 @@ let table = new DatatableInit({
         {
             data: 'action',
             raw: function (full) {
+                let full_day = full.is_full_day
+                let mc = full.is_mc;
+
                 let status_id = full.status_id;
                 let btn = '-';
+
+                let changeBtn = '';
+
+                if(full_day == 1){
+                    changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="mc">Ubah Ke Cuti Sakit</button></li>`;
+                }else if(mc == 1){
+                    changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="annual">Ubah Ke Cuti Rehat</button></li>`;
+                }
 
                 if(status_id == 1){
                     let adminChange = '';
@@ -48,6 +59,7 @@ let table = new DatatableInit({
                       <ul class="dropdown-menu">
                         ${btn}
                         ${adminChange}
+                        ${changeBtn}
                         <li><button class="dropdown-item text-success approval-approve" data-approve="1">Sahkan Cuti</button></li>
                         <li><button class="dropdown-item text-danger approval-approve" data-approve="2">Tidak Sahkan Cuti</button></li>
                       </ul>
