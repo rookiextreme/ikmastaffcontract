@@ -77,7 +77,13 @@ class StaffLeaveController extends Controller
             })->addColumn('approver_name', function($data){
                 return strtoupper($data->approver_name);
             })->addColumn('reason', function($data){
-                return $data->reason ? strtoupper($data->reason) : '-';
+                $show_mc = '';
+                if($data->is_mc || $data->is_half_day){
+                    if($data->mc_upload){
+                        $show_mc = '<br>'.'<a target="_blank" href="'.url('uploads/staff/mc/'.$data->mc_upload).'">Papar</a>';
+                    }
+                }
+                return '<b class="text-primary text-decoration-underline">'.(ucwords($data->leave_category).'</b><br>'.($data->reason ? strtoupper($data->reason) : '-')).$show_mc;
             })->make();
     }
 
@@ -149,7 +155,7 @@ class StaffLeaveController extends Controller
                 return strtoupper($data->approver_name);
             })->addColumn('reason', function($data){
                 $show_mc = '';
-                if($data->is_mc){
+                if($data->is_mc || $data->is_half_day){
                     if($data->mc_upload){
                         $show_mc = '<br>'.'<a target="_blank" href="'.url('uploads/staff/mc/'.$data->mc_upload).'">Papar</a>';
                     }

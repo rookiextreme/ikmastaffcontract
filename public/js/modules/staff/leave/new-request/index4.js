@@ -20,8 +20,8 @@ $('#store-update-leave-new-request').on('click', function(){
         ])
     }
 
-    if(is_mc == 1){
-        v.validUpload('#leave-mc', 'Lampiran', ['png', 'jpg', 'jpeg', 'pdf'], 'leave_mc')
+    if(is_mc == 1 || is_half == 1){
+        v.validUpload('#leave-mc', 'Lampiran', ['png', 'jpg', 'jpeg', 'pdf'], 'leave_mc', true)
     }else{
         common.resetForm([
             ['#leave-mc', 'string']

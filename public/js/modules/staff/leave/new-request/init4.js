@@ -51,7 +51,7 @@ $('#leave-category').on('change', function() {
     } else if (is_half == '1') {
         // Half-day selected
         $('#leave-start-time, #leave-end-time').prop('disabled', false);
-        $('#leave-mc').prop('disabled', true);
+        $('#leave-mc').prop('disabled', false);
     } else {
         // All others
         $('#leave-start-time, #leave-end-time, #leave-mc').prop('disabled', true);

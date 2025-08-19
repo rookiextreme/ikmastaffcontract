@@ -143,7 +143,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-4 mb-4 vals-row mt-4">
-                            <label for="leave-mc" class="required form-label">Lampiran (MC)</label>
+                            <label for="leave-mc" class="required form-label">Lampiran</label>
                             <input type="file" class="form-control" id="leave-mc" value="" disabled>
                             <div class="invalid-feedback"></div>
                         </div>
@@ -185,6 +185,6 @@
         let staff_id = $('#staff-id').val();
     </script>
 
-    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}?v=5"></script>
-    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}?v=5"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/init4.js') }}?v=6"></script>
+    <script src="{{ asset('js/modules/staff/leave/new-request/index4.js') }}?v=6"></script>
 @endsection

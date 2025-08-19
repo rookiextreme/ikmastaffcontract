@@ -25,7 +25,6 @@
                             <option value="Nenek">Nenek</option>
                             <option value="Ibu Mertua">Ibu Mertua</option>
                             <option value="Bapa Mertua">Bapa Mertua</option>
-                            <option value="Saudara Kandung">Saudara Kandung</option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -67,7 +66,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">
-                        <label for="fam-death" class="required form-label">Tarikh Kematian</label>
+                        <label for="fam-death" class="form-label">Tarikh Kematian</label>
                         <input type="text" class="form-control text-uppercase" id="fam-death" value="">
                         <div class="invalid-feedback"></div>
                     </div>
