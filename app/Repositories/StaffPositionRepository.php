@@ -135,7 +135,7 @@ class StaffPositionRepository
             JOIN branches b ON b.id = sph.branch_id
             JOIN branch_positions bp ON bp.id = sph.branch_position_id
             JOIN staffs s ON s.id = sph.staff_id
-            JOIN users u ON u.id = sph.staff_id
+            JOIN users u ON u.id = s.user_id
             JOIN grades g ON g.id = bp.grade_id
             JOIN positions p ON p.id = bp.position_id
             '.($branch ? 'AND b.id = ?' : '').'
