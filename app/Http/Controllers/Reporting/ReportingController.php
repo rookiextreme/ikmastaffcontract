@@ -32,6 +32,7 @@ class ReportingController extends Controller
         $gradeList = $this->getGrades();
         $branchList = $this->getBranches();
 
+        $staff_name = $request->staff_name ?? null;
         $branch = $request->branch ?? null;
         $grade = $request->grade ?? null;
         $year_start = $request->year_start ?? null;
@@ -42,7 +43,6 @@ class ReportingController extends Controller
             $staffList = $this->staffPositionRepository->getStaffByRequest($request);
         }
 
-        $normalButton = $request->find_normal_generate;
         $pdfButton  = $request->find_pdf_generate;
 
         if($pdfButton){
@@ -66,6 +66,7 @@ class ReportingController extends Controller
             'year_end' => $year_end,
             'branch' => $branch,
             'grade' => $grade,
+            'staff_name' => $staff_name,
         ]);
     }
 }

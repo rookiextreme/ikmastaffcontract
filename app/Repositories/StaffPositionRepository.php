@@ -103,6 +103,7 @@ class StaffPositionRepository
     }
 
     public function getStaffByRequest(Request $request){
+        $staff_name = $request->staff_name;
         $branch = $request->branch;
         $grade = $request->grade;
         $year_start = $request->year_start;
@@ -121,6 +122,10 @@ class StaffPositionRepository
         }
         if($year_end){
             $paramsList[] = $year_end;
+        }
+
+        if($staff_name){
+            $paramsList[] = '%'.$staff_name.'%';
         }
 
         $db = DB::select('
@@ -142,6 +147,7 @@ class StaffPositionRepository
             '.($grade ? 'AND bp.grade_id = ?' : '').'
             '.($year_start ? 'AND YEAR(sph.start_date) >= ?' : '').'
             '.($year_end ? 'AND YEAR(sph.end_date) <= ?' : '').'
+            '.($staff_name ? 'AND u.name LIKE ?' : '').'
         ', $paramsList);
 
         return $db;

@@ -13,8 +13,13 @@
             @csrf
             <div class="card-body pt-9 pb-0">
                 <div class="row">
-                    <div class="col-md-3 vals-row mb-4">
-                        <label for="branch" class="required form-label">Cawangan</label>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="staff-name" class="form-label">Nama Pegawai</label>
+                        <input type="text" name="staff_name" class="form-control" value="{{ $staff_name }}">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="branch" class="form-label">Cawangan</label>
                         <select name="branch" class="form-select" data-control="select2" id="branch">
                             <option value="">Semua Cawangan</option>
                             @foreach($branchList as $bl)
@@ -23,8 +28,8 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-3 vals-row mb-4">
-                        <label for="grade" class="required form-label">Gred</label>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="grade" class="form-label">Gred</label>
                         <select name="grade" class="form-select" data-control="select2" id="grade">
                             <option value="">Semua Gred</option>
                             @foreach($gradeList as $gl)
@@ -33,8 +38,8 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-3 vals-row mb-4">
-                        <label for="year-start" class="required form-label">Tahun Mula</label>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="year-start" class="form-label">Tahun Mula</label>
                         <select name="year_start" class="form-select" data-control="select2" id="year-start">
                             <option value="">Semua Tahun</option>
                             @foreach($yearList as $yl)
@@ -43,8 +48,8 @@
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-3 vals-row mb-4">
-                        <label for="year-end" class="required form-label">Tahun Tamat</label>
+                    <div class="col-md-4 vals-row mb-4">
+                        <label for="year-end" class="form-label">Tahun Tamat</label>
                         <select name="year_end" class="form-select" data-control="select2" id="year-end">
                             <option value="">Semua Tahun</option>
                             @foreach($yearList as $yl)
