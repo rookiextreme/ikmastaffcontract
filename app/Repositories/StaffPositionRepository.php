@@ -101,4 +101,49 @@ class StaffPositionRepository
             'message' => 'Jawatan Ditetapkan Sebagai Aktif'
         ];
     }
+
+    public function getStaffByRequest(Request $request){
+        $branch = $request->branch;
+        $grade = $request->grade;
+        $year_start = $request->year_start;
+        $year_end = $request->year_end;
+
+        $paramsList = [];
+
+        if($branch){
+            $paramsList[] = $branch;
+        }
+        if($grade){
+            $paramsList[] = $grade;
+        }
+        if($year_start){
+            $paramsList[] = $year_start;
+        }
+        if($year_end){
+            $paramsList[] = $year_end;
+        }
+
+        $db = DB::select('
+            SELECT
+            u.name,
+            g.name as grade,
+            p.name as position,
+            b.name as branch_name,
+            sph.start_date,
+            sph.end_date
+            FROM staff_position_histories sph
+            JOIN branches b ON b.id = sph.branch_id
+            JOIN branch_positions bp ON bp.id = sph.branch_position_id
+            JOIN staffs s ON s.id = sph.staff_id
+            JOIN users u ON u.id = sph.staff_id
+            JOIN grades g ON g.id = bp.grade_id
+            JOIN positions p ON p.id = bp.position_id
+            '.($branch ? 'AND b.id = ?' : '').'
+            '.($grade ? 'AND bp.grade_id = ?' : '').'
+            '.($year_start ? 'AND YEAR(sph.start_date) >= ?' : '').'
+            '.($year_end ? 'AND YEAR(sph.end_date) <= ?' : '').'
+        ', $paramsList);
+
+        return $db;
+    }
 }

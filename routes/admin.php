@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Setting\AdminPublicHolidayController;
 use App\Http\Controllers\Admin\Setting\AdminStateWeekendHolidayController;
 use App\Http\Controllers\Admin\Setting\GradeSettingController;
 use App\Http\Controllers\Admin\Setting\PositionSettingController;
+use App\Http\Controllers\Reporting\ReportingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
@@ -29,6 +30,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
             Route::post('/position-store-update', [AdminBranchController::class, 'positionStoreUpdate']);
             Route::post('/position-get-info', [AdminBranchController::class, 'positionGetInfo']);
             Route::post('/position-delete', [AdminBranchController::class, 'positionDelete']);
+        });
+
+        Route::group(['prefix' => 'reporting'], function () {
+            Route::match(['post', 'get'], '/', [ReportingController::class, 'index'])->name('admin.reporting.index');
+            Route::match(['get'], '/', [ReportingController::class, 'pdf_download'])->name('admin.reporting.pdf');
         });
 
         Route::group(['prefix' => 'setting'], function () {

@@ -67,4 +67,8 @@ trait LookupTrait
     public function getPositions(){
         return DB::select('SELECT id, name FROM positions where deleted = false');
     }
+
+    public function getBranches(){
+        return DB::select('SELECT id, name FROM branches where deleted = false');
+    }
 }
