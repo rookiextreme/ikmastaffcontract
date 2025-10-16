@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="row gx-5 gx-xl-10 mb-xl-10">
-        <div class="col-md-4">
+        <div class="col-md-12 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <label class="form-label">Tahun</label>
