@@ -199,7 +199,7 @@
        };
 
        var staffAcademicConfig = {
-           type: 'pie',
+           type: 'doughnut',
            data: saData,
            options: {
                plugins: {
