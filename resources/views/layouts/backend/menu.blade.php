@@ -170,6 +170,18 @@
                         </div>
                     @endrole
                     @role('super-admin|admin')
+                    <div class="menu-item">
+                        <a class="menu-link"
+                           href="{{ route('admin.dashboard') }}">
+                            <span class="menu-icon">
+                            <i class="ki-duotone ki-home fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            </i>
+                            </span>
+                            <span class="menu-title">Papan Pemuka</span>
+                        </a>
+                    </div>
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">

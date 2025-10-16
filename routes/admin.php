@@ -6,11 +6,16 @@ use App\Http\Controllers\Admin\Setting\AdminPublicHolidayController;
 use App\Http\Controllers\Admin\Setting\AdminStateWeekendHolidayController;
 use App\Http\Controllers\Admin\Setting\GradeSettingController;
 use App\Http\Controllers\Admin\Setting\PositionSettingController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Reporting\ReportingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
     Route::middleware('activeuser')->group(function () {
+        Route::group(['prefix' => 'dashboard'], function () {
+            Route::get('/', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+        });
+
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', [AdminUserController::class, 'index'])->name('admin.user.list');
             Route::post('/user-list', [AdminUserController::class, 'userList']);

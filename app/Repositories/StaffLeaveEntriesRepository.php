@@ -252,7 +252,7 @@ class StaffLeaveEntriesRepository
                 $sLeave->leave_balance = $sLeave->leave_balance + $entry->days;
                 $sLeave->leave_taken = $sLeave->leave_taken - $entry->days;
             }
-           
+
             $sLeave->save();
             DB::commit();
             return true;
