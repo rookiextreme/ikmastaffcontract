@@ -273,9 +273,15 @@ class StaffLeaveEntriesRepository
             $m->save();
 
             if($approve_stat == 2){
+                $leaveCategory = $m->getLeaveCategory;
                 $sLeave = $m->getStaffLeave;
-                $sLeave->leave_balance = $sLeave->leave_balance + $m->days;
-                $sLeave->leave_taken = $sLeave->leave_taken - $m->days;
+                if($leaveCategory->is_mc){
+                    $sLeave->mc_balance = $sLeave->mc_balance + $m->days;
+                    $sLeave->mc_taken = $sLeave->mc_taken - $m->days;
+                }else{
+                    $sLeave->leave_balance = $sLeave->leave_balance + $m->days;
+                    $sLeave->leave_taken = $sLeave->leave_taken - $m->days;
+                }
                 $sLeave->save();
             }
             dispatch(new StaffLeaveJob($id, $approve_stat == 1 ? 'approve' : 'reject'));
