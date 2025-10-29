@@ -7,7 +7,7 @@
         <!--begin::Logo image-->
         <a>
             <img alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}"
-                 class="h-100px ps-10 app-sidebar-logo-default"/>
+                 class=" app-sidebar-logo-default mb-0 mt-2" style="height: 125px;width: 200px"/>
             <img alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}"
                  class="h-20px app-sidebar-logo-minimize"/>
         </a>
