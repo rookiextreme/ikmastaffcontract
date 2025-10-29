@@ -3,12 +3,12 @@
      data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px"
      data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
     <!--begin::Logo-->
-    <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo" style="background-color: lightgrey">
+    <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo" style="background-color: color(srgb 0.0501 0.0551 0.0721)">
         <!--begin::Logo image-->
         <a>
-            <img alt="Logo" src="{{ asset('assets/images/ikmalogo.png') }}"
-                 class="h-70px ps-15 app-sidebar-logo-default"/>
-            <img alt="Logo" src="{{ asset('assets/images/ikmalogo.png') }}"
+            <img alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}"
+                 class="h-100px ps-10 app-sidebar-logo-default"/>
+            <img alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}"
                  class="h-20px app-sidebar-logo-minimize"/>
         </a>
         <div id="kt_app_sidebar_toggle"

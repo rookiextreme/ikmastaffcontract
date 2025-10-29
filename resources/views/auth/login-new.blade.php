@@ -36,11 +36,10 @@
             <div class="d-flex flex-center flex-lg-start flex-column">
                 <!--begin::Logo-->
                 <a href="{{ route('login') }}" class="mb-7">
-                    <img alt="Logo" src="{{ asset('assets/images/ikmalogo.png') }}" />
+                    <img class="h-325px" alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}" />
                 </a>
                 <!--end::Logo-->
                 <!--begin::Title-->
-                <h2 class="text-white fw-normal m-0">Sistem Pengurusan Staf Kontrak IKMa</h2>
                 <!--end::Title-->
             </div>
             <!--begin::Aside-->
