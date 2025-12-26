@@ -13,7 +13,7 @@
                 @endif
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row mb-4">
                     @if($staff->getStaffPosition->branch_position_id)
                         <div class="col-md-12 mb-4 vals-row mt-4 text-uppercase">
                             JAWATAN TERKINI:<br>
@@ -49,7 +49,16 @@
                             <div class="invalid-feedback"></div>
                         </div>
                     @endif
-                    @if(isset($branch_select))
+                </div>
+                @if(isset($branch_select))
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-4 vals-row mt-4">
+                            <label for="unit-select" class="required form-label">Pilih Unit</label>
+                            <select class="form-control" id="unit-select">
+                                <option>Sila Pilih</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
                         <div class="col-md-3 mb-4 vals-row mt-4">
                             <label for="position-select" class="required form-label">Pilih Jawatan/Gred</label>
                             <select class="form-control" id="position-select">
@@ -62,8 +71,8 @@
                             <input type="text" class="form-control" id="position-start-date" value="">
                             <div class="invalid-feedback"></div>
                         </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
             @if(isset($branch_select))
                 <div class="card-footer d-flex justify-content-end py-6 px-9">

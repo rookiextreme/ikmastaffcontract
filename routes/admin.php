@@ -35,6 +35,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']],function () {
             Route::post('/position-store-update', [AdminBranchController::class, 'positionStoreUpdate']);
             Route::post('/position-get-info', [AdminBranchController::class, 'positionGetInfo']);
             Route::post('/position-delete', [AdminBranchController::class, 'positionDelete']);
+
+            Route::post('/unit-list', [AdminBranchController::class, 'unitList']);
+            Route::post('/unit-store-update', [AdminBranchController::class, 'unitStoreUpdate']);
+            Route::post('/unit-get-info', [AdminBranchController::class, 'unitGetInfo']);
+            Route::post('/unit-delete', [AdminBranchController::class, 'unitDelete']);
         });
 
         Route::group(['prefix' => 'reporting'], function () {

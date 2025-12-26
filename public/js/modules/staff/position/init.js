@@ -47,3 +47,22 @@ $('#position-select').select2({
         }
     },
 });
+
+$('#unit-select').select2({
+    ajax: {
+        url: `${common.getUrl()}${moduleUrl}get-unit-by-branch`,
+        dataType: 'json',
+        data: function (params) {
+            let query = {
+                search: params.term,
+                branch_select: $('#branch-select').val(),
+            }
+            return query;
+        },
+        processResults: function (data) {
+            return {
+                results: data.items
+            };
+        }
+    },
+});

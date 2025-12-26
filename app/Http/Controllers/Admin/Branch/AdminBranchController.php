@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\Branch;
 use App\Models\BranchPosition;
+use App\Models\BranchUnit;
 use App\Repositories\BranchPositionRepository;
 use App\Repositories\BranchRepository;
+use App\Repositories\BranchUnitRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
 use Illuminate\Http\Request;
@@ -18,10 +20,13 @@ class AdminBranchController extends Controller
     private BranchRepository $branchRepository;
     private BranchPositionRepository $branchPositionRepository;
 
-    public function __construct(BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository)
+    private BranchUnitRepository $branchUnitRepository;
+
+    public function __construct(BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository, BranchUnitRepository $branchUnitRepository)
     {
         $this->branchRepository = $branchRepository;
         $this->branchPositionRepository = $branchPositionRepository;
+        $this->branchUnitRepository = $branchUnitRepository;
     }
 
     public function index(){
@@ -108,5 +113,32 @@ class AdminBranchController extends Controller
 
     public function positionDelete(Request $request){
         return $this->setResponse($this->setDelete(BranchPosition::class, $request->id, 'Jawatan'));
+    }
+
+    public function unitList(Request $request){
+        $model = $this->branchUnitRepository->getAllUnitForBranch($request);
+        return SymTable::of($model)
+            ->addRowAttr([
+                'data-id' => function($data){
+                    return $data->id;
+                }
+            ])
+            ->addColumn('name', function($data){
+                return strtoupper($data->name);
+            })->make();
+    }
+
+    public function unitStoreUpdate(Request $request){
+        $m = $this->branchUnitRepository->storeUpdate($request);
+        return $this->setResponse($m['message'], !($m['status'] == 'error'));
+    }
+
+    public function unitGetInfo(Request $request){
+        $m = $this->branchUnitRepository->getBranchUnit($request->id);
+        return $this->setDataResponse($m);
+    }
+
+    public function unitDelete(Request $request){
+        return $this->setResponse($this->setDelete(BranchUnit::class, $request->id, 'Unit'));
     }
 }

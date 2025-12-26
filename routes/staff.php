@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
     Route::middleware('activeuser')->group(function () {
         Route::group(['prefix' => 'profile'], function () {
+            Route::get('/position-history-export/{staff}', [StaffController::class, 'positionHistoryExport'])->name('staff.position-history-export');
             Route::get('/{user_id}/{page}', [StaffController::class, 'index'])->name('staff.profile');
             Route::post('/store-update-main', [StaffController::class, 'storeUpdateMain']);
             Route::post('/academic-list', [StaffController::class, 'academicList']);
@@ -18,6 +19,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
 
             Route::get('/get-branch-by-state', [StaffController::class, 'getBranchByState']);
             Route::get('/get-position-by-branch', [StaffController::class, 'getPositionByBranch']);
+            Route::get('/get-unit-by-branch', [StaffController::class, 'getUnitByBranch']);
             Route::post('/store-update-position', [StaffController::class, 'storeUpdatePosition']);
             Route::post('/store-update-new-leave-balance', [StaffController::class, 'storeUpdateNewLeaveBalance']);
 

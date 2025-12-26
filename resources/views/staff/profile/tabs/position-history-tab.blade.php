@@ -9,6 +9,9 @@
                         <a href="{{ route('admin.user.list') }}" class="btn btn-sm btn-danger">
                             Kembali Ke Senarai Pengguna
                         </a>
+                        <a target="_blank" href="{{ route('staff.position-history-export', ['staff' => $staff->id]) }}" class="btn btn-sm btn-info ms-4">
+                            Export Excel
+                        </a>
                     </div>
                 @endif
             </div>
@@ -40,6 +43,9 @@
                                                     {{ $gsp->start_date ? date('d-m-Y', strtotime($gsp->start_date)) : '-' }}<br>Hingga<br> {{ $gsp->end_date ? date('d-m-Y', strtotime($gsp->end_date)) : '-' }}
                                                 </td>
                                                 <td>
+                                                    @if($gsp->getBranchUnit)
+                                                        {{ $gsp->getBranchUnit?->name }}<br>
+                                                    @endif
                                                     {{ $gsp->getBranchPosition->getPosition->name }}<br>
                                                     {{ $gsp->getBranchPosition->getGrade->name }}
                                                 </td>

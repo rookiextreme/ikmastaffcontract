@@ -25,12 +25,14 @@ class StaffPositionRepository
         $staff_id = $request->staff_id;
         $branch_select = $request->branch_select;
         $position_select = $request->position_select;
+        $unit_select = $request->unit_select;
         $position_start_date = $request->position_start_date;
 
         DB::beginTransaction();
         try{
             $m = $this->getStaffPosition($staff_id);
             $m->branch_position_id = $position_select;
+            $m->branch_unit_id = $unit_select;
             $m->branch_id = $branch_select;
             $m->save();
 
@@ -69,6 +71,7 @@ class StaffPositionRepository
         $checkHistory = new StaffPositionHistory();
         $checkHistory->staff_id = $sp->staff_id;
         $checkHistory->branch_position_id = $sp->branch_position_id;
+        $checkHistory->branch_unit_id = $sp->branch_unit_id;
         $checkHistory->branch_id = $sp->branch_id;
         $checkHistory->start_date = $start_date ? date('Y-m-d', strtotime($start_date)) : null;
         $checkHistory->active = true;
