@@ -22,9 +22,12 @@
         <table style="width: 100%">
             <thead>
             <tr>
+                <td style="width:5%;text-align: center">Bil</td>
                 <td style="width:25%;text-align: center">Nama</td>
+                <th style="width:12%;text-align: center">No. KP</th>   {{-- ✅ Tambah kolum baru --}}
                 <td style="width:25%;text-align: center">Jawatan</td>
                 <td style="width:5%;text-align: center">Gred</td>
+                <td style="width:15%;text-align: center">Unit</td> {{-- ✅ TAMBAH --}}
                 <td style="width:25%;text-align: center">Cawangan</td>
                 <td style="width:10%;text-align: center">Tarikh Lantik</td>
                 <td style="width:10%;text-align: center">Tarikh Tamat</td>
@@ -32,11 +35,14 @@
             </thead>
             <tbody>
             @if(count($staffList) > 0)
-                @foreach($staffList as $sl)
+                @foreach($staffList as $index => $sl)
                     <tr>
+                        <td style="text-align:center">{{ $index + 1 }}</td>
                         <td>{{ ucwords($sl->name)  }}</td>
+                        <td style="text-align: center">{{ $sl->ic_number ?? '-' }}</td> {{-- ✅ Paparkan IC --}}
                         <td>{{ $sl->position }}</td>
                         <td style="text-align: center">{{ $sl->grade }}</td>
+                        <td>{{ $sl->unit_name ?? '-' }}</td> {{-- ✅ TAMBAH --}}
                         <td>{{ $sl->branch_name }}</td>
                         <td  style="text-align: center">
                             {{ $sl->start_date ?? '-' }}
@@ -48,7 +54,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="6">Tiada Rekod Ditemui</td>
+                    <td colspan="9">Tiada Rekod Ditemui</td>
                 </tr>
             @endif
             </tbody>

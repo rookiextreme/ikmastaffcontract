@@ -17,11 +17,7 @@
                         <div class="d-flex flex-column">
                             <!--begin::Name-->
                             <div class="d-flex align-items-center mb-2">
-                                <a class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">Profil:  {{ ucwords(strtolower($staff->getUser->name)) }}
-                                    @if($staff->contract_number)
-                                        (<span class="text-info">#{{ $staff->contract_number }}</span>)
-                                    @endif
-                                </a>
+                                <a class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">Profil:  {{ ucwords(strtolower($staff->getUser->name)) }}</a>
                                 <i class="ki-duotone ki-verify fs-1 text-primary">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
@@ -52,11 +48,16 @@
                                                     </span>
                                                     <br>
                                                     <span class="text-uppercase">
-                                                        {{ $staff->getStaffPosition->getBranchUnit?->name ?? '' }}
+                                                       {{ $staff->getStaffPosition->getBranchPosition->getUnit->name ?? '-' }}
                                                     </span>
                                                     <br>
-                                                    <span class="text-uppercase {{ $staff->work_status == 1 ? 'text-danger' : 'text-success' }}">{{ $staff->work_status == 1 ? 'Perkhidmatan Tamat' : 'Perkhidmatan Aktif'  }}</span>
-                                                </span>
+                                                     {{-- ✅ Paparan No. Kakitangan --}}
+                                                 <span class="text-uppercase">
+                                                No. Kakitangan: {{ $staff->getUser->no_staff ?? '-' }}
+                                                 </span>
+                                                 <br>
+                                                    <span class="text-uppercase {{ $staff->work_status == 1 ? 'text-danger' : 'text-success' }}">{{ $staff->work_status == 1 ? 'Perkhidmatan Tamat' : 'Perkhidmatan Aktif'  }}
+                                                </span>   
                                                 @else
                                                     <span class="text-danger">Sila Pilih Jawatan</span>
                                                 @endif
@@ -302,23 +303,23 @@
     </script>
 
     @if($page == 'main')
-        <script src="{{ asset('js/modules/staff/profile/init4.js') }}?v=4"></script>
-        <script src="{{ asset('js/modules/staff/profile/index4.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/profile/init4.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/profile/index4.js') }}?v=2"></script>
     @elseif($page == 'academic')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
         <script src="{{ asset('js/modules/staff/academic/init4.js') }}?v=4"></script>
         <script src="{{ asset('js/modules/staff/academic/index4.js') }}?v=4"></script>
     @elseif($page == 'position')
-        <script src="{{ asset('js/modules/staff/position/init.js') }}?v=5"></script>
-        <script src="{{ asset('js/modules/staff/position/index.js') }}?v=5"></script>
+        <script src="{{ asset('js/modules/staff/position/init.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/position/index.js') }}?v=4"></script>
     @elseif($page == 'family')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
         <script src="{{ asset('js/modules/staff/family/init4.js') }}?v=4"></script>
         <script src="{{ asset('js/modules/staff/family/index4.js') }}?v=4"></script>
     @elseif($page == 'position_history')
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=4"></script>
-        <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=4"></script>
+        <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=2"></script>
     @endif
 @endsection
 

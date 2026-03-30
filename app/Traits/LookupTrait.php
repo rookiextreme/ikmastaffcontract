@@ -57,7 +57,11 @@ trait LookupTrait
     }
 
     public function getLeaveCategories(){
-        return DB::select('SELECT * FROM leave_categories');
+    return DB::select('
+        SELECT *
+        FROM leave_categories
+        WHERE name != "MC"
+    ');
     }
 
     public function getGrades(){

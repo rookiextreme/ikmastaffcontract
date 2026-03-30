@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\Branch;
 use App\Models\BranchPosition;
-use App\Models\BranchUnit;
 use App\Repositories\BranchPositionRepository;
 use App\Repositories\BranchRepository;
-use App\Repositories\BranchUnitRepository;
 use App\Traits\CommonTrait;
 use App\Traits\LookupTrait;
 use Illuminate\Http\Request;
@@ -20,13 +18,10 @@ class AdminBranchController extends Controller
     private BranchRepository $branchRepository;
     private BranchPositionRepository $branchPositionRepository;
 
-    private BranchUnitRepository $branchUnitRepository;
-
-    public function __construct(BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository, BranchUnitRepository $branchUnitRepository)
+    public function __construct(BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository)
     {
         $this->branchRepository = $branchRepository;
         $this->branchPositionRepository = $branchPositionRepository;
-        $this->branchUnitRepository = $branchUnitRepository;
     }
 
     public function index(){
@@ -74,32 +69,48 @@ class AdminBranchController extends Controller
 
             $responseData['state'] = $state;
         }else if($page == 'position'){
-            $positions = $this->getPositions();
-            $grades = $this->getGrades();
+    $positions = $this->getPositions();
+    $grades = $this->getGrades();
 
-            $responseData['positions'] = $positions;
-            $responseData['grades'] = $grades;
-        }
+    $units = [];
+    if ($branch->hq == 1) {
+        $units = \App\Models\Unit::where('deleted', false)->orderBy('name')->get();
+    }
+
+    $responseData['positions'] = $positions;
+    $responseData['grades'] = $grades;
+    $responseData['units'] = $units;
+}
+
 
         return view('admin.branch.details.index')->with($responseData);
     }
 
-    public function positionList(Request $request){
-        $model = $this->branchPositionRepository->getAllPositionForBranch($request);
-        return SymTable::of($model)
-            ->addRowAttr([
-                'data-id' => function($data){
-                    return $data->id;
-                }
-            ])
-            ->addColumn('position', function($data){
-                return strtoupper($data->position_name);
-            })->addColumn('grade', function($data){
-                return strtoupper($data->grade_name);
-            })->addColumn('holiday', function($data){
-                return $data->default_holiday;
-            })->make();
-    }
+    public function positionList(Request $request)
+{
+    $model = $this->branchPositionRepository->getAllPositionForBranch($request);
+
+    return SymTable::of($model)
+        ->addRowAttr([
+            'data-id' => function ($data) {
+                return $data->id;
+            }
+        ])
+        ->addColumn('position', function ($data) {
+            return strtoupper($data->position_name);
+        })
+        ->addColumn('grade', function ($data) {
+            return strtoupper($data->grade_name);
+        })
+        ->addColumn('unit', function ($data) {          // ✅ Tambah bahagian ini
+            return strtoupper($data->unit_name ?? '-');
+        })
+        ->addColumn('holiday', function ($data) {
+            return $data->default_holiday;
+        })
+        ->make();
+}
+
 
     public function positionStoreUpdate(Request $request){
         $m = $this->branchPositionRepository->storeUpdate($request);
@@ -113,32 +124,5 @@ class AdminBranchController extends Controller
 
     public function positionDelete(Request $request){
         return $this->setResponse($this->setDelete(BranchPosition::class, $request->id, 'Jawatan'));
-    }
-
-    public function unitList(Request $request){
-        $model = $this->branchUnitRepository->getAllUnitForBranch($request);
-        return SymTable::of($model)
-            ->addRowAttr([
-                'data-id' => function($data){
-                    return $data->id;
-                }
-            ])
-            ->addColumn('name', function($data){
-                return strtoupper($data->name);
-            })->make();
-    }
-
-    public function unitStoreUpdate(Request $request){
-        $m = $this->branchUnitRepository->storeUpdate($request);
-        return $this->setResponse($m['message'], !($m['status'] == 'error'));
-    }
-
-    public function unitGetInfo(Request $request){
-        $m = $this->branchUnitRepository->getBranchUnit($request->id);
-        return $this->setDataResponse($m);
-    }
-
-    public function unitDelete(Request $request){
-        return $this->setResponse($this->setDelete(BranchUnit::class, $request->id, 'Unit'));
     }
 }

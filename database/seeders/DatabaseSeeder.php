@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             WeekendHolidaySeeder::class,
             LeaveCategorySeeder::class,
             LeaveRequestStatusSeeder::class,
+            LeaveGroupTypeSeeder::class,
         ]);
     }
 }

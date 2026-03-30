@@ -18,6 +18,12 @@
                         <input type="text" name="staff_name" class="form-control" value="{{ $staff_name }}">
                         <div class="invalid-feedback"></div>
                     </div>
+                        <div class="col-md-3 vals-row mb-4">
+        <label for="ic-no" class="form-label">No. KP</label>
+        <input type="text" name="ic_no" class="form-control" value="{{ $ic_no ?? '' }}">
+        <div class="invalid-feedback"></div>
+    </div>
+
                     <div class="col-md-4 vals-row mb-4">
                         <label for="branch" class="form-label">Cawangan</label>
                         <select name="branch" class="form-select" data-control="select2" id="branch">
@@ -61,6 +67,7 @@
                     <div class="col-md-12 mb-4">
                         <button name="find_normal_generate" type="submit" class="btn btn-success float-end ms-5" value="genNormal">Cari</button>
                         <button name="find_pdf_generate" formtarget="_blank" type="submit" class="btn btn-danger float-end" value="genPdf">Jana PDF</button>
+                        <button name="find_excel_generate" formtarget="_blank" type="submit" class="btn btn-primary float-end" value="genExcel">Jana Excel</button>
                     </div>
                 </div>
             </div>
@@ -77,35 +84,39 @@
                     <thead>
                         <tr>
                             <td style="width:25%">Nama</td>
+                            <td style="width:15%">No. KP</td>   {{-- 👈 kolum baru --}}
                             <td style="width:25%">Jawatan</td>
                             <td style="width:5%">Gred</td>
+                            <td style="width:16%">Unit</td> {{-- ✅ TAMBAH --}}
                             <td style="width:25%">Cawangan</td>
                             <td style="width:10%">Tarikh Lantik</td>
                             <td style="width:10%">Tarikh Tamat</td>
                         </tr>
                     </thead>
                     <tbody>
-                        @if(count($staffList) > 0)
-                            @foreach($staffList as $sl)
-                                <tr>
-                                    <td>{{ ucwords($sl->name)  }}</td>
-                                    <td>{{ $sl->position }}</td>
-                                    <td>{{ $sl->grade }}</td>
-                                    <td>{{ $sl->branch_name }}</td>
-                                    <td>
-                                        {{ $sl->start_date ?? '-' }}
-                                    </td>
-                                    <td>
-                                        {{ $sl->end_date ?? '-' }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="6">Tiada Rekod Ditemui</td>
-                            </tr>
-                        @endif
-                    </tbody>
+@if(count($staffList) > 0)
+    @foreach($staffList as $sl)
+        <tr>
+            <td>
+                {{ ucwords($sl->name) }}
+                <br>
+            </td>
+            <td>{{ $sl->ic_number }}</td>   {{-- tiada ?? '-' dulu --}}
+            <td>{{ $sl->position }}</td>
+            <td>{{ $sl->grade }}</td>
+            <td>{{ $sl->unit_name ?? '-' }}</td>
+            <td>{{ $sl->branch_name }}</td>
+            <td>{{ $sl->start_date }}</td>
+            <td>{{ $sl->end_date }}</td>
+        </tr>
+    @endforeach
+@else
+    <tr>
+        <td colspan="8">Tiada Rekod Ditemui</td>
+    </tr>
+@endif
+</tbody>
+
                 </table>
             </div>
         </div>

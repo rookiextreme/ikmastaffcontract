@@ -18,7 +18,7 @@
                             <div class="table-responsive">
                                 <div class="search float-end mb-4">
                                     <input id="approval-list-search" class="form-control" value="" style="outline: none"
-                                           placeholder="Search..">
+                                           placeholder="Carian Nama / No. KP">
                                 </div>
                                 <table class="table table-bordered text-center align-middle" id="approval-list">
                                     <thead>
@@ -62,6 +62,8 @@
     <input type="hidden" id="is-approval" value="{{ $is_role['approvaladmin'] }}">
     <input type="hidden" id="is-staff" value="{{ $is_role['staff'] }}">
     @include('staff.leave.modals.approver-change')
+    {{-- ✅ TAMBAH MODAL MODE B --}}
+@include('staff.leave.modals.admin-adjust-leave')
 
 @endsection
 
@@ -83,4 +85,25 @@
 
     <script src="{{ asset('js/modules/staff/leave/approval/init4.js') }}?v=4"></script>
     <script src="{{ asset('js/modules/staff/leave/approval/index4.js') }}?v=4"></script>
+@endsection
+
+@section('cssCustom')
+<style>
+/* ✅ Table masih boleh scroll kiri-kanan, tapi dropdown boleh keluar bawah */
+.table-responsive{
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    position: relative;
+}
+
+/* ✅ Kadang parent card-body clamp dropdown */
+.card-body{
+    overflow: visible !important;
+}
+
+/* ✅ Pastikan dropdown menu tak tenggelam */
+.dropdown-menu{
+    z-index: 1055 !important;
+}
+</style>
 @endsection

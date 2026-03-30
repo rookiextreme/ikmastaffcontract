@@ -9,9 +9,6 @@
                         <a href="{{ route('admin.user.list') }}" class="btn btn-sm btn-danger">
                             Kembali Ke Senarai Pengguna
                         </a>
-                        <a target="_blank" href="{{ route('staff.position-history-export', ['staff' => $staff->id]) }}" class="btn btn-sm btn-info ms-4">
-                            Export Excel
-                        </a>
                     </div>
                 @endif
             </div>
@@ -25,6 +22,7 @@
                                     <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
                                         <th style="width: 30%">Penempatan</th>
                                         <th style="width: 20%">Jawatan</th>
+                                         <th style="width: 20%">Unit</th> {{-- ✅ --}}
                                         <th style="width: 10%">Terkini?</th>
                                         @if(Auth::user()->hasRole('super-admin|admin'))
                                             <th style="width: 10%">Tindakan</th>
@@ -43,11 +41,12 @@
                                                     {{ $gsp->start_date ? date('d-m-Y', strtotime($gsp->start_date)) : '-' }}<br>Hingga<br> {{ $gsp->end_date ? date('d-m-Y', strtotime($gsp->end_date)) : '-' }}
                                                 </td>
                                                 <td>
-                                                    @if($gsp->getBranchUnit)
-                                                        {{ $gsp->getBranchUnit?->name }}<br>
-                                                    @endif
                                                     {{ $gsp->getBranchPosition->getPosition->name }}<br>
                                                     {{ $gsp->getBranchPosition->getGrade->name }}
+                                                </td>
+                                                <td>
+                                                    {{ $gsp->getBranchPosition->getUnit->name ?? '-' }}
+
                                                 </td>
                                                 <td>
                                                     @if($gsp->active)

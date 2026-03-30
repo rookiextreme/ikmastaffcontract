@@ -51,6 +51,7 @@ class AdminUserRepository
            SELECT
                 u.id,
                 u.ic_no,
+                u.no_staff, 
                 u.name,
                 u.email,
                 u.active,
@@ -63,7 +64,7 @@ class AdminUserRepository
             JOIN roles r ON r.id = ru.role_id
             '.(!empty($rolesDrop) ? 'AND r.id IN (' . implode(',', $rolesDrop) . ')' : '').'
             '.$searchStr.'
-            GROUP BY u.id, u.ic_no, u.name, u.email, u.active;
+            GROUP BY u.id, u.ic_no, u.no_staff, u.name, u.email, u.active;
         ', $params);
 
         return $m;
@@ -75,6 +76,7 @@ class AdminUserRepository
         $role = $request->role;
         $id = $request->id;
         $identification_no = $request->identification_no;
+        $no_staff = $request->no_staff;   // ✅ TAMBAH BARIS INI
 
         $check = $this->userRepository->checkExist($email, $identification_no, $id);
         DB::beginTransaction();
@@ -89,6 +91,7 @@ class AdminUserRepository
                 $this->userRepository->storeUser($check['user'], $name, $email, $role, $check['status'] == 'update');
                 $check['user']->syncRoles([$role]);
                 $check['user']->ic_no = $identification_no;
+                $check['user']->no_staff  = $no_staff;          // ✅ SET NO. KAKITANGAN
 
                 if($check['status'] == 'new'){
                     $newHashed = Str::random(10);
@@ -130,12 +133,13 @@ class AdminUserRepository
                 u.name,
                 u.email,
                 u.ic_no,
+                u.no_staff,   
                 GROUP_CONCAT(ru.role_id ORDER BY ru.role_id ASC) AS role_ids  -- Concatenate role_id
             FROM users u
             JOIN role_user ru ON ru.user_id = u.id
             JOIN roles r ON ru.role_id = r.id
             WHERE u.id = ?
-            GROUP BY u.id, u.name, u.email, u.ic_no;
+            GROUP BY u.id, u.name, u.email, u.ic_no, u.no_staff;
         ', [
             $user_id
         ]);

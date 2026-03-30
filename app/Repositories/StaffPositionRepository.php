@@ -25,14 +25,12 @@ class StaffPositionRepository
         $staff_id = $request->staff_id;
         $branch_select = $request->branch_select;
         $position_select = $request->position_select;
-        $unit_select = $request->unit_select;
         $position_start_date = $request->position_start_date;
 
         DB::beginTransaction();
         try{
             $m = $this->getStaffPosition($staff_id);
             $m->branch_position_id = $position_select;
-            $m->branch_unit_id = $unit_select;
             $m->branch_id = $branch_select;
             $m->save();
 
@@ -71,7 +69,6 @@ class StaffPositionRepository
         $checkHistory = new StaffPositionHistory();
         $checkHistory->staff_id = $sp->staff_id;
         $checkHistory->branch_position_id = $sp->branch_position_id;
-        $checkHistory->branch_unit_id = $sp->branch_unit_id;
         $checkHistory->branch_id = $sp->branch_id;
         $checkHistory->start_date = $start_date ? date('Y-m-d', strtotime($start_date)) : null;
         $checkHistory->active = true;
@@ -106,53 +103,61 @@ class StaffPositionRepository
     }
 
     public function getStaffByRequest(Request $request){
-        $staff_name = $request->staff_name;
-        $branch = $request->branch;
-        $grade = $request->grade;
-        $year_start = $request->year_start;
-        $year_end = $request->year_end;
+    $staff_name = $request->staff_name;
+    $ic_no      = $request->ic_no;   // No. KP
+    $branch     = $request->branch;
+    $grade      = $request->grade;
+    $year_start = $request->year_start;
+    $year_end   = $request->year_end;
 
-        $paramsList = [];
+    $paramsList = [];
 
-        if($branch){
-            $paramsList[] = $branch;
-        }
-        if($grade){
-            $paramsList[] = $grade;
-        }
-        if($year_start){
-            $paramsList[] = $year_start;
-        }
-        if($year_end){
-            $paramsList[] = $year_end;
-        }
+    if($branch){
+        $paramsList[] = $branch;
+    }
+    if($grade){
+        $paramsList[] = $grade;
+    }
+    if($year_start){
+        $paramsList[] = $year_start;
+    }
+    if($year_end){
+        $paramsList[] = $year_end;
+    }
+    if($staff_name){
+        $paramsList[] = '%'.$staff_name.'%';
+    }
+    if($ic_no){
+        $paramsList[] = '%'.$ic_no.'%';    // ✅ TAMBAH PARAM IC DI SINI
+    }
 
-        if($staff_name){
-            $paramsList[] = '%'.$staff_name.'%';
-        }
-
-        $db = DB::select('
-            SELECT
+    $db = DB::select('
+        SELECT
             u.name,
+            u.ic_no AS ic_number,
             g.name as grade,
             p.name as position,
             b.name as branch_name,
+            un.name as unit_name,         -- ✅ UNIT
             sph.start_date,
             sph.end_date
-            FROM staff_position_histories sph
-            JOIN branches b ON b.id = sph.branch_id
-            JOIN branch_positions bp ON bp.id = sph.branch_position_id
-            JOIN staffs s ON s.id = sph.staff_id
-            JOIN users u ON u.id = s.user_id
-            JOIN grades g ON g.id = bp.grade_id
-            JOIN positions p ON p.id = bp.position_id
-            '.($branch ? 'AND b.id = ?' : '').'
-            '.($grade ? 'AND bp.grade_id = ?' : '').'
-            '.($year_start ? 'AND YEAR(sph.start_date) >= ?' : '').'
-            '.($year_end ? 'AND YEAR(sph.end_date) <= ?' : '').'
-            '.($staff_name ? 'AND u.name LIKE ?' : '').'
-        ', $paramsList);
+        FROM staff_position_histories sph
+        JOIN branches b ON b.id = sph.branch_id
+        JOIN branch_positions bp ON bp.id = sph.branch_position_id
+        LEFT JOIN units un ON un.id = bp.unit_id   -- ✅ JOIN UNIT (ikut branch_position)
+        JOIN staffs s ON s.id = sph.staff_id
+        JOIN users u ON u.id = s.user_id
+        JOIN grades g ON g.id = bp.grade_id
+        JOIN positions p ON p.id = bp.position_id
+        '.($branch ? 'AND b.id = ?' : '').'
+        '.($grade ? 'AND bp.grade_id = ?' : '').'
+        '.($year_start ? 'AND YEAR(sph.start_date) >= ?' : '').'
+        '.($year_end ? 'AND YEAR(sph.end_date) <= ?' : '').'
+        '.($staff_name ? 'AND u.name LIKE ?' : '').'
+        '.($ic_no ? 'AND u.ic_no LIKE ?' : '').'
+    ', $paramsList);
 
-        return $db;
-    }
+    return $db;
+}
+
 }

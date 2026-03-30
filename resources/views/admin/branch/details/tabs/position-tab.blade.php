@@ -26,6 +26,7 @@
                                 <tr class="fw-bold fs-6 text-gray-800" style="text-align:center">
                                     <th style="width: 40%">Jawatan</th>
                                     <th style="width: 25%">Gred</th>
+                                     <th style="width: 25%">Unit</th> <!-- ✅ Tambah lajur Unit -->
                                     <th style="width: 25%">Cuti Asas</th>
                                     <th style="width: 10%">Tindakan</th>
                                 </tr>

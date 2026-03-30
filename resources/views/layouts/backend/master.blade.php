@@ -20,6 +20,8 @@
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     <!--end::Fonts-->
+    <!-- ✅ Flatpickr Datepicker (Global untuk semua page) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!--begin::Vendor Stylesheets(used for this page only)-->
 
     @yield('cssExtensions')
@@ -189,8 +191,27 @@
     let alerting = new Alerts('ms');
     let http = new Http();
 </script>
+<!-- ✅ Flatpickr JS (Global) -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ms.js"></script>
+<script>
+    // Set bahasa Melayu
+    flatpickr.localize(flatpickr.l10ns.ms);
+</script>
+<!-- ✅ Auto-init untuk input bertarikh -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    flatpickr('.date-ikma', {
+        altInput: true,
+        altFormat: 'd-m-Y',
+        dateFormat: 'Y-m-d',
+        allowInput: true
+    });
+});
+</script>
 <!--end::Global Javascript Bundle-->
 @yield('jsExtensions')
+@stack('scripts')
 
 @yield('jsCustom')
 <!--end::Javascript-->

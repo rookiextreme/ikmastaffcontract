@@ -6,6 +6,8 @@ use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Laratrust\LaratrustFacade as Laratrust;
+
 
 class AppServiceProvider extends ServiceProvider
 {

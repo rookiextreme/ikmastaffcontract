@@ -19,11 +19,6 @@
                         <input type="file" class="form-control text-uppercase" id="profile-picture" value="">
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="col-md-4 vals-row mt-4">
-                        <label for="contract" class="required form-label">No. Kontrak</label>
-                        <input type="text" class="form-control" id="contract" name="contract" value="{{ $staff->contract_number }}">
-                        <div class="invalid-feedback"></div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2 mb-4 vals-row mt-4">

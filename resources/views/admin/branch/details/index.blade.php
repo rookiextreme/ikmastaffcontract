@@ -41,10 +41,6 @@
                        href="{{ route('admin.branch.details', ['branch_id' => $branch->id, 'page' => 'main']) }}">Maklumat Asas</a>
                 </li>
                 <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'unit' ? 'active' : '' }}"
-                       href="{{ route('admin.branch.details', ['branch_id' => $branch->id, 'page' => 'unit']) }}">Unit</a>
-                </li>
-                <li class="nav-item mt-2">
                     <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position' ? 'active' : '' }}"
                        href="{{ route('admin.branch.details', ['branch_id' => $branch->id, 'page' => 'position']) }}">Jawatan</a>
                 </li>
@@ -58,9 +54,6 @@
     @elseif($page == 'position')
         @include('admin.branch.details.tabs.position-tab')
         @include('admin.branch.details.modals.position-modal')
-    @elseif($page == 'unit')
-        @include('admin.branch.details.tabs.unit-tab')
-        @include('admin.branch.details.modals.unit-modal')
     @endif
     <input type="hidden" id="branch-id" value="{{ $branch->id }}">
     <input type="hidden" id="page" value="{{ $page }}">
@@ -69,7 +62,7 @@
 @section('jsExtensions')
     <script src="{{ asset('js/custom/modals.js') }}"></script>
 
-    @if($page == 'position' || $page == 'unit')
+    @if($page == 'position')
         <script src="{{ asset('js/custom/datatable-helper.js') }}"></script>
     @endif
 @endsection
@@ -86,9 +79,6 @@
     @elseif($page == 'position')
         <script src="{{ asset('js/modules/admin/branch/details/position/init2.js') }}"></script>
         <script src="{{ asset('js/modules/admin/branch/details/position/index2.js') }}"></script>
-    @elseif($page == 'unit')
-        <script src="{{ asset('js/modules/admin/branch/details/unit/init2.js') }}"></script>
-        <script src="{{ asset('js/modules/admin/branch/details/unit/index2.js') }}"></script>
     @endif
 @endsection
 

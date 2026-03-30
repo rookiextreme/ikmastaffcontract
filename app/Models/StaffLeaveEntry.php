@@ -17,8 +17,8 @@ class StaffLeaveEntry extends Model
     public function getApprover(){
         return $this->hasOne(Staff::class,'id','approver_id')->with('getUser');
     }
-
+    // ✅ Tambah hubungan ini
     public function getLeaveCategory(){
-        return $this->hasOne(LeaveCategory::class,'id','leave_category_id');
+        return $this->belongsTo(LeaveCategory::class, 'leave_category_id', 'id');
     }
 }

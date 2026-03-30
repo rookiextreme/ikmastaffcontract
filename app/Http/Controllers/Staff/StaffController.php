@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Library\Datatable\SymTable;
 use App\Models\BranchPosition;
-use App\Models\Staff;
 use App\Models\StaffAcademic;
 use App\Models\StaffFamily;
 use App\Models\User;
 use App\Repositories\BranchPositionRepository;
 use App\Repositories\BranchRepository;
-use App\Repositories\BranchUnitRepository;
 use App\Repositories\StaffLeaveRepository;
 use App\Repositories\StaffPositionRepository;
 use App\Repositories\StaffRepository;
@@ -32,15 +30,12 @@ class StaffController extends Controller
     private StaffPositionRepository $staffPositionRepository;
     private StaffLeaveRepository $staffLeaveRepository;
 
-    private BranchUnitRepository $branchUnitRepository;
-
-    public function __construct(StaffRepository $staffRepository, BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository, StaffPositionRepository $staffPositionRepository, StaffLeaveRepository $staffLeaveRepository, BranchUnitRepository $branchUnitRepository){
+    public function __construct(StaffRepository $staffRepository, BranchRepository $branchRepository, BranchPositionRepository $branchPositionRepository, StaffPositionRepository $staffPositionRepository, StaffLeaveRepository $staffLeaveRepository){
         $this->staffRepository = $staffRepository;
         $this->branchRepository = $branchRepository;
         $this->branchPositionRepository = $branchPositionRepository;
         $this->staffPositionRepository = $staffPositionRepository;
         $this->staffLeaveRepository = $staffLeaveRepository;
-        $this->branchUnitRepository = $branchUnitRepository;
     }
     public function index($user_id, $page, Request $request){
         $staff = $this->staffRepository->getStaffProfile($user_id);
@@ -234,13 +229,5 @@ class StaffController extends Controller
     public function setPositionAsActive(Request $request){
         $m = $this->staffPositionRepository->setPositionAsActive($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));
-    }
-
-    public function getUnitByBranch(Request $request){
-        return json_encode(['items' => $this->branchUnitRepository->getUnitByBranch($request)]);
-    }
-
-    public function positionHistoryExport(Staff $staff){
-        return view('excel.position_history', compact('staff'));
     }
 }

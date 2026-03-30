@@ -28,6 +28,12 @@
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-12 vals-row mb-4">
+    <label for="no_staff" class="form-label">No. Kakitangan</label>
+    <input type="text" class="form-control text-uppercase" id="no_staff" value="">
+    <div class="invalid-feedback"></div>
+</div>
+
+                    <div class="col-md-12 vals-row mb-4">
                         <label for="name" class="required form-label">Role</label>
                         <select id="role" class="form-control" data-control="select2" data-dropdown-parent="#user-modal" data-placeholder="Pilih Role">
                             <option value="">Pilih Role</option>

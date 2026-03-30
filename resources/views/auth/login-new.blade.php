@@ -26,22 +26,29 @@
 <!--begin::Root-->
 <div class="d-flex flex-column flex-root">
     <!--begin::Page bg image-->
-    <style>body { background-image: url('{{ asset('templates/backend/assets/media/auth/bg4.jpg') }}'); } [data-bs-theme="dark"] body { background-image: url('{{ asset('templates/backend/assets/media/auth/bg4-dark.jpg') }}'); }</style>
+    <style>body { background-image: url("{{ asset('templates/backend/assets/media/auth/bg4.jpg') }}"); } [data-bs-theme="dark"] body { background-image: url("{{ asset('templates/backend/assets/media/auth/bg4-dark.jpg') }}"); }</style>
     <!--end::Page bg image-->
     <!--begin::Authentication - Sign-in -->
     <div class="d-flex flex-column flex-column-fluid flex-lg-row">
         <!--begin::Aside-->
         <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
             <!--begin::Aside-->
-            <div class="d-flex flex-center flex-lg-start flex-column">
-                <!--begin::Logo-->
-                <a href="{{ route('login') }}" class="mb-7">
-                    <img class="h-325px" alt="Logo" src="{{ asset('assets/images/ekontrak5.png') }}" />
-                </a>
-                <!--end::Logo-->
-                <!--begin::Title-->
-                <!--end::Title-->
+            <div class="d-flex flex-center flex-lg-start flex-column align-items-center justify-content-center" style="height:100vh;">
+            <!--begin::Logo-->
+            <a href="{{ route('login') }}" class="mb-5">
+             <img class="h-150px" alt="Logo" src="{{ asset('assets/images/ikmalogo.png') }}" />
+            </a>
+    <!--end::Logo-->
+
+    <!--begin::Title-->
+            <div class="text-center">
+                <h1 class="fw-bold mb-2 text-white" style="letter-spacing:1.5px; font-size:2.5rem;">SISTEM KAKITANGAN</h1>
+                <h2 class="fw-normal mb-2 text-white" style="font-style:italic; font-size:2rem;">(eKakitangan)</h2>
+                <h3 class="fw-semibold text-white" style="font-size:1.7rem;">Institut Koperasi Malaysia</h3>
             </div>
+    <!--end::Title-->
+            </div>
+
             <!--begin::Aside-->
         </div>
         <!--begin::Aside-->

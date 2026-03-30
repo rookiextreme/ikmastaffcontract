@@ -56,14 +56,12 @@ class StaffRepository
         $religion = $request->religion;
         $blood_type = $request->blood_type;
         $profile_picture = $request->file('profile_picture');
-        $contract = $request->contract;
 
         $staff_id = $request->staff_id;
 
         DB::beginTransaction();
         try{
             $staff = Staff::find($staff_id);
-            $staff->contract_number = $contract;
             $staff->address = $address;
             $staff->blood_type = $blood_type;
             $staff->city = $city;
@@ -341,8 +339,8 @@ class StaffRepository
 
         $m = StaffPositionHistory::find($id);
         $data['id'] = $m->id;
-        $data['start_date'] = $m->start_date ? date('d-m-Y', strtotime($m->start_date)) : '';;
-        $data['end_date'] = $m->end_date ? date('d-m-Y', strtotime($m->end_date)) : '';
+        $data['start_date'] = $m->start_date ? date('d-m-Y', strtotime($m->start_date)) : null;
+        $data['end_date'] = $m->end_date ? date('d-m-Y', strtotime($m->end_date)) : null;
         return $data;
     }
 

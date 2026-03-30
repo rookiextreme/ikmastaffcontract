@@ -17,6 +17,7 @@ class LeaveRequestStatusSeeder extends Seeder
             'Menunggu Pengesahan Permohonan',
             'Permohonan Cuti Diluluskan',
             'Permohonan Cuti Tidak Lulus',
+            'Permohonan Cuti Dibatalkan (Admin)',
         ];
 
         foreach ($data as $d) {

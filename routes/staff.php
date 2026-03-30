@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Staff\Leave\StaffLeaveController;
 use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\Staff\Performance\StaffPerformanceController;
+use App\Http\Controllers\Staff\Performance\StaffSktController; // ✅ TAMBAH
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
     Route::middleware('activeuser')->group(function () {
+
         Route::group(['prefix' => 'profile'], function () {
-            Route::get('/position-history-export/{staff}', [StaffController::class, 'positionHistoryExport'])->name('staff.position-history-export');
             Route::get('/{user_id}/{page}', [StaffController::class, 'index'])->name('staff.profile');
             Route::post('/store-update-main', [StaffController::class, 'storeUpdateMain']);
             Route::post('/academic-list', [StaffController::class, 'academicList']);
@@ -19,7 +21,6 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
 
             Route::get('/get-branch-by-state', [StaffController::class, 'getBranchByState']);
             Route::get('/get-position-by-branch', [StaffController::class, 'getPositionByBranch']);
-            Route::get('/get-unit-by-branch', [StaffController::class, 'getUnitByBranch']);
             Route::post('/store-update-position', [StaffController::class, 'storeUpdatePosition']);
             Route::post('/store-update-new-leave-balance', [StaffController::class, 'storeUpdateNewLeaveBalance']);
 
@@ -46,7 +47,27 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::get('/get-approver-options', [StaffLeaveController::class, 'approverOptions']);
             Route::post('/update-approver', [StaffLeaveController::class, 'updateApprover']);
             Route::post('/leave-request-change-category', [StaffLeaveController::class, 'leaveRequestChangeCategory']);
-
+            Route::post('/admin-adjust-auto-approve', [StaffLeaveController::class, 'adminAdjustAndAutoApprove']);
         });
+
+        // Penilaian Prestasi (LNPT - PYD)
+        Route::get('/performance', [StaffPerformanceController::class, 'index'])
+            ->name('staff.performance.index');
+
+        Route::post('/performance/save', [StaffPerformanceController::class, 'saveDraft'])
+            ->name('staff.performance.save');
+
+        Route::post('/performance/submit', [StaffPerformanceController::class, 'submit'])
+            ->name('staff.performance.submit');
+
+        // ✅ SKT (PYD) — klik menu terus buka borang (Bahagian I default)
+        Route::get('/performance/skt', [StaffSktController::class, 'show'])
+            ->name('staff.performance.skt');
+
+        Route::post('/performance/skt/save', [StaffSktController::class, 'saveDraft'])
+            ->name('staff.performance.skt.save');
+
+        Route::post('/performance/skt/submit', [StaffSktController::class, 'submit'])
+            ->name('staff.performance.skt.submit');
     });
 });

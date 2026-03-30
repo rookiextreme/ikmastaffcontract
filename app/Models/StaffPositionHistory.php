@@ -13,8 +13,4 @@ class StaffPositionHistory extends Model
     public function getBranchPosition(){
         return $this->hasOne(BranchPosition::class,'id','branch_position_id');
     }
-
-    public function getBranchUnit(){
-        return $this->hasOne(BranchUnit::class,'id','branch_unit_id');
-    }
 }
