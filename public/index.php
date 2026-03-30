@@ -1,5 +1,5 @@
 <?php
-
+//ini code irham dan meor latest
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
