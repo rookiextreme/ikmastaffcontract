@@ -1,6 +1,6 @@
 <?php
 //update to original
-//Testing git
+//Testing gits
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
