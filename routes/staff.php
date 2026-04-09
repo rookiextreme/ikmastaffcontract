@@ -28,6 +28,12 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/store-update-family', [StaffController::class, 'storeUpdateFamily']);
             Route::post('/get-info-family', [StaffController::class, 'getFamilyInfo']);
             Route::post('/delete-family', [StaffController::class, 'deleteFamily']);
+
+            Route::post('/harta-list', [StaffController::class, 'hartaList']);
+            Route::post('/store-update-harta', [StaffController::class, 'storeUpdateHarta']);
+            Route::post('/get-info-harta', [StaffController::class, 'getHartaInfo']);
+            Route::post('/delete-harta', [StaffController::class, 'deleteHarta']);
+
             Route::post('/store-update-work-status', [StaffController::class, 'storeUpdateWorkStatus']);
             Route::post('/get-info-position-history', [StaffController::class, 'getPositionHistoryInfo']);
             Route::post('/store-update-position-history-date', [StaffController::class, 'storeUpdatePositionHistoryDate']);

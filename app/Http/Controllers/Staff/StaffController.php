@@ -7,6 +7,7 @@ use App\Library\Datatable\SymTable;
 use App\Models\BranchPosition;
 use App\Models\StaffAcademic;
 use App\Models\StaffFamily;
+use App\Models\StaffHarta; // ✅ TAMBAH
 use App\Models\User;
 use App\Repositories\BranchPositionRepository;
 use App\Repositories\BranchRepository;
@@ -37,6 +38,7 @@ class StaffController extends Controller
         $this->staffPositionRepository = $staffPositionRepository;
         $this->staffLeaveRepository = $staffLeaveRepository;
     }
+
     public function index($user_id, $page, Request $request){
         $staff = $this->staffRepository->getStaffProfile($user_id);
 
@@ -84,41 +86,26 @@ class StaffController extends Controller
         return view('staff.profile.index')->with($responseData);
     }
 
-    public function storeUpdateMain(Request $request){
-        $m = $this->staffRepository->storeUpdateProfile($request);
-        return $this->setDataResponse($m, !($m['status'] == 'error'));
-    }
-
+    // ================= ACADEMIC =================
     public function academicList(Request $request){
         $model = $this->staffRepository->getAcademicList($request);
 
         return SymTable::of($model)
             ->addRowAttr([
-                'data-id' => function($data){
-                    return $data->id;
-                }
+                'data-id' => fn($data) => $data->id
             ])
-            ->addColumn('level', function($data){
-                return $data->qualification;
-            })
-            ->addColumn('institution', function($data){
-                return $data->institution_name;
-            })
+            ->addColumn('level', fn($data) => $data->qualification)
+            ->addColumn('institution', fn($data) => $data->institution_name)
             ->addColumn('certificate', function($data){
                 $pro = $data->certification_professional ? '<a class="text-warning" target="_blank" href="'.asset('uploads/staff/academics/cert_pro/'.$data->certification_professional).'">Papar Sijil</a>' : '';
                 $cert = $data->certificate_file ? '<br><a target="_blank" href="'.asset('uploads/staff/academics/cert/'.$data->certificate_file).'">Papar Sijil</a>' : '';
-
-                if($pro == null && $cert == null){
-                    return '-';
-                }
-                return $pro.$cert;
+                return $pro.$cert ?: '-';
             })
             ->addColumn('specialization', function($data){
                 return '<span class="text-primary">'.ucwords($data->major_specialization).'</span>'.($data->minor_specialization ? '<br><span class="text-info">'.ucwords($data->minor_specialization).'</span>' : '');
             })
-            ->addColumn('grade', function($data){
-                return $data->overall_grade ?? '-';
-            })->make();
+            ->addColumn('grade', fn($data) => $data->overall_grade ?? '-')
+            ->make();
     }
 
     public function storeUpdateAcademic(Request $request){
@@ -134,64 +121,20 @@ class StaffController extends Controller
         return $this->setResponse($this->setHardDelete(StaffAcademic::class, $request->id, 'Akademik'));
     }
 
-    public function resetPassword(Request $request){
-        $request->validate([
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ], [
-            'password.required' => 'Kata Laluan Wajib Diisi',
-            'password.confirmed' => 'Kata Laluan Tidak Sama',
-            'password.min' => 'Kata Laluan Perlu Minima 8 Karakter',
-        ]);
-
-        $user_id = $request->user_id;
-        $m = User::find($user_id);
-        $m->password = Hash::make($request->password);
-        $m->save();
-
-        return redirect()->back()->with('success', 'Your action was successful!');
-    }
-
-    public function getBranchByState(Request $request){
-        return json_encode(['items' => $this->branchRepository->getBranchesByState($request)]);
-    }
-
-    public function getPositionByBranch(Request $request){
-        return json_encode(['items' => $this->branchPositionRepository->getPositionByBranch($request)]);
-    }
-
-    public function storeUpdatePosition(Request $request){
-        $m = $this->staffPositionRepository->storeUpdatePosition($request);
-        return $this->setResponse($m['message'], !($m['status'] == 'error'));
-    }
-
-    public function storeUpdateNewLeaveBalance(Request $request){
-        $m = $this->staffLeaveRepository->storeUpdateNewLeaveBalance($request);
-        return $this->setResponse($m['message'], !($m['status'] == 'error'));
-    }
-
+    // ================= FAMILY =================
     public function familyList(Request $request){
         $model = $this->staffRepository->getFamilyList($request);
 
         return SymTable::of($model)
             ->addRowAttr([
-                'data-id' => function($data){
-                    return $data->id;
-                }
+                'data-id' => fn($data) => $data->id
             ])
-            ->addColumn('name', function($data){
-                return $data->name.'<br>Umur '.(Carbon::parse($data->dob)->age);
-            })
-            ->addColumn('email', function($data){
-                return $data->email.'<br>'.$data->phone;
-            })
-            ->addColumn('relation', function($data){
-                return $data->relation;
-            })
-            ->addColumn('grade', function($data){
-                return $data->overall_grade ?? '-';
-            })->addColumn('death', function($data){
-                return $data->death_date ? $this->regularDate($data->death_date) : '-';
-            })->make();
+            ->addColumn('name', fn($data) => $data->name.'<br>Umur '.(Carbon::parse($data->dob)->age))
+            ->addColumn('email', fn($data) => $data->email.'<br>'.$data->phone)
+            ->addColumn('relation', fn($data) => $data->relation)
+            ->addColumn('grade', fn($data) => $data->overall_grade ?? '-')
+            ->addColumn('death', fn($data) => $data->death_date ? $this->regularDate($data->death_date) : '-')
+            ->make();
     }
 
     public function storeUpdateFamily(Request $request){
@@ -207,6 +150,35 @@ class StaffController extends Controller
         return $this->setResponse($this->setHardDelete(StaffFamily::class, $request->id, 'Maklumat Keluarga'));
     }
 
+    // ================= HARTA (BARU) =================
+  public function hartaList(Request $request){
+    $model = $this->staffRepository->getHartaList($request);
+
+    return SymTable::of($model)
+        ->addRowAttr([
+            'data-id' => fn($data) => $data->id
+        ])
+        ->addColumn('type', fn($data) => ($data->type ?? '-') == 'Lain lain' ? 'Lain-lain' : ($data->type ?? '-'))
+        ->addColumn('description', fn($data) => $data->description ?? '-')
+        ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
+        ->addColumn('year', fn($data) => $data->year ?? '-')
+        ->make();
+}
+
+    public function storeUpdateHarta(Request $request){
+        $m = $this->staffRepository->storeUpdateHarta($request);
+        return $this->setDataResponse($m, !($m['status'] == 'error'));
+    }
+
+    public function getHartaInfo(Request $request) : JsonResponse{
+        return $this->setDataResponse($this->staffRepository->getHarta($request->id));
+    }
+
+    public function deleteHarta(Request $request) : JsonResponse{
+        return $this->setResponse($this->setHardDelete(StaffHarta::class, $request->id, 'Harta'));
+    }
+
+    // ================= OTHERS =================
     public function storeUpdateAppointed(Request $request){
         $m = $this->staffRepository->setAppointedDate($request);
         return $this->setResponse($m['message'], !($m['status'] == 'error'));

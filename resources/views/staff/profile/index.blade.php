@@ -190,6 +190,14 @@
                         <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'position_history' ? 'active' : '' }}"
                            href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'position_history']) }}">Sejarah Perkhidmatan</a>
                     </li>
+
+                    {{-- ✅ TAMBAH BARU: TAB PERISYTIHARAN HARTA --}}
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ $page == 'harta' ? 'active' : '' }}"
+                           href="{{ route('staff.profile', ['user_id' => $staff->user_id, 'page' => 'harta']) }}">
+                            Perisytiharan Harta
+                        </a>
+                    </li>
                 @endif
                 @if(Auth::user()->hasRole('super-admin|admin'))
                     <li class="nav-item mt-2">
@@ -201,6 +209,7 @@
             <!--begin::Navs-->
         </div>
     </div>
+
     @if($page == 'main')
         @include('staff.profile.tabs.profile-tab')
     @elseif($page == 'academic')
@@ -216,7 +225,13 @@
     @elseif($page == 'family')
         @include('staff.profile.modals.family-modal')
         @include('staff.profile.tabs.family-tab')
+
+    {{-- ✅ TAMBAH BARU: PAGE HARTA --}}
+    @elseif($page == 'harta')
+        @include('staff.profile.modals.harta-modal')
+        @include('staff.profile.tabs.harta-tab')
     @endif
+
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
     <input type="hidden" id="page" value="{{ $page }}">
@@ -320,6 +335,11 @@
         <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
         <script src="{{ asset('js/modules/staff/position_history/init.js') }}?v=2"></script>
         <script src="{{ asset('js/modules/staff/position_history/index.js') }}?v=2"></script>
+
+    {{-- ✅ TAMBAH BARU: JS PAGE HARTA --}}
+    @elseif($page == 'harta')
+        <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
+        <script src="{{ asset('js/modules/staff/harta/init.js') }}?v=1"></script>
+        <script src="{{ asset('js/modules/staff/harta/index.js') }}?v=1"></script>
     @endif
 @endsection
-

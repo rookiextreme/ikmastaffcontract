@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Staff;
 use App\Models\StaffAcademic;
 use App\Models\StaffFamily;
+use App\Models\StaffHarta;
 use App\Models\StaffPosition;
 use App\Models\StaffPositionHistory;
 use App\Models\User;
@@ -298,6 +299,72 @@ class StaffRepository
         $data['child_count'] = $m->child_count;
         $data['dob'] = $m->dob ? $this->regularDate($m->dob) : null;
         $data['death'] = $m->death_date ? $this->regularDate($m->death_date) : null;
+        return $data;
+    }
+
+    public function getHartaList(Request $request){
+        $staff_id = $request->staff_id;
+
+        $model = DB::select('
+            SELECT
+            sh.id,
+            sh.type,
+            sh.description,
+            sh.value,
+            sh.year
+            FROM staff_hartas sh
+            JOIN staffs s ON s.id = sh.staff_id
+            AND sh.staff_id = ?
+            LIMIT 100
+        ',[
+            $staff_id
+        ]);
+
+        return $model;
+    }
+
+    public function storeUpdateHarta(Request $request){
+        $harta_type = $request->harta_type;
+        $harta_desc = $request->harta_desc;
+        $harta_value = $request->harta_value;
+        $harta_year = $request->harta_year;
+        $id = $request->id;
+        $staff_id = $request->staff_id;
+
+        DB::beginTransaction();
+        try{
+            $m = $id ? StaffHarta::find($id) : new StaffHarta;
+            $m->staff_id = $staff_id;
+            $m->type = $harta_type;
+            $m->description = $harta_desc;
+            $m->value = $harta_value;
+            $m->year = $harta_year;
+            $m->save();
+
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Rekod Harta '.($id ? 'Dikemaskini' : 'Ditambah'),
+        ];
+    }
+
+    public function getHarta($id){
+        $data = [];
+
+        $m = StaffHarta::find($id);
+        $data['id'] = $m->id;
+        $data['type'] = $m->type;
+        $data['description'] = $m->description;
+        $data['value'] = $m->value;
+        $data['year'] = $m->year;
         return $data;
     }
 
