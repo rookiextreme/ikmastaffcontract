@@ -2,7 +2,7 @@ $('#update-profile').on('click', function(){
     let v = new Validscript('ms');
     v.validInt('#salutation', 'Nama Gelaran', true)
     v.validMix('#name', 'Nama')
-    v.validMix('#contract', 'KOntrak')
+    //v.validMix('#contract', 'KOntrak')
     v.validInt('#identification-no', 'No. Kad Pengenalan')
     v.validEmail('#email', 'E-mel')
     v.validMix('#address', 'Alamat')

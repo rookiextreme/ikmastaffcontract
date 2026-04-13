@@ -1,49 +1,60 @@
-$('#update-position').on('click', function(){
+// ===============================
+// index.js (Tetapan Jawatan Staff)
+// ===============================
+
+$('#update-position').on('click', function () {
     common.buttonLoadOnPress('#update-position');
+
     let v = new Validscript();
-    v.validInt('#state-select', 'Negeri', true)
-    v.validInt('#branch-select', 'Penempatan', true)
-    v.validInt('#position-select', 'Jawatan/Gred', true)
-    v.validInt('#unit-select', 'Unit', true)
-    v.validRegularDate('#position-start-date', 'Tarikh Mula Lantikan')
+    v.validInt('#state-select', 'Negeri', true);
+    v.validInt('#branch-select', 'Penempatan', true);
+    v.validInt('#position-select', 'Jawatan/Gred', true);
+    v.validRegularDate('#position-start-date', 'Tarikh Mula Lantikan');
 
     if (v.checkFail()) {
         alerting.formRequired();
+        common.buttonLoadOff('#update-position'); // ✅ supaya button tak stuck
         return false;
     }
 
     v.setNewEntry('staff_id', staff_id);
 
+    // ❗ Tidak hantar unit_id supaya backend lama tak terganggu.
+    // Kalau satu hari nanti awak nak simpan unit, baru kita tambah di backend & hantar di sini.
+
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update-position`,
         data: v.data,
         method: 'POST',
-        callback: function(r){
+        callback: function (r) {
             common.buttonLoadOff('#update-position');
-            if(r.status){
+
+            if (r.status) {
                 alerting.fireSwal({
                     text: r.data.message,
                     icon: 'success',
                     buttonColor: 'btn btn-success',
                     confirmButton: 'Close',
-                    callback: function(){
+                    callback: function () {
                         window.location.href = `${common.getUrl()}${moduleUrl}${user_id}/${page}`;
                     }
-                })
-            }else{
+                });
+            } else {
                 alerting.error(r.data);
             }
         }
-    })
-})
+    });
+});
 
-$('#update-leave-balance').on('click', function(){
-    common.buttonLoadOnPress('#update-leave-balance')
-    let v = new Validscript()
-    v.validDoubleInt('#new-leave-balance', 'Jumlah Cuti Baru')
+$('#update-leave-balance').on('click', function () {
+    common.buttonLoadOnPress('#update-leave-balance');
+
+    let v = new Validscript();
+    v.validDoubleInt('#new-leave-balance', 'Jumlah Cuti Baru');
 
     if (v.checkFail()) {
         alerting.formRequired();
+        common.buttonLoadOff('#update-leave-balance'); // ✅ supaya button tak stuck
         return false;
     }
 
@@ -53,21 +64,22 @@ $('#update-leave-balance').on('click', function(){
         url: `${common.getUrl()}${moduleUrl}store-update-new-leave-balance`,
         data: v.data,
         method: 'POST',
-        callback: function(r){
+        callback: function (r) {
             common.buttonLoadOff('#update-leave-balance');
-            if(r.status){
+
+            if (r.status) {
                 alerting.fireSwal({
                     text: r.data.message,
                     icon: 'success',
                     buttonColor: 'btn btn-success',
                     confirmButton: 'Close',
-                    callback: function(){
-                        window.location.reload()
+                    callback: function () {
+                        window.location.reload();
                     }
-                })
-            }else{
+                });
+            } else {
                 alerting.error(r.data);
             }
         }
-    })
-})
+    });
+});
