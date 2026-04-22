@@ -1,52 +1,36 @@
-$('#position-add').on('click', function(){
-    resetPositionForm();
-    positionModal.show({
-        title: 'Tambah Jawatan',
+$('#unit-add').on('click', function(){
+    resetUnitForm();
+    unitModal.show({
+        title: 'Tambah Unit',
         buttons: [
-            {
-                selector: '#position-store-add',
-                show: true
-            },
-            {
-                selector: '#position-store-update',
-                show: false
-            }
+            { selector: '#unit-store-add', show: true },
+            { selector: '#unit-store-update', show: false }
         ]
     });
 })
 
-$(document).on('click','.position-edit', function(){
-    resetPositionForm();
+$(document).on('click','.unit-edit', function(){
+    resetUnitForm();
     let id = common.getRowId(this, 'data-id');
     let data = common.getForm();
     data.append('id', id);
 
-    positionModal.show({
-        title: 'Kemaskini Jawatan',
+    unitModal.show({
+        title: 'Kemaskini Unit',
         buttons: [
-            {
-                selector: '#position-store-add',
-                show: false
-            },
-            {
-                selector: '#position-store-update',
-                show: true
-            }
+            { selector: '#unit-store-add', show: false },
+            { selector: '#unit-store-update', show: true }
         ],
         callback: function(){
             http.fetch({
-                url: `${common.getUrl()}${moduleUrl}position-get-info`,
+                url: `${common.getUrl()}${moduleUrl}get-info`,
                 data: data,
                 method: 'POST',
                 callback: function(r){
                     if(r.status){
-    common.setFormValue('#position-name', r.data.name, 'dropdown');
-    $('#position-unit').val(r.data.unit ?? '');
-    $('#position-unit').removeClass('is-valid is-invalid');
-    common.setFormValue('#position-grade', r.data.grade, 'dropdown');
-    common.setFormValue('#position-holiday', r.data.holiday, 'string');
-    common.setFormValue('#position-id', r.data.id, 'string');
-}else{
+                        common.setFormValue('#unit-name', r.data.name, 'string');
+                        common.setFormValue('#unit-id', r.data.id, 'string');
+                    }else{
                         alerting.error(r.data);
                     }
                 }
@@ -55,17 +39,13 @@ $(document).on('click','.position-edit', function(){
     });
 })
 
-$('#position-store-add').on('click', () => positionStoreUpdate('#position-store-add'));
-$('#position-store-update').on('click', () => positionStoreUpdate('#position-store-add'));
+$('#unit-store-add').on('click', () => unitStoreUpdate('#unit-store-add'));
+$('#unit-store-update').on('click', () => unitStoreUpdate('#unit-store-update'));
 
-function positionStoreUpdate(selector){
+function unitStoreUpdate(selector){
     common.buttonLoadOnPress(selector);
-    let v = new Validscript('ms');
-
-    v.validInt('#position-name', 'Jawatan', true)
-    v.validInt('#position-grade', 'Gred', true)
-    v.validInt('#position-unit', 'Unit', true) // ✅ tambah
-    v.validDoubleInt('#position-holiday', 'Bilangan Cuti')
+    let v = new Validscript();
+    v.validMix('#unit-name', 'Nama');
 
     if(v.checkFail()){
         alerting.formRequired();
@@ -73,16 +53,13 @@ function positionStoreUpdate(selector){
         return false;
     }
 
-    v.setNewEntry('id', $('#position-id').val());
-    v.setNewEntry('branch_id', branch_id);
-     v.setNewEntry('position_unit', $('#position-unit').val()); // ✅ PALING PENTING
+    v.setNewEntry('id', $('#unit-id').val());
 
     http.fetch({
-        url: `${common.getUrl()}${moduleUrl}position-store-update`,
+        url: `${common.getUrl()}${moduleUrl}store-update`,
         data: v.data,
         method: 'POST',
         callback: function(r){
-            console.log(r);
             if(r.status){
                 alerting.fireSwal({
                     text: r.data.message,
@@ -90,32 +67,31 @@ function positionStoreUpdate(selector){
                     buttonColor: 'btn btn-success',
                     confirmButton: 'Close',
                     callback: function(){
-                        positionModal.hide();
+                        unitModal.hide();
                         table.reload();
                     }
                 })
             }else{
                 alerting.error(r.data);
             }
-
             common.buttonLoadOff(selector);
         }
     })
 }
 
-$(document).on('click', '.position-delete', function(){
+$(document).on('click', '.unit-delete', function(){
     let data = common.getForm();
     data.append('id', common.getRowId(this, 'data-id'));
 
     alerting.fireSwal({
-        text: 'Padam Jawatan?',
-        icon: 'warning',
-        confirmButton: 'Ya',
+        text: 'Padam Unit?',
+        icon: 'error',
+        confirmButton: 'Padam',
         buttonColor: 'btn btn-warning',
         showCancelButton: true,
         callback: function(){
             http.fetch({
-                url: `${common.getUrl()}${moduleUrl}position-delete`,
+                url: `${common.getUrl()}${moduleUrl}delete`,
                 data: data,
                 method: 'POST',
                 callback: function(r){

@@ -23,17 +23,19 @@
                         <div class="invalid-feedback"></div>
                     </div>
 
-                    {{-- Unit (HQ Sahaja) --}}
-                    <div class="col-md-6">
-    <label for="position_unit" class="form-label">Unit</label>
-    <select class="form-control" id="position_unit">
+              {{-- Unit (HQ Sahaja) --}}
+{{-- Unit (HQ Sahaja) --}}
+<div class="col-md-12 vals-row mb-4">
+    <label for="position-unit" class="form-label">Unit</label>
+    <select class="form-control" id="position-unit" name="position_unit"
+            style="height: 44px; padding-top: 0.775rem; padding-bottom: 0.775rem;">
         <option value="">Sila Pilih</option>
         @foreach($units as $unit)
             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
         @endforeach
     </select>
+    <div class="invalid-feedback"></div>
 </div>
-
 
                     {{-- Gred --}}
                     <div class="col-md-12 vals-row mb-4">

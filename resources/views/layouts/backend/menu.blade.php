@@ -3,23 +3,43 @@
     use App\Models\AgentStatus;
     use Illuminate\Support\Facades\Auth;
 
-    // ✅ Tapis menu PPP/PPK berdasarkan lantikan dalam tempoh aktif
     use App\Models\PerformanceAssignment;
     use App\Models\PerformancePeriod;
 
     $uid = Auth::id();
-    $activePeriod = PerformancePeriod::where('is_active', 1)->first();
+
+    // Ambil period aktif ikut type
+    $activeLnptPeriod = PerformancePeriod::where('type', 'LNPT')
+        ->where('is_active', 1)
+        ->orderByDesc('year')
+        ->orderByDesc('session')
+        ->first();
+
+    $activeSktPeriod = PerformancePeriod::where('type', 'SKT')
+        ->where('is_active', 1)
+        ->orderByDesc('year')
+        ->orderByDesc('session')
+        ->first();
 
     $isPPP = false;
     $isPPK = false;
+    $isPPPSkt = false;
 
-    if ($activePeriod) {
-        $isPPP = PerformanceAssignment::where('performance_period_id', $activePeriod->id)
+    // PPP / PPK untuk LNPT sahaja
+    if ($activeLnptPeriod) {
+        $isPPP = PerformanceAssignment::where('performance_period_id', $activeLnptPeriod->id)
             ->where('ppp_user_id', $uid)
             ->exists();
 
-        $isPPK = PerformanceAssignment::where('performance_period_id', $activePeriod->id)
+        $isPPK = PerformanceAssignment::where('performance_period_id', $activeLnptPeriod->id)
             ->where('ppk_user_id', $uid)
+            ->exists();
+    }
+
+    // PPP SKT jika mahu tapis ikut period SKT
+    if ($activeSktPeriod) {
+        $isPPPSkt = PerformanceAssignment::where('performance_period_id', $activeSktPeriod->id)
+            ->where('ppp_user_id', $uid)
             ->exists();
     }
 @endphp
@@ -390,7 +410,6 @@
 </div>
 @endif
 
-{{-- ✅ Menu PPP (TAPIS ikut lantikan) --}}
 @if($isPPP)
 <div class="menu-item">
     <a class="menu-link" href="{{ route('ppp.performance.index') }}">
@@ -402,8 +421,9 @@
         <span class="menu-title">Penilaian Prestasi (PPP)</span>
     </a>
 </div>
+@endif
 
-{{-- ✅ TAMBAH: Penilaian SKT (PPP) --}}
+@if($isPPPSkt)
 <div class="menu-item">
     <a class="menu-link" href="{{ route('ppp.performance.skt.index') }}">
         <span class="menu-icon">

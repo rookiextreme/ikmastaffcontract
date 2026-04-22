@@ -28,10 +28,11 @@
                     <table class="table table-bordered text-center align-middle" id="harta-list">
                         <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
+                            <th>Pemilik Harta</th>
                             <th>Jenis Harta</th>
                             <th>Keterangan</th>
                             <th>Nilai (RM)</th>
-                            <th>Tahun Perolehan</th>
+                            <th>Tarikh Pemilikan</th>
                             <th>Tindakan</th>
                         </tr>
                         </thead>

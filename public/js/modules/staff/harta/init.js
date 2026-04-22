@@ -11,6 +11,7 @@ let table = new DatatableInit({
     prev: '#harta-prev',
     next: '#harta-next',
     columns: [
+        { data: 'owner' },
         { data: 'type' },
         { data: 'description' },
         { data: 'value' },
@@ -18,20 +19,26 @@ let table = new DatatableInit({
         {
             data: 'action',
             raw: function (full) {
-    return `
-    <div class="dropdown">
-        <button class="btn btn-icon btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="fas fa-pencil fs-4"></i>
-</button>
-        <ul class="dropdown-menu">
-            <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
-            <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
-        </ul>
-    </div>`;
-}
+                return `
+                <div class="dropdown">
+                    <button class="btn btn-icon btn-sm btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-pencil fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
+                        <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
+                    </ul>
+                </div>`;
+            }
         }
     ]
 });
 
 table.setupChangePage('#harta-prev', '#harta-next');
 table.run();
+
+$("#harta-year").flatpickr({
+    dateFormat: "d-m-Y",
+    allowInput: true,
+    maxDate: "today"
+});
