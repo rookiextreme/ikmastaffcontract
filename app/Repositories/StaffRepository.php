@@ -303,64 +303,85 @@ class StaffRepository
     }
 
     public function getHartaList(Request $request){
-        $staff_id = $request->staff_id;
+    $staff_id = $request->staff_id;
 
-        $model = DB::select('
-            SELECT
-            sh.id,
-            sh.type,
-            sh.description,
-            sh.value,
-            sh.year
-            FROM staff_hartas sh
-            JOIN staffs s ON s.id = sh.staff_id
-            AND sh.staff_id = ?
-            LIMIT 100
-        ',[
-            $staff_id
-        ]);
+    $model = DB::select('
+        SELECT
+        sh.id,
+        sh.owner_type,
+        sh.family_id,
+        sh.owner_name,
+        sh.type,
+        sh.description,
+        sh.value,
+        sh.year,
+        sf.name as family_name,
+        sf.relation as family_relation,
+        u.name as staff_owner_name
+        FROM staff_hartas sh
+        LEFT JOIN staff_families sf ON sf.id = sh.family_id
+        JOIN staffs s ON s.id = sh.staff_id
+        LEFT JOIN users u ON u.id = s.user_id
+        WHERE sh.staff_id = ?
+        LIMIT 100
+    ',[
+        $staff_id
+    ]);
 
-        return $model;
-    }
+    return $model;
+}
 
     public function storeUpdateHarta(Request $request){
-        $harta_type = $request->harta_type;
-        $harta_desc = $request->harta_desc;
-        $harta_value = $request->harta_value;
-        $harta_year = $request->harta_year;
-        $id = $request->id;
-        $staff_id = $request->staff_id;
+    $harta_type = $request->harta_type;
+    $harta_desc = $request->harta_desc;
+    $harta_value = $request->harta_value;
+    $harta_year = $request->harta_year;
 
-        DB::beginTransaction();
-        try{
-            $m = $id ? StaffHarta::find($id) : new StaffHarta;
-            $m->staff_id = $staff_id;
-            $m->type = $harta_type;
-            $m->description = $harta_desc;
-            $m->value = $harta_value;
-            $m->year = $harta_year;
-            $m->save();
+    $owner_type = $request->owner_type;
+    $family_id = $request->family_id;
+    $owner_name = $request->owner_name;
 
-            DB::commit();
-        }catch (\Exception $exception){
-            DB::rollBack();
-            return [
-                'status' => 'error',
-                'message' => $exception->getMessage(),
-            ];
-        }
+    $id = $request->id;
+    $staff_id = $request->staff_id;
 
+    DB::beginTransaction();
+    try{
+        $m = $id ? StaffHarta::find($id) : new StaffHarta;
+        $m->staff_id = $staff_id;
+
+        $m->owner_type = $owner_type ?? 'self';
+        $m->family_id = $owner_type == 'family' ? $family_id : null;
+        $m->owner_name = $owner_type == 'other' ? $owner_name : null;
+
+        $m->type = $harta_type;
+        $m->description = $harta_desc;
+        $m->value = $harta_value;
+        $m->year = $harta_year;
+        $m->save();
+
+        DB::commit();
+    }catch (\Exception $exception){
+        DB::rollBack();
         return [
-            'status' => 'success',
-            'message' => 'Rekod Harta '.($id ? 'Dikemaskini' : 'Ditambah'),
+            'status' => 'error',
+            'message' => $exception->getMessage(),
         ];
     }
+
+    return [
+        'status' => 'success',
+        'message' => 'Rekod Harta '.($id ? 'Dikemaskini' : 'Ditambah'),
+    ];
+}
 
     public function getHarta($id){
         $data = [];
 
         $m = StaffHarta::find($id);
         $data['id'] = $m->id;
+        $data['owner_type'] = $m->owner_type;
+        $data['family_id'] = $m->family_id;
+        $data['owner_name'] = $m->owner_name;
         $data['type'] = $m->type;
         $data['description'] = $m->description;
         $data['value'] = $m->value;

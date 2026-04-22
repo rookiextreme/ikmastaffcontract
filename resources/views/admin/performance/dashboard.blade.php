@@ -304,7 +304,7 @@
                     <table class="table table-row-bordered table-hover align-middle">
                         <thead>
                             <tr class="fw-bold text-muted bg-light">
-                                <th width="50">#</th>
+                                <th width="50">Bil</th>
                                 <th>Nama</th>
                                 <th>Jenis</th>
                                 <th>Status</th>

@@ -235,6 +235,7 @@
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
     <input type="hidden" id="page" value="{{ $page }}">
+    <input type="hidden" id="login-user-name" value="{{ $login_user_name ?? '' }}">
     <input type="hidden" id="state-select" value="{{ $state_select ?? null }}">
     <input type="hidden" id="branch-select" value="{{ $branch_select ?? null }}">
 @endsection

@@ -21,6 +21,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Auth;
+
 
 class StaffController extends Controller
 {
@@ -53,7 +55,9 @@ class StaffController extends Controller
         $responseData = [
             'page' => $page,
             'user_id' => $user_id,
-            'staff' => $staff
+            'staff' => $staff,
+            'families' => StaffFamily::where('staff_id', $staff->id)->get(),
+            'login_user_name' => $staff->getUser->name
         ];
 
         if($page == 'main'){
@@ -254,20 +258,37 @@ class StaffController extends Controller
     }
 
     // ================= HARTA =================
-    public function hartaList(Request $request)
-    {
-        $model = $this->staffRepository->getHartaList($request);
+    public function hartaList(Request $request){
+    $model = $this->staffRepository->getHartaList($request);
 
-        return SymTable::of($model)
-            ->addRowAttr([
-                'data-id' => fn($data) => $data->id
-            ])
-            ->addColumn('type', fn($data) => ($data->type ?? '-') == 'Lain lain' ? 'Lain-lain' : ($data->type ?? '-'))
-            ->addColumn('description', fn($data) => $data->description ?? '-')
-            ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value, 2) : '-')
-            ->addColumn('year', fn($data) => $data->year ?? '-')
-            ->make();
-    }
+    return SymTable::of($model)
+        ->addRowAttr([
+            'data-id' => fn($data) => $data->id
+        ])
+        ->addColumn('owner', function($data){
+            if(($data->owner_type ?? 'self') == 'family'){
+                $familyName = $data->family_name ?? '-';
+                $familyRelation = $data->family_relation ?? '';
+
+                return $familyRelation
+                    ? $familyName.' ('.$familyRelation.')'
+                    : $familyName;
+            }
+
+            if(($data->owner_type ?? '') == 'other'){
+                return $data->owner_name ?? '-';
+            }
+
+            return $data->staff_owner_name ?? 'Sendiri';
+        })
+        ->addColumn('type', fn($data) => ($data->type ?? '-') == 'Lain lain' ? 'Lain-lain' : ($data->type ?? '-'))
+        ->addColumn('description', fn($data) => $data->description ?? '-')
+        ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
+        ->addColumn('year', function($data){
+    return $data->year ?? '-';
+})
+        ->make();
+}
 
     public function storeUpdateHarta(Request $request)
     {
