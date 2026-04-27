@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Performance;
 
+use App\Models\PerformanceStatusLog;
 use App\Http\Controllers\Controller;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
@@ -181,6 +182,38 @@ class StaffSktController extends Controller
             'status'           => 'SUBMITTED',
             'skt_submitted_at' => now(),
         ]);
+
+$fresh = $evaluation->fresh();
+
+$requiredPYD = ['I', 'II'];
+$completed = [];
+foreach ($requiredPYD as $sec) {
+    if ($this->repo->isSectionComplete($sec, 'pyd', $fresh)) {
+        $completed[] = $sec;
+    }
+}
+
+$missing = [];
+foreach ($requiredPYD as $sec) {
+    if (!$this->repo->isSectionComplete($sec, 'pyd', $fresh)) {
+        $missing[] = $sec;
+    }
+}
+
+PerformanceStatusLog::create([
+    'evaluation_id' => $fresh->id,
+    'actor_id'      => $userId,
+    'actor_role'    => 'pyd',
+    'action'        => 'SUBMIT_PYD_SKT',
+    'from_status'   => 'DRAFT',
+    'to_status'     => 'SUBMITTED',
+    'meta'          => [
+        'module'             => 'SKT',
+        'required_sections'  => $requiredPYD,
+        'completed_sections' => $completed,
+        'missing_sections'   => $missing,
+    ],
+]);
 
         return back()->with('success', 'SKT berjaya dihantar kepada PPP.');
     }

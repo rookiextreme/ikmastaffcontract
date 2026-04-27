@@ -228,9 +228,10 @@
 
     {{-- ✅ TAMBAH BARU: PAGE HARTA --}}
     @elseif($page == 'harta')
-        @include('staff.profile.modals.harta-modal')
-        @include('staff.profile.tabs.harta-tab')
-    @endif
+    @include('staff.profile.modals.harta-modal')
+    @include('staff.profile.modals.harta-pelupusan-modal')
+    @include('staff.profile.tabs.harta-tab')
+@endif
 
     <input type="hidden" id="staff-id" value="{{ $staff->id }}">
     <input type="hidden" id="user-id" value="{{ $staff->getUser->id }}">
@@ -250,6 +251,7 @@
         let staff_id = $('#staff-id').val();
         let user_id = $('#user-id').val();
         let page = $('#page').val();
+        let csrfToken = '{{ csrf_token() }}';
         $("#appointed-date").flatpickr({
             dateFormat: "d-m-Y",
         });
@@ -339,8 +341,8 @@
 
     {{-- ✅ TAMBAH BARU: JS PAGE HARTA --}}
     @elseif($page == 'harta')
-        <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
-        <script src="{{ asset('js/modules/staff/harta/init.js') }}?v=1"></script>
-        <script src="{{ asset('js/modules/staff/harta/index.js') }}?v=1"></script>
-    @endif
+    <script src="{{ asset('js/custom/datatable-helper.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/harta/init.js') }}?v=2"></script>
+    <script src="{{ asset('js/modules/staff/harta/index.js') }}?v=2"></script>
+@endif
 @endsection

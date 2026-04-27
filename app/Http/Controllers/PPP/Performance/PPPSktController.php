@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PPP\Performance;
 
+use App\Models\PerformanceStatusLog;
 use App\Http\Controllers\Controller;
 use App\Models\PerformanceEvaluation;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
@@ -92,6 +93,38 @@ class PPPSktController extends Controller
             'status' => 'PPP_REVIEWED',
             'skt_ppp_reviewed_at' => now(),
         ]);
+
+        $fresh = $evaluation->fresh();
+
+$requiredPPP = ['I', 'II', 'III'];
+$completed = [];
+foreach ($requiredPPP as $sec) {
+    if ($this->repo->isSectionComplete($sec, 'ppp', $fresh)) {
+        $completed[] = $sec;
+    }
+}
+
+$missing = [];
+foreach ($requiredPPP as $sec) {
+    if (!$this->repo->isSectionComplete($sec, 'ppp', $fresh)) {
+        $missing[] = $sec;
+    }
+}
+
+PerformanceStatusLog::create([
+    'evaluation_id' => $fresh->id,
+    'actor_id'      => Auth::id(),
+    'actor_role'    => 'ppp',
+    'action'        => 'REVIEW_PPP_SKT',
+    'from_status'   => 'SUBMITTED',
+    'to_status'     => 'PPP_REVIEWED',
+    'meta'          => [
+        'module'             => 'SKT',
+        'required_sections'  => $requiredPPP,
+        'completed_sections' => $completed,
+        'missing_sections'   => $missing,
+    ],
+]);
 
         return back()->with('success','SKT disahkan oleh PPP.');
     }

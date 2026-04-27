@@ -276,6 +276,10 @@ class StaffController extends Controller
             }
 
             if(($data->owner_type ?? '') == 'other'){
+                if(!empty($data->owner_name) && !empty($data->owner_relation)){
+                    return $data->owner_name.' ('.$data->owner_relation.')';
+                }
+
                 return $data->owner_name ?? '-';
             }
 
@@ -285,16 +289,50 @@ class StaffController extends Controller
         ->addColumn('description', fn($data) => $data->description ?? '-')
         ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
         ->addColumn('year', function($data){
-    return $data->year ?? '-';
-})
+            return $data->year ?? '-';
+        })
+        ->addColumn('pelupusan', function($data){
+            $method = trim((string)($data->disposal_method ?? ''));
+            $date   = trim((string)($data->disposal_date ?? ''));
+
+            if($method !== '' && $method !== '-' && $date !== '' && $date !== '-' && $date !== '0000-00-00'){
+                return $method.'<br>'.$date;
+            }
+
+            return '-';
+        })
+        ->addColumn('terkini', function($data){
+            $method = trim((string)($data->disposal_method ?? ''));
+            $date   = trim((string)($data->disposal_date ?? ''));
+
+            $hasDisposal = (
+                $method !== '' &&
+                $method !== '-' &&
+                $date !== '' &&
+                $date !== '-' &&
+                $date !== '0000-00-00'
+            );
+
+            if($hasDisposal){
+                return '<span class="text-danger fw-bold">Dilupuskan</span>';
+            }
+
+            return '<span class="text-success fw-bold">Aktif</span>';
+            
+        })
         ->make();
 }
-
     public function storeUpdateHarta(Request $request)
     {
         $m = $this->staffRepository->storeUpdateHarta($request);
         return $this->setDataResponse($m, !($m['status'] == 'error'));
     }
+
+    public function storeHartaPelupusan(Request $request)
+{
+    $m = $this->staffRepository->storeHartaPelupusan($request);
+    return $this->setDataResponse($m, !($m['status'] == 'error'));
+}
 
     public function getHartaInfo(Request $request) : JsonResponse
     {

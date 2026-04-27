@@ -51,9 +51,14 @@
                 </div>
 
                 <div class="mb-4" id="section-harta-owner-name" style="display:none;">
-                    <label class="form-label">Nama Pemilik</label>
-                    <input type="text" class="form-control" id="harta-owner-name">
-                </div>
+    <label class="form-label">Nama Pemilik</label>
+    <input type="text" class="form-control" id="harta-owner-name">
+</div>
+
+<div class="mb-4" id="section-harta-owner-relation" style="display:none;">
+    <label class="form-label">Hubungan</label>
+    <input type="text" class="form-control" id="harta-owner-relation" placeholder="Contoh: Saudara">
+</div>
 
                 <div class="mb-4">
                     <label class="required form-label">Jenis Harta</label>
