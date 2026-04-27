@@ -1,4 +1,5 @@
 let hartaModal = new Modals({selector: '#harta-modal'});
+let hartaPelupusanModal = new Modals({selector: '#harta-pelupusan-modal'});
 
 let hartaData = common.getForm(false)
 hartaData.append('staff_id', staff_id)
@@ -11,27 +12,32 @@ let table = new DatatableInit({
     prev: '#harta-prev',
     next: '#harta-next',
     columns: [
-        { data: 'owner' },
-        { data: 'type' },
-        { data: 'description' },
-        { data: 'value' },
-        { data: 'year' },
-        {
-            data: 'action',
-            raw: function (full) {
-                return `
-                <div class="dropdown">
-                    <button class="btn btn-icon btn-sm btn-warning" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-pencil fs-4"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
-                        <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
-                    </ul>
-                </div>`;
-            }
+    { data: 'owner' },
+    { data: 'type' },
+    { data: 'description' },
+    { data: 'value' },
+    { data: 'year' },
+    { data: 'pelupusan' },
+    { data: 'terkini' },
+
+    {
+        data: 'action',
+        raw: function (full) {
+            return `
+            <div class="dropdown">
+                <button class="btn btn-icon btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-pencil fs-4"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
+                    <li><button class="dropdown-item text-primary harta-pelupusan">Pelupusan</button></li>
+                    <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
+                </ul>
+            </div>
+            `;
         }
-    ]
+    }
+]
 });
 
 table.setupChangePage('#harta-prev', '#harta-next');

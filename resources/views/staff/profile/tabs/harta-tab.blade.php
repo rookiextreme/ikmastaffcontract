@@ -17,14 +17,12 @@
             <div class="card-body">
                 <div class="table-responsive">
 
-                    <!-- BUTTON TAMBAH -->
                     <div class="float-start mb-4">
                         <button class="btn btn-success btn-sm" id="harta-add">
-    <i class="fas fa-add fs-4 pe-0"></i>
-</button>
+                            <i class="fas fa-add fs-4 pe-0"></i>
+                        </button>
                     </div>
 
-                    <!-- TABLE -->
                     <table class="table table-bordered text-center align-middle" id="harta-list">
                         <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
@@ -33,13 +31,14 @@
                             <th>Keterangan</th>
                             <th>Nilai (RM)</th>
                             <th>Tarikh Pemilikan</th>
+                            <th>Pelupusan</th>
+                            <th>Terkini?</th>
                             <th>Tindakan</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
 
-                    <!-- PAGINATION -->
                     <ul class="pagination">
                         <li class="page-item">
                             <button class="page-link" id="harta-prev">Previous</button>

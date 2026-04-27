@@ -311,10 +311,13 @@ class StaffRepository
         sh.owner_type,
         sh.family_id,
         sh.owner_name,
+        sh.owner_relation,
         sh.type,
         sh.description,
         sh.value,
         sh.year,
+        sh.disposal_method,
+        sh.disposal_date,
         sf.name as family_name,
         sf.relation as family_relation,
         u.name as staff_owner_name
@@ -340,6 +343,7 @@ class StaffRepository
     $owner_type = $request->owner_type;
     $family_id = $request->family_id;
     $owner_name = $request->owner_name;
+    $owner_relation = $request->owner_relation;
 
     $id = $request->id;
     $staff_id = $request->staff_id;
@@ -352,6 +356,7 @@ class StaffRepository
         $m->owner_type = $owner_type ?? 'self';
         $m->family_id = $owner_type == 'family' ? $family_id : null;
         $m->owner_name = $owner_type == 'other' ? $owner_name : null;
+        $m->owner_relation = $owner_type == 'other' ? $owner_relation : null;
 
         $m->type = $harta_type;
         $m->description = $harta_desc;
@@ -375,19 +380,47 @@ class StaffRepository
 }
 
     public function getHarta($id){
-        $data = [];
+    $data = [];
 
+    $m = StaffHarta::find($id);
+    $data['id'] = $m->id;
+    $data['owner_type'] = $m->owner_type;
+    $data['family_id'] = $m->family_id;
+    $data['owner_name'] = $m->owner_name;
+    $data['owner_relation'] = $m->owner_relation;
+    $data['type'] = $m->type;
+    $data['description'] = $m->description;
+    $data['value'] = $m->value;
+    $data['year'] = $m->year;
+    return $data;
+}
+
+public function storeHartaPelupusan(Request $request){
+    $id = $request->id;
+    $disposal_method = $request->disposal_method;
+    $disposal_date = $request->disposal_date;
+
+    DB::beginTransaction();
+    try{
         $m = StaffHarta::find($id);
-        $data['id'] = $m->id;
-        $data['owner_type'] = $m->owner_type;
-        $data['family_id'] = $m->family_id;
-        $data['owner_name'] = $m->owner_name;
-        $data['type'] = $m->type;
-        $data['description'] = $m->description;
-        $data['value'] = $m->value;
-        $data['year'] = $m->year;
-        return $data;
+        $m->disposal_method = $disposal_method;
+        $m->disposal_date = $disposal_date;
+        $m->save();
+
+        DB::commit();
+    }catch (\Exception $exception){
+        DB::rollBack();
+        return [
+            'status' => 'error',
+            'message' => $exception->getMessage(),
+        ];
     }
+
+    return [
+        'status' => 'success',
+        'message' => 'Maklumat Pelupusan Berjaya Disimpan',
+    ];
+}
 
     public function setAppointedDate(Request $request){
         $date = $request->date;
