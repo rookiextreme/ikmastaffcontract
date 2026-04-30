@@ -47,12 +47,42 @@ class PerformanceAssignmentController extends Controller
             $type
         );
 
+        // ✅ FIX: elak 404 / error kalau belum ada tempoh penilaian
+        if (!$period) {
+            $assignments = collect();
+
+            // dropdown user (ringkas)
+            $users = User::orderBy('name')->get(['id','name']);
+
+            $noActivePeriod = true;
+
+            return view('admin.performance.assignments.index', compact(
+                'periods',
+                'period',
+                'assignments',
+                'users',
+                'tab',
+                'type',
+                'noActivePeriod'
+            ));
+        }
+
         $assignments = $this->repo->listByPeriod($period->id, $type);
 
         // dropdown user (ringkas)
         $users = User::orderBy('name')->get(['id','name']);
 
-        return view('admin.performance.assignments.index', compact('periods','period','assignments','users','tab','type'));
+        $noActivePeriod = false;
+
+        return view('admin.performance.assignments.index', compact(
+            'periods',
+            'period',
+            'assignments',
+            'users',
+            'tab',
+            'type',
+            'noActivePeriod'
+        ));
     }
 
     public function store(Request $request)

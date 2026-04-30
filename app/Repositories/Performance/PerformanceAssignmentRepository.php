@@ -14,37 +14,31 @@ class PerformanceAssignmentRepository
      * - Kalau tak diberi: ambil period aktif untuk type itu
      * - Kalau tiada aktif: fallback latest untuk type itu (year desc, session desc)
      */
-    public function getActiveOrSelectedPeriod(?int $periodId = null, string $type = 'LNPT'): PerformancePeriod
-    {
-        $type = strtoupper(trim($type));
+    public function getActiveOrSelectedPeriod(?int $periodId = null, string $type = 'LNPT'): ?PerformancePeriod
+{
+    $type = strtoupper(trim($type));
 
-        if ($periodId) {
-            $p = PerformancePeriod::where('id', $periodId)
-                // ✅ robust: elak isu 'SKT ' / 'skt'
-                ->whereRaw('UPPER(TRIM(type)) = ?', [$type])
-                ->first();
-
-            if ($p) return $p;
-
-            abort(404, "Tempoh tidak dijumpai / tidak sepadan untuk jenis {$type}.");
-        }
-
-        $active = PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
-            ->where('is_active', 1)
-            ->orderByDesc('year')
-            ->orderByDesc('session')
+    if ($periodId) {
+        return PerformancePeriod::where('id', $periodId)
+            ->whereRaw('UPPER(TRIM(type)) = ?', [$type])
             ->first();
-
-        if ($active) return $active;
-
-        // fallback latest ikut type
-        $latest = PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
-            ->orderByDesc('year')
-            ->orderByDesc('session')
-            ->first();
-
-        return $latest ?: abort(404, "Tiada tempoh {$type} ditemui. Sila tambah tempoh dahulu.");
     }
+
+    $active = PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
+        ->where('is_active', 1)
+        ->orderByDesc('year')
+        ->orderByDesc('session')
+        ->first();
+
+    if ($active) {
+        return $active;
+    }
+
+    return PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
+        ->orderByDesc('year')
+        ->orderByDesc('session')
+        ->first();
+}
 
     /**
      * ✅ DIKEMASKINI: list lantikan ikut period + TYPE
