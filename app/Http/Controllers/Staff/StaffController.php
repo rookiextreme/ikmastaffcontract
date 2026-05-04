@@ -266,6 +266,8 @@ class StaffController extends Controller
             'data-id' => fn($data) => $data->id
         ])
         ->addColumn('owner', function($data){
+
+            // 👉 AHLI KELUARGA
             if(($data->owner_type ?? 'self') == 'family'){
                 $familyName = $data->family_name ?? '-';
                 $familyRelation = $data->family_relation ?? '';
@@ -275,22 +277,23 @@ class StaffController extends Controller
                     : $familyName;
             }
 
+            // 👉 LAIN-LAIN
             if(($data->owner_type ?? '') == 'other'){
-                if(!empty($data->owner_name) && !empty($data->owner_relation)){
-                    return $data->owner_name.' ('.$data->owner_relation.')';
-                }
+                $name = $data->owner_name ?? '-';
+                $relation = $data->owner_relation ?? '';
 
-                return $data->owner_name ?? '-';
+                return $relation
+                    ? $name.' ('.$relation.')'
+                    : $name;
             }
 
+            // 👉 SENDIRI
             return $data->staff_owner_name ?? 'Sendiri';
         })
         ->addColumn('type', fn($data) => ($data->type ?? '-') == 'Lain lain' ? 'Lain-lain' : ($data->type ?? '-'))
         ->addColumn('description', fn($data) => $data->description ?? '-')
         ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
-        ->addColumn('year', function($data){
-            return $data->year ?? '-';
-        })
+        ->addColumn('year', fn($data) => $data->year ?? '-')
         ->addColumn('pelupusan', function($data){
             $method = trim((string)($data->disposal_method ?? ''));
             $date   = trim((string)($data->disposal_date ?? ''));
@@ -302,48 +305,301 @@ class StaffController extends Controller
             return '-';
         })
         ->addColumn('terkini', function($data){
+            if(($data->disposal_status ?? null) === 'SUBMITTED'){
+                return '<span class="text-warning fw-bold">Menunggu Pelupusan</span>';
+            }
+
+            if(($data->disposal_status ?? null) === 'APPROVED'){
+                return '<span class="text-danger fw-bold">Dilupuskan</span>';
+            }
+
             $method = trim((string)($data->disposal_method ?? ''));
             $date   = trim((string)($data->disposal_date ?? ''));
 
-            $hasDisposal = (
+            $hasOldDisposal = (
                 $method !== '' &&
                 $method !== '-' &&
                 $date !== '' &&
                 $date !== '-' &&
-                $date !== '0000-00-00'
+                $date !== '0000-00-00' &&
+                empty($data->disposal_status)
             );
 
-            if($hasDisposal){
+            if($hasOldDisposal){
                 return '<span class="text-danger fw-bold">Dilupuskan</span>';
             }
 
             return '<span class="text-success fw-bold">Aktif</span>';
-            
         })
-        ->make();
-}
-    public function storeUpdateHarta(Request $request)
-    {
-        $m = $this->staffRepository->storeUpdateHarta($request);
-        return $this->setDataResponse($m, !($m['status'] == 'error'));
+        ->addColumn('declaration_status', function($data){
+            return match($data->declaration_status ?? 'DRAFT') {
+                'DRAFT' => '<span class="badge badge-light-secondary">Draf</span>',
+                'SUBMITTED' => '<span class="badge badge-light-primary">Dihantar</span>',
+                'RETURNED' => '<span class="badge badge-light-warning">Dikembalikan</span>',
+                'APPROVED' => '<span class="badge badge-light-success">Disahkan</span>',
+                default => '<span class="badge badge-light-secondary">Draf</span>',
+            };
+        })
+        ->addColumn('declaration_status_raw', function($data){
+            return $data->declaration_status ?: 'DRAFT';
+        })
+        ->addColumn('disposal_status_raw', function($data){
+            return $data->disposal_status ?? null;
+        })
+        ->addColumn('action_state', function($data){
+            $declaration = $data->declaration_status ?? 'DRAFT';
+            $disposal = $data->disposal_status ?? null;
+
+            $method = trim((string)($data->disposal_method ?? ''));
+            $date   = trim((string)($data->disposal_date ?? ''));
+
+            $hasOldDisposal = (
+                $method !== '' &&
+                $method !== '-' &&
+                $date !== '' &&
+                $date !== '-' &&
+                $date !== '0000-00-00' &&
+                empty($disposal)
+            );
+
+            if($disposal === 'SUBMITTED'){
+                return 'APPROVE_DISPOSAL';
+            }
+
+            if($disposal === 'APPROVED' || $hasOldDisposal){
+                return 'LOCKED';
+            }
+
+            if($declaration === 'SUBMITTED'){
+                return 'LOCKED';
+            }
+
+            if($declaration === 'APPROVED'){
+                return 'CAN_DISPOSE';
+            }
+
+            if($declaration === 'DRAFT' || $declaration === 'RETURNED'){
+                return 'CAN_EDIT';
+            }
+
+            return 'LOCKED';
+        })
+        ->addColumn('action', function($data){
+    $declaration = $data->declaration_status ?? 'DRAFT';
+    $disposal = $data->disposal_status ?? null;
+
+    $method = trim((string)($data->disposal_method ?? ''));
+    $date   = trim((string)($data->disposal_date ?? ''));
+
+    $hasOldDisposal = (
+        $method !== '' &&
+        $method !== '-' &&
+        $date !== '' &&
+        $date !== '-' &&
+        $date !== '0000-00-00' &&
+        empty($disposal)
+    );
+
+    if($disposal === 'SUBMITTED'){
+        return '
+            <button class="btn btn-icon btn-sm btn-success harta-approve-disposal" type="button" title="Sahkan Pelupusan">
+                <i class="fas fa-check fs-4"></i>
+            </button>
+        ';
     }
 
-    public function storeHartaPelupusan(Request $request)
+    if($disposal === 'APPROVED' || $hasOldDisposal || $declaration === 'SUBMITTED'){
+        return '<span class="badge badge-light-dark">Dikunci</span>';
+    }
+
+    if($declaration === 'APPROVED'){
+        return '
+            <div class="dropdown">
+                <button class="btn btn-icon btn-sm btn-primary" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-recycle fs-4"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button class="dropdown-item text-primary harta-pelupusan">Mohon Pelupusan</button></li>
+                </ul>
+            </div>
+        ';
+    }
+
+    if($declaration === 'DRAFT' || $declaration === 'RETURNED'){
+        return '
+            <div class="dropdown">
+                <button class="btn btn-icon btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-pencil fs-4"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
+                    <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
+                </ul>
+            </div>
+        ';
+    }
+
+    return '<span class="badge badge-light-dark">Dikunci</span>';
+})
+        ->make();
+}
+
+public function storeUpdateHarta(Request $request)
+{
+    $m = $this->staffRepository->storeUpdateHarta($request);
+    return $this->setDataResponse($m, !($m['status'] == 'error'));
+}
+
+public function storeHartaPelupusan(Request $request)
 {
     $m = $this->staffRepository->storeHartaPelupusan($request);
     return $this->setDataResponse($m, !($m['status'] == 'error'));
 }
 
-    public function getHartaInfo(Request $request) : JsonResponse
-    {
-        return $this->setDataResponse($this->staffRepository->getHarta($request->id));
+public function submitHarta(Request $request)
+{
+    $staff_id = $request->staff_id;
+
+    $count = StaffHarta::where('staff_id', $staff_id)
+        ->whereIn('declaration_status', ['DRAFT', 'RETURNED'])
+        ->count();
+
+    if($count <= 0){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Tiada rekod harta berstatus draf untuk dihantar.',
+        ], false);
     }
 
-    public function deleteHarta(Request $request) : JsonResponse
-    {
-        return $this->setResponse($this->setHardDelete(StaffHarta::class, $request->id, 'Harta'));
+    StaffHarta::where('staff_id', $staff_id)
+        ->whereIn('declaration_status', ['DRAFT', 'RETURNED'])
+        ->update([
+            'declaration_status' => 'SUBMITTED',
+            'submitted_at' => now(),
+            'returned_at' => null,
+            'admin_remark' => null,
+            'updated_at' => now(),
+        ]);
+
+    return $this->setDataResponse([
+        'status' => 'success',
+        'message' => 'Perisytiharan harta berjaya dihantar kepada admin untuk semakan.',
+    ]);
+}
+public function approveHarta(Request $request)
+{
+    $staff_id = $request->staff_id;
+
+    $count = StaffHarta::where('staff_id', $staff_id)
+        ->where('declaration_status', 'SUBMITTED')
+        ->count();
+
+    if($count <= 0){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Tiada perisytiharan berstatus dihantar untuk disahkan.',
+        ], false);
     }
 
+    StaffHarta::where('staff_id', $staff_id)
+        ->where('declaration_status', 'SUBMITTED')
+        ->update([
+            'declaration_status' => 'APPROVED',
+            'approved_at' => now(),
+            'approved_by' => Auth::id(),
+            'admin_remark' => $request->admin_remark,
+            'updated_at' => now(),
+        ]);
+
+    return $this->setDataResponse([
+        'status' => 'success',
+        'message' => 'Perisytiharan harta berjaya disahkan.',
+    ]);
+}
+
+public function returnHarta(Request $request)
+{
+    $request->validate([
+        'admin_remark' => 'required|string|max:1000',
+    ]);
+
+    $staff_id = $request->staff_id;
+
+    $count = StaffHarta::where('staff_id', $staff_id)
+        ->where('declaration_status', 'SUBMITTED')
+        ->count();
+
+    if($count <= 0){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Tiada perisytiharan berstatus dihantar untuk dikembalikan.',
+        ], false);
+    }
+
+    StaffHarta::where('staff_id', $staff_id)
+        ->where('declaration_status', 'SUBMITTED')
+        ->update([
+            'declaration_status' => 'RETURNED',
+            'returned_at' => now(),
+            'admin_remark' => $request->admin_remark,
+            'updated_at' => now(),
+        ]);
+
+    return $this->setDataResponse([
+        'status' => 'success',
+        'message' => 'Perisytiharan harta telah dikembalikan kepada staf untuk pembetulan.',
+    ]);
+}
+public function approveHartaPelupusan(Request $request)
+{
+    $id = $request->id;
+
+    $harta = StaffHarta::find($id);
+
+    if(!$harta){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Rekod harta tidak dijumpai.',
+        ], false);
+    }
+
+    if($harta->disposal_status !== 'SUBMITTED'){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Tiada permohonan pelupusan untuk disahkan.',
+        ], false);
+    }
+
+    $harta->disposal_status = 'APPROVED';
+    $harta->disposal_approved_at = now();
+    $harta->disposal_approved_by = Auth::id();
+    $harta->disposal_admin_remark = $request->disposal_admin_remark;
+    $harta->save();
+
+    return $this->setDataResponse([
+        'status' => 'success',
+        'message' => 'Pelupusan harta berjaya disahkan.',
+    ]);
+}
+
+public function getHartaInfo(Request $request) : JsonResponse
+{
+    return $this->setDataResponse($this->staffRepository->getHarta($request->id));
+}
+
+public function deleteHarta(Request $request) : JsonResponse
+{
+    $harta = StaffHarta::find($request->id);
+
+    if($harta && in_array($harta->declaration_status, ['SUBMITTED', 'APPROVED'])){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Rekod telah dihantar/disahkan dan tidak boleh dipadam.',
+        ], false);
+    }
+
+    return $this->setResponse($this->setHardDelete(StaffHarta::class, $request->id, 'Harta'));
+}
     // ================= OTHERS =================
     public function storeUpdateAppointed(Request $request)
     {

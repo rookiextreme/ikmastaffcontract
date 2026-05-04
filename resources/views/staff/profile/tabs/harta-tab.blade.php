@@ -21,6 +21,22 @@
                         <button class="btn btn-success btn-sm" id="harta-add">
                             <i class="fas fa-add fs-4 pe-0"></i>
                         </button>
+
+                        <!-- ✅ BUTTON HANTAR -->
+                        <button class="btn btn-primary btn-sm ms-2" id="harta-submit">
+                            <i class="fas fa-paper-plane fs-4 pe-0"></i>
+                        </button>
+
+                        <!-- ✅ TAMBAH BUTTON ADMIN -->
+                        @if(Auth::user()->hasRole('super-admin|admin'))
+                            <button class="btn btn-success btn-sm ms-2" id="harta-approve">
+                                <i class="fas fa-check fs-4 pe-0"></i>
+                            </button>
+
+                            <button class="btn btn-warning btn-sm ms-2" id="harta-return">
+                                <i class="fas fa-undo fs-4 pe-0"></i>
+                            </button>
+                        @endif
                     </div>
 
                     <table class="table table-bordered text-center align-middle" id="harta-list">
@@ -33,6 +49,10 @@
                             <th>Tarikh Pemilikan</th>
                             <th>Pelupusan</th>
                             <th>Terkini?</th>
+
+                            <!-- ✅ COLUMN STATUS -->
+                            <th>Status Perisytiharan</th>
+
                             <th>Tindakan</th>
                         </tr>
                         </thead>
