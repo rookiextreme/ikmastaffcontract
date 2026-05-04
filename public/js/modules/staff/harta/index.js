@@ -350,3 +350,147 @@ function resetHartaForm(){
     $('#harta-modal .fv-plugins-message-container').html('');
     $('#harta-modal .fv-plugins-icon').remove();
 }
+$(document).on('click', '#harta-submit', function(){
+    let data = common.getForm();
+    data.append('staff_id', staff_id);
+    data.append('_token', csrfToken);
+
+    alerting.fireSwal({
+        text: 'Adakah anda pasti untuk hantar perisytiharan harta? Selepas dihantar, rekod tidak boleh dikemaskini.',
+        icon: 'warning',
+        confirmButton: 'Hantar',
+        buttonColor: 'btn btn-primary',
+        showCancelButton: true,
+        callback: function(){
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}submit-harta`,
+                data: data,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                table.reload();
+                            }
+                        });
+                    }else{
+                        alerting.error(r.data.message ?? r.data);
+                    }
+                }
+            });
+        }
+    });
+});
+$(document).on('click', '#harta-approve', function(){
+    let data = common.getForm();
+    data.append('staff_id', staff_id);
+    data.append('_token', csrfToken);
+    data.append('admin_remark', '');
+
+    alerting.fireSwal({
+        text: 'Adakah anda pasti untuk sahkan perisytiharan harta ini?',
+        icon: 'warning',
+        confirmButton: 'Sahkan',
+        buttonColor: 'btn btn-success',
+        showCancelButton: true,
+        callback: function(){
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}approve-harta`,
+                data: data,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                table.reload();
+                            }
+                        });
+                    }else{
+                        alerting.error(r.data.message ?? r.data);
+                    }
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '#harta-return', function(){
+    let reason = prompt('Sila masukkan sebab dikembalikan:');
+
+    if(!reason){
+        alerting.error('Sebab dikembalikan wajib diisi.');
+        return;
+    }
+
+    let data = common.getForm();
+    data.append('staff_id', staff_id);
+    data.append('_token', csrfToken);
+    data.append('admin_remark', reason);
+
+    http.fetch({
+        url: `${common.getUrl()}${moduleUrl}return-harta`,
+        data: data,
+        method: 'POST',
+        callback: function(r){
+            if(r.status){
+                alerting.fireSwal({
+                    text: r.data.message,
+                    icon: 'success',
+                    buttonColor: 'btn btn-success',
+                    confirmButton: 'Close',
+                    callback: function(){
+                        table.reload();
+                    }
+                });
+            }else{
+                alerting.error(r.data.message ?? r.data);
+            }
+        }
+    });
+});
+$(document).on('click', '.harta-approve-disposal', function(){
+    let id = common.getRowId(this, 'data-id');
+
+    let data = common.getForm();
+    data.append('id', id);
+    data.append('_token', csrfToken);
+    data.append('disposal_admin_remark', '');
+
+    alerting.fireSwal({
+        text: 'Adakah anda pasti untuk sahkan pelupusan harta ini?',
+        icon: 'warning',
+        confirmButton: 'Sahkan',
+        buttonColor: 'btn btn-success',
+        showCancelButton: true,
+        callback: function(){
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}approve-harta-pelupusan`,
+                data: data,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                table.reload();
+                            }
+                        });
+                    }else{
+                        alerting.error(r.data.message ?? r.data);
+                    }
+                }
+            });
+        }
+    });
+});

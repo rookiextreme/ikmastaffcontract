@@ -302,7 +302,7 @@ class StaffRepository
         return $data;
     }
 
-    public function getHartaList(Request $request){
+   public function getHartaList(Request $request){
     $staff_id = $request->staff_id;
 
     $model = DB::select('
@@ -316,8 +316,17 @@ class StaffRepository
         sh.description,
         sh.value,
         sh.year,
+        sh.declaration_status,
+        sh.submitted_at,
+        sh.returned_at,
+        sh.approved_at,
+        sh.admin_remark,
         sh.disposal_method,
         sh.disposal_date,
+        sh.disposal_status,
+        sh.disposal_submitted_at,
+        sh.disposal_approved_at,
+        sh.disposal_admin_remark,
         sf.name as family_name,
         sf.relation as family_relation,
         u.name as staff_owner_name
@@ -334,7 +343,7 @@ class StaffRepository
     return $model;
 }
 
-    public function storeUpdateHarta(Request $request){
+public function storeUpdateHarta(Request $request){
     $harta_type = $request->harta_type;
     $harta_desc = $request->harta_desc;
     $harta_value = $request->harta_value;
@@ -351,6 +360,15 @@ class StaffRepository
     DB::beginTransaction();
     try{
         $m = $id ? StaffHarta::find($id) : new StaffHarta;
+
+        if($id && in_array($m->declaration_status, ['SUBMITTED', 'APPROVED'])){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => 'Rekod telah dihantar/disahkan dan tidak boleh dikemaskini.',
+            ];
+        }
+
         $m->staff_id = $staff_id;
 
         $m->owner_type = $owner_type ?? 'self';
@@ -362,6 +380,11 @@ class StaffRepository
         $m->description = $harta_desc;
         $m->value = $harta_value;
         $m->year = $harta_year;
+
+        if(!$id){
+            $m->declaration_status = 'DRAFT';
+        }
+
         $m->save();
 
         DB::commit();
@@ -379,7 +402,7 @@ class StaffRepository
     ];
 }
 
-    public function getHarta($id){
+public function getHarta($id){
     $data = [];
 
     $m = StaffHarta::find($id);
@@ -392,6 +415,11 @@ class StaffRepository
     $data['description'] = $m->description;
     $data['value'] = $m->value;
     $data['year'] = $m->year;
+    $data['declaration_status'] = $m->declaration_status;
+    $data['submitted_at'] = $m->submitted_at;
+    $data['returned_at'] = $m->returned_at;
+    $data['approved_at'] = $m->approved_at;
+    $data['admin_remark'] = $m->admin_remark;
     return $data;
 }
 
@@ -403,8 +431,44 @@ public function storeHartaPelupusan(Request $request){
     DB::beginTransaction();
     try{
         $m = StaffHarta::find($id);
+
+        if(!$m){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => 'Rekod harta tidak dijumpai.',
+            ];
+        }
+
+        if($m->declaration_status !== 'APPROVED'){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => 'Pelupusan hanya boleh dibuat selepas perisytiharan disahkan oleh admin.',
+            ];
+        }
+
+        if($m->disposal_status === 'SUBMITTED'){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => 'Permohonan pelupusan sedang menunggu semakan admin.',
+            ];
+        }
+
+        if($m->disposal_status === 'APPROVED'){
+            DB::rollBack();
+            return [
+                'status' => 'error',
+                'message' => 'Harta ini telah dilupuskan.',
+            ];
+        }
+
         $m->disposal_method = $disposal_method;
         $m->disposal_date = $disposal_date;
+        $m->disposal_status = 'SUBMITTED';
+        $m->disposal_submitted_at = now();
+        $m->disposal_admin_remark = null;
         $m->save();
 
         DB::commit();
@@ -418,7 +482,7 @@ public function storeHartaPelupusan(Request $request){
 
     return [
         'status' => 'success',
-        'message' => 'Maklumat Pelupusan Berjaya Disimpan',
+        'message' => 'Permohonan pelupusan berjaya dihantar kepada admin untuk semakan.',
     ];
 }
 
