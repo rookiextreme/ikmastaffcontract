@@ -44,6 +44,7 @@ $(document).on('click','.user-edit', function(){
                         common.setFormValue('#email', r.data.email, 'string');
                         common.setFormValue('#role', r.data.role_ids, 'dropdown');
                         common.setFormValue('#identification_no', r.data.ic_no, 'string');
+                        common.setFormValue('#no_staff', r.data.no_staff, 'string');
                         common.setFormValue('#user-id', r.data.id, 'string');
 
                         $('#role').trigger('change');
@@ -74,6 +75,7 @@ function userStoreUpdate(selector){
     }
 
     v.setNewEntry('id', $('#user-id').val());
+    v.setNewEntry('no_staff', $('#no_staff').val());
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update`,
