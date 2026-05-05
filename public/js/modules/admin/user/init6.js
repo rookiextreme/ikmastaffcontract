@@ -53,6 +53,7 @@ function resetUserForm(){
         ['#email', 'string'],
         ['#role', 'dropdown'],
         ['#identification_no', 'string'],
+        ['#no_staff', 'string'],
     ])
 
     common.setFormValue('#user-id', '', 'string');
