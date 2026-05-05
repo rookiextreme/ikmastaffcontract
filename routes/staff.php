@@ -35,6 +35,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['auth']],function () {
             Route::post('/delete-harta', [StaffController::class, 'deleteHarta']);
             Route::post('/store-harta-pelupusan', [StaffController::class, 'storeHartaPelupusan']);
             Route::post('/approve-harta-pelupusan', [StaffController::class, 'approveHartaPelupusan']);
+            Route::post('/reject-harta-pelupusan', [StaffController::class, 'rejectHartaPelupusan']);
             Route::post('/submit-harta', [StaffController::class, 'submitHarta']);
             Route::post('/approve-harta', [StaffController::class, 'approveHarta']);
             Route::post('/return-harta', [StaffController::class, 'returnHarta']);

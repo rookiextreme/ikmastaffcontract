@@ -494,3 +494,40 @@ $(document).on('click', '.harta-approve-disposal', function(){
         }
     });
 });
+$(document).on('click', '.harta-reject-disposal', function(){
+    let id = common.getRowId(this, 'data-id');
+
+    let data = common.getForm();
+    data.append('id', id);
+    data.append('_token', csrfToken);
+
+    alerting.fireSwal({
+        text: 'Adakah anda pasti untuk tolak permohonan pelupusan ini?',
+        icon: 'warning',
+        confirmButton: 'Tolak',
+        buttonColor: 'btn btn-danger',
+        showCancelButton: true,
+        callback: function(){
+            http.fetch({
+                url: `${common.getUrl()}${moduleUrl}reject-harta-pelupusan`,
+                data: data,
+                method: 'POST',
+                callback: function(r){
+                    if(r.status){
+                        alerting.fireSwal({
+                            text: r.data.message,
+                            icon: 'success',
+                            buttonColor: 'btn btn-success',
+                            confirmButton: 'Close',
+                            callback: function(){
+                                table.reload();
+                            }
+                        });
+                    }else{
+                        alerting.error(r.data.message ?? r.data);
+                    }
+                }
+            });
+        }
+    });
+});

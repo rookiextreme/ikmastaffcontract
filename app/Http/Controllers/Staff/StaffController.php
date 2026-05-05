@@ -401,12 +401,20 @@ class StaffController extends Controller
     );
 
     if($disposal === 'SUBMITTED'){
-        return '
+    return '
+        <div class="d-flex gap-2 justify-content-center">
+
             <button class="btn btn-icon btn-sm btn-success harta-approve-disposal" type="button" title="Sahkan Pelupusan">
                 <i class="fas fa-check fs-4"></i>
             </button>
-        ';
-    }
+
+            <button class="btn btn-icon btn-sm btn-danger harta-reject-disposal" type="button" title="Tolak Pelupusan">
+                <i class="fas fa-times fs-4"></i>
+            </button>
+
+        </div>
+    ';
+}
 
     if($disposal === 'APPROVED' || $hasOldDisposal || $declaration === 'SUBMITTED'){
         return '<span class="badge badge-light-dark">Dikunci</span>';
@@ -579,6 +587,37 @@ public function approveHartaPelupusan(Request $request)
     return $this->setDataResponse([
         'status' => 'success',
         'message' => 'Pelupusan harta berjaya disahkan.',
+    ]);
+}
+
+public function rejectHartaPelupusan(Request $request)
+{
+    $harta = StaffHarta::find($request->id);
+
+    if(!$harta){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Rekod harta tidak dijumpai.',
+        ], false);
+    }
+
+    if($harta->disposal_status !== 'SUBMITTED'){
+        return $this->setDataResponse([
+            'status' => 'error',
+            'message' => 'Tiada permohonan pelupusan untuk ditolak.',
+        ], false);
+    }
+
+    $harta->disposal_method = null;
+    $harta->disposal_date = null;
+    $harta->disposal_status = null;
+    $harta->disposal_submitted_at = null;
+    $harta->disposal_admin_remark = null;
+    $harta->save();
+
+    return $this->setDataResponse([
+        'status' => 'success',
+        'message' => 'Permohonan pelupusan telah ditolak dan rekod kembali aktif.',
     ]);
 }
 
