@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Jobs\UserJob;
+//use App\Jobs\UserJob;
 use App\Models\ParticipantProfile;
 use App\Models\Staff;
 use App\Models\User;
@@ -106,9 +106,9 @@ class AdminUserRepository
                     $this->staffRepository->setBasicStaffProfile($check['user'], $request);
                 }
 
-                if ($check['status'] == 'new') {
-                    dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
-                }
+                //if ($check['status'] == 'new') {
+                //    dispatch(new UserJob($check['user']->id, 'admin_add_new_user', $newHashed));
+                //}
 
                 DB::commit();
             }

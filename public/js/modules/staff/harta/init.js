@@ -31,8 +31,10 @@ let table = new DatatableInit({
 table.setupChangePage('#harta-prev', '#harta-next');
 table.run();
 
+// 💥 INIT SEMULA fresh
 $("#harta-year").flatpickr({
     dateFormat: "d-m-Y",
-    allowInput: true,
-    maxDate: "today"
+    allowInput: false,
+    maxDate: "today",
+    defaultDate: null
 });

@@ -337,6 +337,9 @@ function resetHartaForm(){
     $('#harta-desc').val('');
     $('#harta-value').val('');
     $('#harta-year').val('');
+    if ($('#harta-year')[0]?._flatpickr) {
+    $('#harta-year')[0]._flatpickr.clear();
+}
 
     $('#section-harta-self').show();
     $('#section-harta-family').hide();
