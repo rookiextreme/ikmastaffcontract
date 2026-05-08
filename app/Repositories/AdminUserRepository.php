@@ -64,7 +64,8 @@ class AdminUserRepository
             JOIN roles r ON r.id = ru.role_id
             '.(!empty($rolesDrop) ? 'AND r.id IN (' . implode(',', $rolesDrop) . ')' : '').'
             '.$searchStr.'
-            GROUP BY u.id, u.ic_no, u.no_staff, u.name, u.email, u.active;
+            GROUP BY u.id, u.ic_no, u.no_staff, u.name, u.email, u.active
+ORDER BY u.id DESC;
         ', $params);
 
         return $m;
