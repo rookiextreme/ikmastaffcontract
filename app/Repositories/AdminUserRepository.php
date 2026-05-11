@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+//use Illuminate\Support\Str;
 
 class AdminUserRepository
 {
@@ -95,7 +95,8 @@ ORDER BY u.id DESC;
                 $check['user']->no_staff  = $no_staff;          // ✅ SET NO. KAKITANGAN
 
                 if($check['status'] == 'new'){
-                    $newHashed = Str::random(10);
+                    //$newHashed = Str::random(10); guna default password
+                    $newHashed = 'Password123';
                     $check['user']->password = Hash::make($newHashed);
                 }
                 $check['user']->save();

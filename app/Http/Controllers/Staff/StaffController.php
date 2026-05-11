@@ -294,15 +294,36 @@ class StaffController extends Controller
         ->addColumn('description', fn($data) => $data->description ?? '-')
         ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
         ->addColumn('year', fn($data) => $data->year ?? '-')
+        // ✅ DIKEMASKINI: tambah paparan nilai pelupusan RM
         ->addColumn('pelupusan', function($data){
             $method = trim((string)($data->disposal_method ?? ''));
             $date   = trim((string)($data->disposal_date ?? ''));
+            $value  = $data->disposal_value ?? null;
 
-            if($method !== '' && $method !== '-' && $date !== '' && $date !== '-' && $date !== '0000-00-00'){
-                return $method.'<br>'.$date;
+            if(
+                ($method === '' || $method === '-') &&
+                ($date === '' || $date === '-' || $date === '0000-00-00') &&
+                empty($value)
+            ){
+                return '-';
             }
 
-            return '-';
+            $html = '';
+
+            if($method !== '' && $method !== '-'){
+                $html .= e($method);
+            }
+
+            if($date !== '' && $date !== '-' && $date !== '0000-00-00'){
+                $html .= ($html ? '<br>' : '') . $date;
+            }
+
+            // ✅ TAMBAHAN: nilai pelupusan tidak wajib, papar hanya jika ada
+            if(!empty($value)){
+                $html .= ($html ? '<br>' : '') . '<strong>RM '.number_format($value, 2).'</strong>';
+            }
+
+            return $html ?: '-';
         })
         ->addColumn('terkini', function($data){
             if(($data->disposal_status ?? null) === 'SUBMITTED'){
@@ -385,6 +406,7 @@ class StaffController extends Controller
             return 'LOCKED';
         })
         ->addColumn('action', function($data){
+
     $declaration = $data->declaration_status ?? 'DRAFT';
     $disposal = $data->disposal_status ?? null;
 
@@ -400,49 +422,119 @@ class StaffController extends Controller
         empty($disposal)
     );
 
+    // ✅ TAMBAHAN: semak user login sama ada admin atau bukan
+    $isAdmin = Auth::user()->hasRole('admin');
+
+    // ===============================
+    // PELUPUSAN MENUNGGU PENGESAHAN
+    // ===============================
     if($disposal === 'SUBMITTED'){
-    return '
-        <div class="d-flex gap-2 justify-content-center">
 
-            <button class="btn btn-icon btn-sm btn-success harta-approve-disposal" type="button" title="Sahkan Pelupusan">
-                <i class="fas fa-check fs-4"></i>
-            </button>
+        // ❌ STAFF TAK BOLEH APPROVE
+        if(!$isAdmin){
+            return '<span class="badge badge-light-dark">Dikunci</span>';
+        }
 
-            <button class="btn btn-icon btn-sm btn-danger harta-reject-disposal" type="button" title="Tolak Pelupusan">
-                <i class="fas fa-times fs-4"></i>
-            </button>
-
-        </div>
-    ';
-}
-
-    if($disposal === 'APPROVED' || $hasOldDisposal || $declaration === 'SUBMITTED'){
-        return '<span class="badge badge-light-dark">Dikunci</span>';
-    }
-
-    if($declaration === 'APPROVED'){
+        // ✅ ADMIN SAHAJA
         return '
-            <div class="dropdown">
-                <button class="btn btn-icon btn-sm btn-primary" type="button" data-bs-toggle="dropdown">
-                    <i class="fas fa-recycle fs-4"></i>
+            <div class="d-flex gap-2 justify-content-center">
+
+                <button class="btn btn-icon btn-sm btn-success harta-approve-disposal"
+                    type="button"
+                    title="Sahkan Pelupusan">
+
+                    <i class="fas fa-check fs-4"></i>
+
                 </button>
-                <ul class="dropdown-menu">
-                    <li><button class="dropdown-item text-primary harta-pelupusan">Mohon Pelupusan</button></li>
-                </ul>
+
+                <button class="btn btn-icon btn-sm btn-danger harta-reject-disposal"
+                    type="button"
+                    title="Tolak Pelupusan">
+
+                    <i class="fas fa-times fs-4"></i>
+
+                </button>
+
             </div>
         ';
     }
 
-    if($declaration === 'DRAFT' || $declaration === 'RETURNED'){
+    // ===============================
+    // DIKUNCI
+    // ===============================
+    if(
+        $disposal === 'APPROVED' ||
+        $hasOldDisposal ||
+        $declaration === 'SUBMITTED'
+    ){
+        return '<span class="badge badge-light-dark">Dikunci</span>';
+    }
+
+    // ===============================
+    // BOLEH MOHON PELUPUSAN
+    // ===============================
+    if($declaration === 'APPROVED'){
+
         return '
             <div class="dropdown">
-                <button class="btn btn-icon btn-sm btn-warning" type="button" data-bs-toggle="dropdown">
-                    <i class="fas fa-pencil fs-4"></i>
+
+                <button class="btn btn-icon btn-sm btn-primary"
+                    type="button"
+                    data-bs-toggle="dropdown">
+
+                    <i class="fas fa-recycle fs-4"></i>
+
                 </button>
+
                 <ul class="dropdown-menu">
-                    <li><button class="dropdown-item text-warning harta-edit">Kemaskini</button></li>
-                    <li><button class="dropdown-item text-danger harta-delete">Padam</button></li>
+
+                    <li>
+                        <button class="dropdown-item text-primary harta-pelupusan">
+                            Mohon Pelupusan
+                        </button>
+                    </li>
+
                 </ul>
+
+            </div>
+        ';
+    }
+
+    // ===============================
+    // DRAFT / RETURNED
+    // ===============================
+    if(
+        $declaration === 'DRAFT' ||
+        $declaration === 'RETURNED'
+    ){
+
+        return '
+            <div class="dropdown">
+
+                <button class="btn btn-icon btn-sm btn-warning"
+                    type="button"
+                    data-bs-toggle="dropdown">
+
+                    <i class="fas fa-pencil fs-4"></i>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <button class="dropdown-item text-warning harta-edit">
+                            Kemaskini
+                        </button>
+                    </li>
+
+                    <li>
+                        <button class="dropdown-item text-danger harta-delete">
+                            Padam
+                        </button>
+                    </li>
+
+                </ul>
+
             </div>
         ';
     }

@@ -30,6 +30,7 @@ class StaffHarta extends Model
         // Pelupusan
         'disposal_method',
         'disposal_date',
+        'disposal_value', 
         'disposal_status',
         'disposal_submitted_at',
         'disposal_approved_at',

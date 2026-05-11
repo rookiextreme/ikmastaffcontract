@@ -323,6 +323,7 @@ class StaffRepository
         sh.admin_remark,
         sh.disposal_method,
         sh.disposal_date,
+        sh.disposal_value,
         sh.disposal_status,
         sh.disposal_submitted_at,
         sh.disposal_approved_at,
@@ -335,6 +336,7 @@ class StaffRepository
         JOIN staffs s ON s.id = sh.staff_id
         LEFT JOIN users u ON u.id = s.user_id
         WHERE sh.staff_id = ?
+        ORDER BY sh.id DESC
         LIMIT 100
     ',[
         $staff_id
@@ -427,6 +429,7 @@ public function storeHartaPelupusan(Request $request){
     $id = $request->id;
     $disposal_method = $request->disposal_method;
     $disposal_date = $request->disposal_date;
+    $disposal_value = $request->disposal_value; // ✅ TAMBAHAN
 
     DB::beginTransaction();
     try{
@@ -466,6 +469,7 @@ public function storeHartaPelupusan(Request $request){
 
         $m->disposal_method = $disposal_method;
         $m->disposal_date = $disposal_date;
+        $m->disposal_value = $disposal_value; // ✅ TAMBAHAN
         $m->disposal_status = 'SUBMITTED';
         $m->disposal_submitted_at = now();
         $m->disposal_admin_remark = null;

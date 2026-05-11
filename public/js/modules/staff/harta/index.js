@@ -162,10 +162,11 @@ $(document).on('click', '.harta-pelupusan', function(){
     $('#harta-disposal-id').val('');
     $('#harta-disposal-method').val('');
     $('#harta-disposal-date').val('');
+    $('#harta-disposal-value').val('')
     $('#harta-disposal-other').val('');
     $('#section-disposal-other').hide();
 
-    $('#harta-disposal-method, #harta-disposal-date, #harta-disposal-other')
+    $('#harta-disposal-method, #harta-disposal-date, #harta-disposal-value, #harta-disposal-other')
         .removeClass('is-valid is-invalid');
 
     $('#harta-pelupusan-modal .valid-feedback, #harta-pelupusan-modal .invalid-feedback').html('');
@@ -220,6 +221,7 @@ v.setNewEntry('_token', csrfToken);    v.setNewEntry(
         method === 'Lain-lain' ? $('#harta-disposal-other').val() : method
     );
     v.setNewEntry('disposal_date', $('#harta-disposal-date').val());
+    v.setNewEntry('disposal_value', $('#harta-disposal-value').val());
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-harta-pelupusan`,

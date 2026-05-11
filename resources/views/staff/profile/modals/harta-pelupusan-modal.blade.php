@@ -28,6 +28,19 @@
                     <label class="required form-label">Tarikh Pelupusan</label>
                     <input type="text" class="form-control" id="harta-disposal-date" placeholder="dd-mm-yyyy">
                 </div>
+
+                 <div class="mb-4">
+                    <label class="form-label">Nilai Pelupusan (RM)</label>
+
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           class="form-control"
+                           id="harta-disposal-value"
+                           name="disposal_value"
+                           placeholder="Contoh: 3000.00">
+                </div>
+
                 <div class="mb-4" id="section-disposal-other" style="display:none;">
     <label class="form-label">Nyatakan Kaedah</label>
     <input type="text" class="form-control" id="harta-disposal-other">
