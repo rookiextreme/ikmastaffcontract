@@ -67,6 +67,7 @@ v.setNewEntry('_token', csrfToken);
     v.setNewEntry('family_id', $('#harta-family-id').val());
     v.setNewEntry('owner_name', $('#harta-owner-name').val());
     v.setNewEntry('owner_relation', $('#harta-owner-relation').val());
+    v.setNewEntry('financial_source', $('#harta-financial-source').val());
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update-harta`,
@@ -129,6 +130,7 @@ $(document).on('click', '.harta-edit', function(){
                         $('#harta-type').val(r.data.type).trigger('change');
                         $('#harta-desc').val(r.data.description);
                         $('#harta-value').val(r.data.value);
+                        $('#harta-financial-source').val(r.data.financial_source);
                         $('#harta-year').val(r.data.year);
 
                         if(r.data.owner_type === 'family'){
@@ -338,6 +340,7 @@ function resetHartaForm(){
     $('#harta-type').val('Kenderaan').trigger('change');
     $('#harta-desc').val('');
     $('#harta-value').val('');
+    $('#harta-financial-source').val('');
     $('#harta-year').val('');
     if ($('#harta-year')[0]?._flatpickr) {
     $('#harta-year')[0]._flatpickr.clear();

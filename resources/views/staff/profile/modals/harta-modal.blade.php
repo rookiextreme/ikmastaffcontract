@@ -80,6 +80,17 @@
                     <label class="required form-label">Nilai (RM)</label>
                     <input type="number" class="form-control" id="harta-value">
                 </div>
+                <div class="mb-4">
+    <label class="form-label">Sumber Kewangan</label>
+
+    <select class="form-control" id="harta-financial-source">
+        <option value="">- PILIHAN -</option>
+        <option value="Pinjaman">Pinjaman</option>
+        <option value="Pembiayaan Sendiri">Pembiayaan Sendiri</option>
+        <option value="Dianugerahi">Dianugerahi</option>
+        <option value="Dihadiahkan">Dihadiahkan</option>
+    </select>
+</div>
 
                 <div class="mb-4">
                     <label class="required form-label">Tarikh Pemilikan</label>

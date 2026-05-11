@@ -293,6 +293,11 @@ class StaffController extends Controller
         ->addColumn('type', fn($data) => ($data->type ?? '-') == 'Lain lain' ? 'Lain-lain' : ($data->type ?? '-'))
         ->addColumn('description', fn($data) => $data->description ?? '-')
         ->addColumn('value', fn($data) => $data->value ? 'RM '.number_format($data->value,2) : '-')
+        ->addColumn('financial_source', function($data){
+    return !empty($data->financial_source)
+        ? $data->financial_source
+        : '-';
+})
         ->addColumn('year', fn($data) => $data->year ?? '-')
         // ✅ DIKEMASKINI: tambah paparan nilai pelupusan RM
         ->addColumn('pelupusan', function($data){

@@ -315,6 +315,7 @@ class StaffRepository
         sh.type,
         sh.description,
         sh.value,
+        sh.financial_source,
         sh.year,
         sh.declaration_status,
         sh.submitted_at,
@@ -349,6 +350,7 @@ public function storeUpdateHarta(Request $request){
     $harta_type = $request->harta_type;
     $harta_desc = $request->harta_desc;
     $harta_value = $request->harta_value;
+    $financial_source = $request->financial_source;
     $harta_year = $request->harta_year;
 
     $owner_type = $request->owner_type;
@@ -382,6 +384,7 @@ public function storeUpdateHarta(Request $request){
         $m->description = $harta_desc;
         $m->value = $harta_value;
         $m->year = $harta_year;
+        $m->financial_source = $financial_source;
 
         if(!$id){
             $m->declaration_status = 'DRAFT';

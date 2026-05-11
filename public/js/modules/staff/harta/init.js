@@ -16,6 +16,7 @@ let table = new DatatableInit({
         { data: 'type' },
         { data: 'description' },
         { data: 'value' },
+        { data: 'financial_source' },
         { data: 'year' },
         { data: 'pelupusan' },
         { data: 'terkini' },

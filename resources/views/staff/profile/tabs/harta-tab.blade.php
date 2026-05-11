@@ -46,6 +46,7 @@
                             <th>Jenis Harta</th>
                             <th>Keterangan</th>
                             <th>Nilai (RM)</th>
+                            <th>Sumber Kewangan</th>
                             <th>Tarikh Pemilikan</th>
                             <th>Pelupusan</th>
                             <th>Terkini?</th>
