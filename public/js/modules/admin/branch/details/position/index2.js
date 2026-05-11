@@ -64,7 +64,6 @@ function positionStoreUpdate(selector){
 
     v.validInt('#position-name', 'Jawatan', true)
     v.validInt('#position-grade', 'Gred', true)
-    v.validInt('#position-unit', 'Unit', true) // ✅ tambah
     v.validDoubleInt('#position-holiday', 'Bilangan Cuti')
 
     if(v.checkFail()){
@@ -75,7 +74,7 @@ function positionStoreUpdate(selector){
 
     v.setNewEntry('id', $('#position-id').val());
     v.setNewEntry('branch_id', branch_id);
-     v.setNewEntry('position_unit', $('#position-unit').val()); // ✅ PALING PENTING
+     v.setNewEntry('position_unit', $('#position-unit').val() || '');
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}position-store-update`,
