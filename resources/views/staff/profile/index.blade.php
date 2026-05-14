@@ -47,10 +47,12 @@
                                                         ({{ $staff->getStaffPosition->getBranchPosition->getGrade->name ?? '' }})
                                                     </span>
                                                     <br>
-                                                    <span class="text-uppercase">
-                                                       {{ $staff->getStaffPosition->getBranchPosition->getUnit->name ?? '-' }}
-                                                    </span>
-                                                    <br>
+                                                    @if(!empty($staff->getStaffPosition->getBranchPosition->getUnit->name))
+    <span class="text-uppercase">
+        {{ $staff->getStaffPosition->getBranchPosition->getUnit->name }}
+    </span>
+    <br>
+@endif
                                                      {{-- ✅ Paparan No. Kakitangan --}}
                                                  <span class="text-uppercase">
                                                 No. Kakitangan: {{ $staff->getUser->no_staff ?? '-' }}

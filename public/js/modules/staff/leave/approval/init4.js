@@ -41,11 +41,13 @@ let table = new DatatableInit({
 
                 let changeBtn = '';
 
-                if(full_day == 1){
-                    changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="mc">Ubah Ke Cuti Sakit</button></li>`;
-                }else if(mc == 1){
-                    changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="annual">Ubah Ke Cuti Rehat</button></li>`;
-                }
+if(is_admin){
+    if(full_day == 1){
+        changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="mc">Ubah Ke Cuti Sakit</button></li>`;
+    }else if(mc == 1){
+        changeBtn = `<li><button class="dropdown-item text-info leave-change-category" data-change="annual">Ubah Ke Cuti Rehat</button></li>`;
+    }
+}
 
                 if(status_id == 1){
                     let adminChange = '';
