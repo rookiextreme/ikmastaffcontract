@@ -11,6 +11,7 @@ use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\NotificationHelper;
 
 class PerformanceEvaluationAdminController extends Controller
 {
@@ -248,8 +249,18 @@ class PerformanceEvaluationAdminController extends Controller
             );
 
             if ($eval->wasRecentlyCreated) {
-                $created++;
-            }
+    $created++;
+
+    // ✅ Notification kepada PYD
+    NotificationHelper::send(
+        $a->pyd_user_id,
+        'Penilaian LNPT Baharu',
+        'Penilaian LNPT baharu telah dijana. Sila lengkapkan borang penilaian anda.',
+        route('staff.performance.index'),
+        'LNPT',
+        'info'
+    );
+}
 
             // ✅ kalau SKT, tandakan dijana
             if ($tab === 'skt' && empty($eval->skt_generated_at)) {

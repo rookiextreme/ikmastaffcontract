@@ -120,9 +120,104 @@
         </div>
         <!--end::Menu-->
     </div>
-    <!--end::Theme mode-->
-    <!--begin::User menu-->
-    <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
+       <!--end::Theme mode-->
+
+{{-- NOTIFICATION BELL --}}
+@php
+    $notifications = \App\Models\Notification::where('receiver_id', auth()->id())
+        ->latest()
+        ->limit(5)
+        ->get();
+
+    $unreadCount = \App\Models\Notification::where('receiver_id', auth()->id())
+        ->where('is_read', false)
+        ->count();
+@endphp
+
+<div class="app-navbar-item ms-1 ms-md-4">
+
+    <a href="#"
+       class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px position-relative"
+       data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+       data-kt-menu-attach="parent"
+       data-kt-menu-placement="bottom-end">
+
+        <i class="ki-duotone ki-notification-bing fs-2">
+            <span class="path1"></span>
+            <span class="path2"></span>
+            <span class="path3"></span>
+        </i>
+
+        @if($unreadCount > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">
+                {{ $unreadCount }}
+            </span>
+        @endif
+
+    </a>
+
+    {{-- DROPDOWN --}}
+    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg fw-semibold py-4 fs-6 w-375px"
+         data-kt-menu="true">
+
+        <div class="menu-item px-5">
+            <div class="fw-bold fs-5 mb-2">
+                Peti Pesanan
+            </div>
+        </div>
+
+        <div class="separator my-2"></div>
+
+        @forelse($notifications as $notification)
+
+            <div class="menu-item px-5 py-3">
+
+                <a href="{{ route('notification.read', $notification->id) }}"
+                   class="text-gray-800 text-hover-primary">
+
+                    <div class="fw-bold">
+                        {{ $notification->title }}
+                    </div>
+
+                    <div class="text-muted fs-7">
+                        {{ $notification->message }}
+                    </div>
+
+                    <div class="text-muted fs-8 mt-1">
+                        {{ $notification->created_at->diffForHumans() }}
+                    </div>
+
+                </a>
+
+            </div>
+
+            <div class="separator"></div>
+
+        @empty
+
+            <div class="menu-item px-5 py-5 text-center text-muted">
+                Tiada notification baru
+            </div>
+
+        @endforelse
+
+        <div class="menu-item px-5 py-3 text-center">
+
+            <a href="{{ route('notification.index') }}"
+               class="btn btn-sm btn-light-primary">
+
+                Lihat Semua
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--begin::User menu-->
+<div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
         <!--begin::Menu wrapper-->
         <div class="cursor-pointer symbol symbol-35px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
             @role('super-admin|admin')

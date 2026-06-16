@@ -9,6 +9,8 @@ use App\Models\PerformanceStatusLog; // ✅ tambah (log submit sahaja)
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
+
 
 class PPPPerformanceController extends Controller
 {
@@ -286,6 +288,21 @@ class PPPPerformanceController extends Controller
                 'ppp_total_score'     => (float)$fresh->ppp_total_score,
             ],
         ]);
+
+        // ✅ Notification kepada PPK
+$fresh = \App\Models\PerformanceEvaluation::with('assignment')
+    ->find($evaluation->id);
+
+if ($fresh && $fresh->assignment && $fresh->assignment->ppk_user_id) {
+    NotificationHelper::send(
+        $fresh->assignment->ppk_user_id,
+        'LNPT Menunggu Pengesahan PPK',
+        Auth::user()->name.' telah menghantar LNPT untuk pengesahan PPK.',
+        route('ppk.performance.index'),
+        'LNPT',
+        'info'
+    );
+}
 
         return redirect()->route('ppp.performance.index')->with('success', 'Berjaya dihantar kepada PPK.');
     }

@@ -4,11 +4,16 @@ $('#store-update-leave-new-request').on('click', function(){
     let is_mc = $('#leave-category').find(':selected').attr('data-mc')
     let is_full = $('#leave-category').find(':selected').attr('data-full')
     let is_half = $('#leave-category').find(':selected').attr('data-half')
+    let is_group = $('#leave-category').find(':selected').attr('data-group')
 
     let v = new Validscript('ms')
     v.validMix('#leave-date-range', 'Julat Cuti')
     v.validInt('#leave-category', 'Kategori Cuti', true)
     v.validInt('#leave-approver', 'Pelulus', true)
+
+    if (is_group == 1) {
+    v.validInt('#leave-group-type', 'Jenis Cuti Kelompok', true)
+}
 
     if(is_half == 1){
         v.validMix('#leave-start-time', $('#leave-start-time').val())
@@ -20,7 +25,7 @@ $('#store-update-leave-new-request').on('click', function(){
         ])
     }
 
-    if(is_mc == 1 || is_half == 1){
+    if(is_mc == 1 || is_half == 1 || is_group == 1){
         v.validUpload('#leave-mc', 'Lampiran', ['png', 'jpg', 'jpeg', 'pdf'], 'leave_mc', true)
     }else{
         common.resetForm([
@@ -35,6 +40,7 @@ $('#store-update-leave-new-request').on('click', function(){
 
     v.setNewEntry('staff_id', staff_id)
     v.setNewEntry('leave_reason', $('#leave-reason').val())
+    v.setNewEntry('leave_group_type_id', $('#leave-group-type').val())
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update-new-request`,

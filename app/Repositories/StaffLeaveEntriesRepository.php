@@ -13,6 +13,8 @@ use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\NotificationHelper;
+use App\Models\User;
 
 class StaffLeaveEntriesRepository
 {
@@ -114,37 +116,44 @@ class StaffLeaveEntriesRepository
             }
         }
 
-        $hTaken      = 0;
-        $currentDate = $date['start'];
+        $isGroupLeave = (($getLeaveCategory->is_group_leave ?? 0) == 1);
 
-        while ($currentDate <= $date['end']) {
-            $needAdd = true;
+$hTaken      = 0;
+$currentDate = $date['start'];
 
-            if (in_array(date('l', strtotime($currentDate)), $weekendH)) {
-                $needAdd = false;
-            }
+while ($currentDate <= $date['end']) {
 
-            if (in_array($currentDate, $publicH)) {
-                $needAdd = false;
-            }
+    if ($isGroupLeave) {
+        $hTaken++;
+    } else {
+        $needAdd = true;
 
-            if ($needAdd) {
-                $hTaken++;
-            }
-
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        if (in_array(date('l', strtotime($currentDate)), $weekendH)) {
+            $needAdd = false;
         }
 
-        if ($hTaken == 0) {
-            return [
-                'status'  => 'error',
-                'message' => 'Tarikh Yang Anda Pilih Adalah Cuti Umum/Cuti Mingguan'
-            ];
+        if (in_array($currentDate, $publicH)) {
+            $needAdd = false;
         }
 
-        if ($getLeaveCategory->is_half_day == true) {
-            $hTaken = 0.5 * $hTaken;
+        if ($needAdd) {
+            $hTaken++;
         }
+    }
+
+    $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+}
+
+if ($hTaken == 0) {
+    return [
+        'status'  => 'error',
+        'message' => 'Tarikh Yang Anda Pilih Adalah Cuti Umum/Cuti Mingguan'
+    ];
+}
+
+if ($getLeaveCategory->is_half_day == true) {
+    $hTaken = 0.5 * $hTaken;
+}
 
         DB::beginTransaction();
         try {
@@ -159,9 +168,7 @@ class StaffLeaveEntriesRepository
             $m->leave_category_id = $leave_category;
 
             // ✅ simpan jenis cuti kelompok jika kategori group
-            $m->leave_group_type_id = (($getLeaveCategory->is_group_leave ?? 0) == 1)
-                ? $leave_group_type_id
-                : null;
+           $m->leave_group_type_id = $isGroupLeave ? $leave_group_type_id : null;
 
             $m->start_date = $date['start'];
             $m->end_date = $date['end'];
@@ -181,6 +188,23 @@ class StaffLeaveEntriesRepository
             }
 
             $m->save();
+            // ✅ Notification kepada pelulus
+$approverStaff = Staff::find($leave_approver);
+
+if ($approverStaff && $approverStaff->user_id) {
+
+    NotificationHelper::send(
+        $approverStaff->user_id,
+        'Permohonan Cuti Baru',
+        auth()->user()->name.' telah menghantar permohonan cuti.',
+        route('staff.leave.approval', [
+            'user_id' => $approverStaff->user_id
+        ]),
+        'CUTI',
+        'info'
+    );
+
+}
 
             // ===================== KIRA & TOLAK BAKI CUTI =====================
             if ($getLeaveCategory->is_mc == true) {
@@ -188,7 +212,7 @@ class StaffLeaveEntriesRepository
                 $sLeave->mc_taken   = $sLeave->mc_taken + $hTaken;
                 $sLeave->mc_balance = $sLeave->mc_balance - $hTaken;
 
-            } elseif ($getLeaveCategory->is_group_leave == true) {
+            } elseif ($isGroupLeave) {
 
                 if ($sLeave->group_balance < $hTaken) {
                     DB::rollBack();
@@ -245,7 +269,7 @@ class StaffLeaveEntriesRepository
             'message' => 'Permohonan Cuti Anda Sedang Menunggu Pengesahan'
         ];
     }
-
+    
     /**
      * ✅ FIX + TAMBAH JOIN: paparkan nama jenis cuti kelompok
      */
@@ -395,6 +419,24 @@ class StaffLeaveEntriesRepository
             }
 
             dispatch(new StaffLeaveJob($id, $approve_stat == 1 ? 'approve' : 'reject'));
+
+            $requesterStaff = $m->getStaffPosition->getStaff ?? null;
+
+        if ($requesterStaff && $requesterStaff->user_id) {
+            $statusText = $approve_stat == 1 ? 'diluluskan' : 'tidak diluluskan';
+
+            NotificationHelper::send(
+                $requesterStaff->user_id,
+                $approve_stat == 1 ? 'Permohonan Cuti Diluluskan' : 'Permohonan Cuti Tidak Diluluskan',
+                'Permohonan cuti anda telah '.$statusText.'.',
+                route('staff.leave.request', [
+                    'user_id' => $requesterStaff->user_id
+                ]),
+                'CUTI',
+                $approve_stat == 1 ? 'success' : 'danger'
+            );
+        }
+
             DB::commit();
 
             return [

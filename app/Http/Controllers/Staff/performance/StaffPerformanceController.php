@@ -7,6 +7,7 @@ use App\Models\PerformanceEvaluation;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 class StaffPerformanceController extends Controller
 {
@@ -286,6 +287,21 @@ class StaffPerformanceController extends Controller
             ],
         ]);
 
+        // NOTIFICATION PPP
+$fresh3 = \App\Models\PerformanceEvaluation::with('assignment')
+    ->find($fresh->id);
+
+if ($fresh3 && $fresh3->assignment && $fresh3->assignment->ppp_user_id) {
+    NotificationHelper::send(
+        $fresh3->assignment->ppp_user_id,
+        'LNPT Menunggu Semakan PPP',
+        Auth::user()->name.' telah menghantar LNPT untuk semakan PPP.',
+        route('ppp.performance.index'),
+        'LNPT',
+        'info'
+    );
+}
+
         return redirect()
             ->route('staff.performance.index')
             ->with('success', 'Borang berjaya dihantar kepada PPP.');
@@ -294,6 +310,7 @@ class StaffPerformanceController extends Controller
     // optional legacy endpoint
     public function submit(Request $request)
     {
+           dd('MASUK FUNCTION SUBMIT');
         $userId = Auth::id();
 
         $data = $request->validate([

@@ -8,6 +8,7 @@ use App\Models\PerformanceCompetencyScore;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 class PPKPerformanceController extends Controller
 {
@@ -246,6 +247,20 @@ class PPKPerformanceController extends Controller
                 'final_score'          => (float)($fresh->ppk_total_score ?? 0),
             ],
         ]);
+
+        // ✅ Notification kepada PYD selepas PPK sahkan LNPT
+$fresh2 = PerformanceEvaluation::with('assignment')->find($evaluation->id);
+
+if ($fresh2 && $fresh2->pyd_user_id) {
+    NotificationHelper::send(
+        $fresh2->pyd_user_id,
+        'LNPT Telah Disahkan',
+        'LNPT anda telah disahkan oleh PPK dan proses penilaian telah selesai.',
+        route('staff.performance.index'),
+        'LNPT',
+        'success'
+    );
+}
 
         return redirect()->route('ppk.performance.index')->with('success', 'Berjaya disahkan oleh PPK.');
     }

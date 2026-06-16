@@ -43,6 +43,14 @@ $('#leave-category').on('change', function() {
     let is_mc = selected.attr('data-mc');
     let is_full = selected.attr('data-full');
     let is_half = selected.attr('data-half');
+    let is_group = selected.attr('data-group');
+
+    if (is_group == '1') {
+    $('#group-leave-type-wrap').show();
+} else {
+    $('#group-leave-type-wrap').hide();
+    $('#leave-group-type').val('').trigger('change');
+}
 
     if (is_mc == '1') {
         // MC selected
@@ -52,6 +60,9 @@ $('#leave-category').on('change', function() {
         // Half-day selected
         $('#leave-start-time, #leave-end-time').prop('disabled', false);
         $('#leave-mc').prop('disabled', false);
+        } else if (is_group == '1') {
+    $('#leave-start-time, #leave-end-time').prop('disabled', true);
+    $('#leave-mc').prop('disabled', false);
     } else {
         // All others
         $('#leave-start-time, #leave-end-time, #leave-mc').prop('disabled', true);

@@ -96,6 +96,35 @@
                                 <span class="menu-title">Papan Pemuka</span>
                             </a>
                         </div>
+                        {{-- PETI PESANAN --}}
+<div class="menu-item">
+    <a class="menu-link" href="{{ route('notification.index') }}">
+
+        <span class="menu-icon">
+            <i class="ki-duotone ki-notification-bing fs-2">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+        </span>
+
+        <span class="menu-title">
+            Peti Pesanan
+        </span>
+
+        @php
+            $unread = \App\Models\Notification::where('receiver_id', auth()->id())
+                ->where('is_read', false)
+                ->count();
+        @endphp
+
+        @if($unread > 0)
+            <span class="badge badge-danger">
+                {{ $unread }}
+            </span>
+        @endif
+
+    </a>
+</div>
 
                         {{-- PROFIL --}}
                         <div class="menu-item pt-5">
