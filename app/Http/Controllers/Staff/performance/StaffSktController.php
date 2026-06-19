@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 class StaffSktController extends Controller
 {
@@ -214,6 +215,18 @@ PerformanceStatusLog::create([
         'missing_sections'   => $missing,
     ],
 ]);
+
+// ✅ Notification kepada PPP selepas PYD hantar SKT
+if ($assignment && $assignment->ppp_user_id) {
+    NotificationHelper::send(
+        $assignment->ppp_user_id,
+        'SKT Menunggu Semakan PPP',
+        Auth::user()->name.' telah menghantar SKT untuk semakan PPP.',
+        route('ppp.performance.skt.index'),
+        'SKT',
+        'info'
+    );
+}
 
         return back()->with('success', 'SKT berjaya dihantar kepada PPP.');
     }

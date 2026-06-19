@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 
 class StaffController extends Controller
@@ -304,6 +305,11 @@ class StaffController extends Controller
             $method = trim((string)($data->disposal_method ?? ''));
             $date   = trim((string)($data->disposal_date ?? ''));
             $value  = $data->disposal_value ?? null;
+            $status = $data->disposal_status ?? null;
+
+if (!in_array($status, ['SUBMITTED', 'APPROVED'])) {
+    return '-';
+}
 
             if(
                 ($method === '' || $method === '-') &&
@@ -586,6 +592,29 @@ public function submitHarta(Request $request)
             'updated_at' => now(),
         ]);
 
+   $senderUserId = Auth::id();
+
+$admins = User::join('role_user', 'users.id', '=', 'role_user.user_id')
+    ->join('roles', 'roles.id', '=', 'role_user.role_id')
+    ->whereIn('roles.name', ['admin', 'super-admin'])
+    ->select('users.*')
+    ->distinct()
+    ->get();
+
+foreach ($admins as $admin) {
+    NotificationHelper::send(
+        $admin->id,
+        'Pengisytiharan Harta Baharu',
+        Auth::user()->name.' telah menghantar pengisytiharan harta untuk semakan.',
+        route('staff.profile', [
+            'user_id' => $senderUserId,
+            'page' => 'harta'
+        ]),
+        'HARTA',
+        'info'
+    );
+}
+
     return $this->setDataResponse([
         'status' => 'success',
         'message' => 'Perisytiharan harta berjaya dihantar kepada admin untuk semakan.',
@@ -615,6 +644,22 @@ public function approveHarta(Request $request)
             'admin_remark' => $request->admin_remark,
             'updated_at' => now(),
         ]);
+        
+        $staff = \App\Models\Staff::find($staff_id);
+
+if ($staff && $staff->user_id) {
+    NotificationHelper::send(
+        $staff->user_id,
+        'Pengisytiharan Harta Disahkan',
+        'Pengisytiharan harta anda telah disahkan oleh admin.',
+        route('staff.profile', [
+            'user_id' => $staff->user_id,
+            'page'    => 'harta'
+        ]),
+        'HARTA',
+        'success'
+    );
+}
 
     return $this->setDataResponse([
         'status' => 'success',
@@ -650,6 +695,22 @@ public function returnHarta(Request $request)
             'updated_at' => now(),
         ]);
 
+        $staff = \App\Models\Staff::find($staff_id);
+
+if ($staff && $staff->user_id) {
+    NotificationHelper::send(
+        $staff->user_id,
+        'Pengisytiharan Harta Dikembalikan',
+        'Pengisytiharan harta anda telah dikembalikan oleh admin untuk pembetulan.',
+        route('staff.profile', [
+            'user_id' => $staff->user_id,
+            'page'    => 'harta'
+        ]),
+        'HARTA',
+        'warning'
+    );
+}
+
     return $this->setDataResponse([
         'status' => 'success',
         'message' => 'Perisytiharan harta telah dikembalikan kepada staf untuk pembetulan.',
@@ -681,6 +742,23 @@ public function approveHartaPelupusan(Request $request)
     $harta->disposal_admin_remark = $request->disposal_admin_remark;
     $harta->save();
 
+    // ✅ Notification kepada staff
+$staff = \App\Models\Staff::find($harta->staff_id);
+
+if ($staff && $staff->user_id) {
+    NotificationHelper::send(
+        $staff->user_id,
+        'Pelupusan Harta Disahkan',
+        'Permohonan pelupusan harta anda telah disahkan oleh admin.',
+        route('staff.profile', [
+            'user_id' => $staff->user_id,
+            'page'    => 'harta'
+        ]),
+        'HARTA',
+        'success'
+    );
+}
+
     return $this->setDataResponse([
         'status' => 'success',
         'message' => 'Pelupusan harta berjaya disahkan.',
@@ -707,10 +785,28 @@ public function rejectHartaPelupusan(Request $request)
 
     $harta->disposal_method = null;
     $harta->disposal_date = null;
+    $harta->disposal_value = null;
     $harta->disposal_status = null;
     $harta->disposal_submitted_at = null;
     $harta->disposal_admin_remark = null;
     $harta->save();
+
+    // ✅ Notification kepada staff
+$staff = \App\Models\Staff::find($harta->staff_id);
+
+if ($staff && $staff->user_id) {
+    NotificationHelper::send(
+        $staff->user_id,
+        'Pelupusan Harta Ditolak',
+        'Permohonan pelupusan harta anda telah ditolak oleh admin dan rekod harta kembali aktif.',
+        route('staff.profile', [
+            'user_id' => $staff->user_id,
+            'page'    => 'harta'
+        ]),
+        'HARTA',
+        'warning'
+    );
+}
 
     return $this->setDataResponse([
         'status' => 'success',

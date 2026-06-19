@@ -8,6 +8,7 @@ use App\Models\PerformanceEvaluation;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 class PPPSktController extends Controller
 {
@@ -125,6 +126,18 @@ PerformanceStatusLog::create([
         'missing_sections'   => $missing,
     ],
 ]);
+
+// ✅ Notification kepada PYD selepas PPP sahkan SKT
+if ($fresh->pyd_user_id) {
+    NotificationHelper::send(
+        $fresh->pyd_user_id,
+        'SKT Telah Disemak PPP',
+        Auth::user()->name.' telah selesai menyemak SKT anda.',
+        route('staff.performance.skt'),
+        'SKT',
+        'success'
+    );
+}
 
         return back()->with('success','SKT disahkan oleh PPP.');
     }

@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\NotificationHelper;
+use Illuminate\Support\Facades\Auth;
 
 class StaffRepository
 {
@@ -486,6 +488,28 @@ public function storeHartaPelupusan(Request $request){
             'message' => $exception->getMessage(),
         ];
     }
+
+    // ✅ Notification kepada admin
+$admins = User::join('role_user', 'users.id', '=', 'role_user.user_id')
+    ->join('roles', 'roles.id', '=', 'role_user.role_id')
+    ->whereIn('roles.name', ['admin', 'super-admin'])
+    ->select('users.*')
+    ->distinct()
+    ->get();
+
+foreach ($admins as $admin) {
+    NotificationHelper::send(
+        $admin->id,
+        'Permohonan Pelupusan Harta Baharu',
+        Auth::user()->name.' telah menghantar permohonan pelupusan harta untuk semakan.',
+        route('staff.profile', [
+            'user_id' => Auth::id(),
+            'page'    => 'harta'
+        ]),
+        'HARTA',
+        'info'
+    );
+}
 
     return [
         'status' => 'success',
