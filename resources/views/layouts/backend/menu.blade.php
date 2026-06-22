@@ -355,7 +355,17 @@
                                 <span class="menu-title">Sejarah Jawatan</span>
                             </a>
                         </div>
-
+<div class="menu-item">
+    <a class="menu-link" href="{{ route('admin.reporting.harta') }}">
+        <span class="menu-icon">
+            <i class="ki-duotone ki-abstract-13 fs-2">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+        </span>
+        <span class="menu-title">Perisytiharan Harta</span>
+    </a>
+</div>
                     @endrole
 
 

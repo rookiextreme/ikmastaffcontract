@@ -63,6 +63,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
         Route::group(['prefix' => 'reporting'], function () {
             Route::match(['get', 'post'], '/', [ReportingController::class, 'index'])->name('admin.reporting.index');
             Route::get('/pdf', [ReportingController::class, 'pdfDownload'])->name('admin.reporting.pdf');
+
+              // Laporan Perisytiharan Harta
+    Route::match(['get', 'post'], '/harta', [ReportingController::class, 'harta'])
+        ->name('admin.reporting.harta');
         });
 
         // ================ Cuti Kelompok (Admin) ================

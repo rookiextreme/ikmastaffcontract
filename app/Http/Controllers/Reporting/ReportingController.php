@@ -11,6 +11,7 @@ use App\Repositories\StaffPositionRepository;
 use App\Traits\LookupTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Models\StaffHarta;
 
 class ReportingController extends Controller
 {
@@ -152,6 +153,103 @@ class ReportingController extends Controller
             'grade' => $grade,
             'staff_name' => $staff_name,
             'ic_no'       => $ic_no,   // 👈 hantar ke view
+        ]);
+    }
+
+        public function harta(Request $request)
+    {
+        $currentYear = date("Y");
+        $startYear = $currentYear - 10;
+
+        $yearList = [];
+
+        for ($year = $currentYear; $year >= $startYear; $year--) {
+            $yearList[] = $year;
+        }
+
+        $branchList = $this->getBranches();
+
+        $staff_name = $request->staff_name ?? null;
+        $ic_no = $request->ic_no ?? null;
+        $branch = $request->branch ?? null;
+        $year = $request->year ?? null;
+        $type = $request->type ?? null;
+        $declaration_status = $request->declaration_status ?? null;
+        $status_harta = $request->status_harta ?? null;
+
+        $hartaList = [];
+
+        if ($request->post()) {
+            $query = StaffHarta::query()
+                ->from('staff_hartas as sh')
+                ->leftJoin('staffs as s', 's.id', '=', 'sh.staff_id')
+                ->leftJoin('users as u', 'u.id', '=', 's.user_id')
+                ->leftJoin('staff_positions as sp', function ($join) {
+                    $join->on('sp.staff_id', '=', 's.id')
+                        ->where('sp.deleted', 0);
+                })
+                ->leftJoin('branches as b', 'b.id', '=', 'sp.branch_id')
+                ->select(
+                    'sh.*',
+                    'u.name',
+                    'u.ic_no',
+                    'b.name as branch_name'
+                );
+
+            if ($staff_name) {
+                $query->where('u.name', 'like', '%' . $staff_name . '%');
+            }
+
+            if ($ic_no) {
+                $icNoClean = str_replace(['-', ' '], '', $ic_no);
+
+                $query->whereRaw(
+                    "REPLACE(REPLACE(u.ic_no,'-',''),' ','') LIKE ?",
+                    ["%{$icNoClean}%"]
+                );
+            }
+
+            if ($branch) {
+                $query->where('sp.branch_id', $branch);
+            }
+
+            if ($year) {
+                $query->where('sh.year', $year);
+            }
+
+            if ($type) {
+                $query->where('sh.type', 'like', '%' . $type . '%');
+            }
+
+            if ($declaration_status) {
+                $query->where('sh.declaration_status', $declaration_status);
+            }
+
+            if ($status_harta == 'AKTIF') {
+                $query->whereNull('sh.disposal_status');
+            }
+
+            if ($status_harta == 'DILUPUSKAN') {
+                $query->whereNotNull('sh.disposal_status');
+            }
+
+            $hartaList = $query
+                ->orderBy('u.name')
+                ->orderByDesc('sh.year')
+                ->get();
+        }
+
+        return view('reporting.harta', [
+            'yearList' => $yearList,
+            'branchList' => $branchList,
+            'hartaList' => $hartaList,
+            'staff_name' => $staff_name,
+            'ic_no' => $ic_no,
+            'branch' => $branch,
+            'year' => $year,
+            'type' => $type,
+            'declaration_status' => $declaration_status,
+            'status_harta' => $status_harta,
         ]);
     }
 }
