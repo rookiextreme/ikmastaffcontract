@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\NotificationHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PerformanceEvaluationAdminController extends Controller
 {
@@ -636,4 +637,45 @@ class PerformanceEvaluationAdminController extends Controller
             ])
             ->with('success', 'Maklumat PYD (Bahagian II) berjaya dikemaskini.');
     }
+    public function pdf($id)
+{
+    $evaluation = PerformanceEvaluation::with([
+        'assignment.pydUser.staffPosition.position',
+        'assignment.pydUser.staffPosition.grade',
+        'assignment.pydUser',
+        'assignment.pppUser',
+        'assignment.ppkUser',
+        'period',
+        'competencyScores.item',
+        'logs.actor',
+    ])->findOrFail($id);
+
+    if (strtoupper((string)$evaluation->status) !== 'FINAL') {
+        return redirect()
+            ->back()
+            ->with('error', 'PDF hanya boleh dijana selepas penilaian dimuktamadkan.');
+    }
+
+    $sectionMeta = $this->repo->sectionMeta();
+
+    $itemsBySection = [
+        'III' => $this->repo->getCompetencyItemsByCode('III'),
+        'IV'  => $this->repo->getCompetencyItemsByCode('IV'),
+        'V'   => $this->repo->getCompetencyItemsByCode('V'),
+        'VI'  => $this->repo->getCompetencyItemsByCode('VI'),
+    ];
+
+    $scores = $evaluation->competencyScores()->get()->keyBy('competency_item_id');
+
+    $pdf = Pdf::loadView('admin.performance.evaluations.pdf', compact(
+        'evaluation',
+        'sectionMeta',
+        'itemsBySection',
+        'scores'
+    ))->setPaper('a4', 'portrait');
+
+    $filename = 'laporan-penilaian-prestasi-' . $evaluation->id . '.pdf';
+
+    return $pdf->stream($filename);
+}
 }

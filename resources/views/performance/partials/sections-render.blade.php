@@ -178,6 +178,8 @@
 
     // ✅ Admin sahaja boleh edit
     $canEditPPSM = ($roleKey === 'admin');
+    // Papar kepada pengguna hanya selepas admin muktamadkan
+$isFinalized = strtoupper((string)($evaluation->status ?? '')) === 'FINAL';
 @endphp
 
 <div class="card border mb-5">
@@ -258,13 +260,26 @@
                 </button>
             </form>
         @else
-            <div class="fs-4 mt-1">
-                {{ $ppsm !== null ? number_format((float)$ppsm, 2) : '-' }}
-            </div>
-            <div class="text-muted small mt-1">
-                (Dikemaskini oleh admin/UPSM)
-            </div>
-        @endif
+
+    @if($isFinalized)
+
+        <div class="fs-4 mt-1">
+            {{ $ppsm !== null ? number_format((float)$ppsm, 2) : '-' }}
+        </div>
+
+        <div class="text-muted small mt-1">
+            (Dikemaskini oleh admin/UPSM)
+        </div>
+
+    @else
+
+        <div class="text-muted mt-2">
+            Markah PPSM belum dimuktamadkan.
+        </div>
+
+    @endif
+
+@endif
     </div>
 </div>
 
@@ -272,7 +287,7 @@
         </div>
 
         <div class="text-muted small mt-3">
-            Bahagian ini auto (paparan sahaja). Markah PPSM boleh dikemaskini oleh admin/UPSM dan akan dipaparkan kepada semua peranan.
+            Bahagian ini auto (paparan sahaja). Markah PPSM hanya akan dipaparkan kepada semua peranan selepas penilaian dimuktamadkan oleh Admin/UPSM.
         </div>
     </div>
 </div>

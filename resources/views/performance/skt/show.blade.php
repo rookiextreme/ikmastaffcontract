@@ -20,8 +20,10 @@
     if ($e) {
         if (($e->status ?? null) === 'FINAL') {
             $statusSkt = 'FINAL';
-        } elseif (($e->status ?? null) === 'PPP_REVIEWED') {
-            $statusSkt = 'PPP_REVIEWED';
+        } elseif (($e->status ?? null) === 'RETURNED_BY_PPP') {
+    $statusSkt = 'RETURNED_BY_PPP';
+} elseif (($e->status ?? null) === 'PPP_REVIEWED') {
+    $statusSkt = 'PPP_REVIEWED';
         } elseif (empty($e->skt_submitted_at)) {
             $statusSkt = 'DRAFT';
         } elseif (!empty($e->skt_submitted_at) && empty($e->skt_ppp_reviewed_at)) {
@@ -34,7 +36,7 @@
     // =========================
     // LOCKING LOGIC (ikut role)
     // =========================
-    $lockedPYD = ($statusSkt !== 'DRAFT');
+    $lockedPYD = !in_array($statusSkt, ['DRAFT', 'RETURNED_BY_PPP'], true);
     $lockedPPP = !in_array($statusSkt, ['SUBMITTED','PPP_REVIEWED'], true);
 
     $is_locked = match($roleKey){
@@ -56,6 +58,7 @@
     $badgeClass = match($statusSkt){
         'DRAFT'        => 'bg-light text-dark border',
         'SUBMITTED'    => 'bg-warning',
+        'RETURNED_BY_PPP' => 'bg-danger',
         'PPP_REVIEWED' => 'bg-success',
         'FINAL'        => 'bg-primary',
         default        => 'bg-light text-dark border',
@@ -104,9 +107,19 @@
                     @endif
 
                     @if($roleKey === 'ppp')
-                        <a href="{{ route('ppp.performance.skt.index') }}" class="btn btn-light">
-                            Kembali
-                        </a>
+
+    @if($e && $statusSkt === 'SUBMITTED')
+        <button type="button"
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#modalReturnSkt">
+            Pulangkan Kepada PYD
+        </button>
+    @endif
+
+    <a href="{{ route('ppp.performance.skt.index') }}" class="btn btn-light">
+        Kembali
+    </a>
                     @elseif($roleKey === 'admin')
                         <a href="{{ url()->previous() }}" class="btn btn-light">
                             Kembali
@@ -131,6 +144,22 @@
             @if(!empty($message))
                 <div class="alert alert-warning mb-4">{{ $message }}</div>
             @endif
+
+            {{-- ALERT RETURNED BY PPP --}}
+@if($roleKey === 'pyd' && $e && $statusSkt === 'RETURNED_BY_PPP')
+    <div class="alert alert-warning border border-warning mb-4">
+        <strong>SKT Dipulangkan Oleh PPP</strong><br>
+
+        PPP telah memulangkan SKT ini untuk pembetulan.
+        Sila semak catatan di bawah, buat pembetulan dan hantar semula kepada PPP.
+
+        @if(!empty($e->ppp_return_remark))
+            <hr>
+            <strong>Catatan PPP:</strong><br>
+            <div style="white-space: pre-line;">{{ $e->ppp_return_remark }}</div>
+        @endif
+    </div>
+@endif
 
             {{-- ALERT FINAL --}}
             @if($roleKey === 'admin' && $e && $statusSkt === 'FINAL')
@@ -229,6 +258,56 @@
                             class="btn btn-success"
                             onclick="return confirm('Pasti mahu muktamadkan SKT ini? Selepas dimuktamadkan, status akan menjadi FINAL.')">
                         Ya, Muktamadkan
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+@endif
+{{-- MODAL RETURN SKT PPP --}}
+@if($roleKey === 'ppp' && $e && $statusSkt === 'SUBMITTED')
+<div class="modal fade" id="modalReturnSkt" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="POST" action="{{ route('ppp.performance.skt.return', $e->id) }}">
+                @csrf
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Pulangkan SKT Kepada PYD</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        Tindakan ini akan memulangkan SKT kepada PYD untuk pembetulan.
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sebab Pemulangan</label>
+                        <textarea name="ppp_return_remark"
+                                  rows="4"
+                                  class="form-control"
+                                  required
+                                  minlength="5"
+                                  maxlength="1000"
+                                  placeholder="Contoh: Sila lengkapkan petunjuk prestasi Bahagian I.">{{ old('ppp_return_remark') }}</textarea>
+                    </div>
+
+                    @error('ppp_return_remark')
+                        <div class="text-danger small mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+
+                    <button type="submit"
+                            class="btn btn-warning"
+                            onclick="return confirm('Pasti mahu pulangkan SKT ini kepada PYD?')">
+                        Ya, Pulangkan
                     </button>
                 </div>
             </form>

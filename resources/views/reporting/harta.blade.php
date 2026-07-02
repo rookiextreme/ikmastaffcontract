@@ -75,9 +75,36 @@
                     </div>
 
                     <div class="col-md-12 mb-4">
-                        <button type="submit" class="btn btn-success float-end ms-5">Cari</button>
-                        <a href="{{ route('admin.reporting.harta') }}" class="btn btn-light float-end">Reset</a>
-                    </div>
+
+    <button name="find_normal_generate"
+            type="submit"
+            class="btn btn-success float-end ms-2"
+            value="genNormal">
+        Cari
+    </button>
+
+    <button name="find_pdf_generate"
+            formtarget="_blank"
+            type="submit"
+            class="btn btn-danger float-end ms-2"
+            value="genPdf">
+        Jana PDF
+    </button>
+
+    <button name="find_excel_generate"
+            formtarget="_blank"
+            type="submit"
+            class="btn btn-primary float-end ms-2"
+            value="genExcel">
+        Jana Excel
+    </button>
+
+    <a href="{{ route('admin.reporting.harta') }}"
+       class="btn btn-light float-end">
+        Reset
+    </a>
+
+</div>
                 </div>
             </div>
         </form>

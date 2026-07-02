@@ -21,6 +21,7 @@ let table = new DatatableInit({
         { data: 'pelupusan' },
         { data: 'terkini' },
         { data: 'declaration_status' },
+        { data: 'attachment' },
 
         {
             data: 'action',

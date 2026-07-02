@@ -68,6 +68,9 @@ v.setNewEntry('_token', csrfToken);
     v.setNewEntry('owner_name', $('#harta-owner-name').val());
     v.setNewEntry('owner_relation', $('#harta-owner-relation').val());
     v.setNewEntry('financial_source', $('#harta-financial-source').val());
+    if ($('#harta-attachment')[0].files.length > 0) {
+    v.data.append('attachment', $('#harta-attachment')[0].files[0]);
+}
 
     http.fetch({
         url: `${common.getUrl()}${moduleUrl}store-update-harta`,
@@ -342,6 +345,7 @@ function resetHartaForm(){
     $('#harta-value').val('');
     $('#harta-financial-source').val('');
     $('#harta-year').val('');
+    $('#harta-attachment').val('');
     if ($('#harta-year')[0]?._flatpickr) {
     $('#harta-year')[0]._flatpickr.clear();
 }

@@ -97,9 +97,9 @@ class StaffSktController extends Controller
         $evaluation = $this->repo->ensureEvaluationExistsOrFail($period->id, $assignment, $userId);
 
         // ❌ bila dah submit → tak boleh edit
-        if (($evaluation->status ?? 'DRAFT') !== 'DRAFT') {
-            return back()->with('error', 'SKT telah dihantar kepada PPP.');
-        }
+        if (!in_array(($evaluation->status ?? 'DRAFT'), ['DRAFT', 'RETURNED_BY_PPP'], true)) {
+    return back()->with('error', 'SKT telah dihantar kepada PPP.');
+}
 
         if ($bahagian === 'I') {
             $payload = $this->normalizeRows(
@@ -149,9 +149,11 @@ class StaffSktController extends Controller
 
         $evaluation = $this->repo->ensureEvaluationExistsOrFail($period->id, $assignment, $userId);
 
-        if (($evaluation->status ?? 'DRAFT') !== 'DRAFT') {
-            return back()->with('error', 'SKT telah dihantar.');
-        }
+        $fromStatus = $evaluation->status ?? 'DRAFT';
+
+if (!in_array($fromStatus, ['DRAFT', 'RETURNED_BY_PPP'], true)) {
+    return back()->with('error', 'SKT telah dihantar.');
+}
 
         $itemsI = (array)($evaluation->skt_bahagian_i['items'] ?? []);
         $tambah = (array)($evaluation->skt_bahagian_ii['tambah'] ?? []);
@@ -180,9 +182,11 @@ class StaffSktController extends Controller
         }
 
         $evaluation->update([
-            'status'           => 'SUBMITTED',
-            'skt_submitted_at' => now(),
-        ]);
+    'status'            => 'SUBMITTED',
+    'skt_submitted_at'  => now(),
+    'ppp_return_remark' => null,
+    'ppp_returned_at'   => null,
+]);
 
 $fresh = $evaluation->fresh();
 
@@ -206,7 +210,7 @@ PerformanceStatusLog::create([
     'actor_id'      => $userId,
     'actor_role'    => 'pyd',
     'action'        => 'SUBMIT_PYD_SKT',
-    'from_status'   => 'DRAFT',
+    'from_status'   => $fromStatus,
     'to_status'     => 'SUBMITTED',
     'meta'          => [
         'module'             => 'SKT',

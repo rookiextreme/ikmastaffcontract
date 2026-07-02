@@ -64,6 +64,16 @@
                     </button>
                 @endif
 
+                {{-- ✅ Butang PDF (hanya selepas FINAL) --}}
+@if($status === 'FINAL')
+    <a href="{{ route('admin.performance.evaluations.pdf', $evaluation->id) }}"
+       target="_blank"
+       class="btn btn-danger">
+        <i class="fas fa-file-pdf me-1"></i>
+        PDF Penilaian
+    </a>
+@endif
+
                 <a href="{{ route('admin.performance.evaluations.index') }}"
                    class="btn btn-light">
                     Kembali

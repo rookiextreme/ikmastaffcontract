@@ -318,6 +318,7 @@ class StaffRepository
         sh.description,
         sh.value,
         sh.financial_source,
+        sh.attachment,
         sh.year,
         sh.declaration_status,
         sh.submitted_at,
@@ -375,6 +376,18 @@ public function storeUpdateHarta(Request $request){
             ];
         }
 
+        if ($request->hasFile('attachment')) {
+            $request->validate([
+                'attachment' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
+            ]);
+
+            $file = $request->file('attachment');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $path = $file->storeAs('harta', $filename, 'public');
+
+            $m->attachment = $path;
+        }
+
         $m->staff_id = $staff_id;
 
         $m->owner_type = $owner_type ?? 'self';
@@ -422,6 +435,8 @@ public function getHarta($id){
     $data['description'] = $m->description;
     $data['value'] = $m->value;
     $data['year'] = $m->year;
+    $data['financial_source'] = $m->financial_source;
+    $data['attachment'] = $m->attachment;
     $data['declaration_status'] = $m->declaration_status;
     $data['submitted_at'] = $m->submitted_at;
     $data['returned_at'] = $m->returned_at;

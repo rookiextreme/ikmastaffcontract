@@ -20,6 +20,8 @@ class StaffHarta extends Model
         'description',
         'value',
         'year',
+        'financial_source',
+        'attachment',
 
         // Pemilik harta
         'owner_type',

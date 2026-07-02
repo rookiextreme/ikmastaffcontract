@@ -300,6 +300,19 @@ class StaffController extends Controller
         : '-';
 })
         ->addColumn('year', fn($data) => $data->year ?? '-')
+        ->addColumn('attachment', function($data){
+    if(!empty($data->attachment)){
+        return '
+            <a href="'.asset('storage/'.$data->attachment).'"
+               target="_blank"
+               class="btn btn-sm btn-light-primary">
+                <i class="fas fa-file"></i> Lihat
+            </a>
+        ';
+    }
+
+    return '-';
+})
         // ✅ DIKEMASKINI: tambah paparan nilai pelupusan RM
         ->addColumn('pelupusan', function($data){
             $method = trim((string)($data->disposal_method ?? ''));
@@ -364,14 +377,27 @@ if (!in_array($status, ['SUBMITTED', 'APPROVED'])) {
             return '<span class="text-success fw-bold">Aktif</span>';
         })
         ->addColumn('declaration_status', function($data){
-            return match($data->declaration_status ?? 'DRAFT') {
-                'DRAFT' => '<span class="badge badge-light-secondary">Draf</span>',
-                'SUBMITTED' => '<span class="badge badge-light-primary">Dihantar</span>',
-                'RETURNED' => '<span class="badge badge-light-warning">Dikembalikan</span>',
-                'APPROVED' => '<span class="badge badge-light-success">Disahkan</span>',
-                default => '<span class="badge badge-light-secondary">Draf</span>',
-            };
-        })
+
+    if(($data->declaration_status ?? '') == 'RETURNED'){
+
+        $remark = $data->admin_remark ?? 'Tiada maklum balas';
+
+        return '
+            <span class="badge badge-light-warning">Dikembalikan</span>
+            <br>
+            <small class="text-danger fw-bold">
+                Sebab: '.$remark.'
+            </small>
+        ';
+    }
+
+    return match($data->declaration_status ?? 'DRAFT') {
+        'DRAFT' => '<span class="badge badge-light-secondary">Draf</span>',
+        'SUBMITTED' => '<span class="badge badge-light-primary">Dihantar</span>',
+        'APPROVED' => '<span class="badge badge-light-success">Disahkan</span>',
+        default => '<span class="badge badge-light-secondary">Draf</span>',
+    };
+})
         ->addColumn('declaration_status_raw', function($data){
             return $data->declaration_status ?: 'DRAFT';
         })

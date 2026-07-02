@@ -40,6 +40,8 @@ class PerformanceEvaluation extends Model
         'skt_bahagian_iii',
         'skt_submitted_at',
         'skt_ppp_reviewed_at',
+        'ppp_return_remark',
+        'ppp_returned_at',
 
         // =====================
         // PPP INPUT
@@ -81,6 +83,7 @@ class PerformanceEvaluation extends Model
         'skt_bahagian_iii'  => 'array',
         'skt_submitted_at'  => 'datetime',
         'skt_ppp_reviewed_at' => 'datetime',
+        'ppp_returned_at'     => 'datetime',
 
         // ✅ PPSM (optional tapi elok supaya format decimal konsisten)
         'ppsm_score' => 'decimal:2',

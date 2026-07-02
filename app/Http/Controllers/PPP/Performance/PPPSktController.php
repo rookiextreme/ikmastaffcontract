@@ -141,4 +141,51 @@ if ($fresh->pyd_user_id) {
 
         return back()->with('success','SKT disahkan oleh PPP.');
     }
+    /**
+ * Pulangkan SKT kepada PYD untuk pembetulan
+ */
+public function returnToPyd(Request $request, PerformanceEvaluation $evaluation)
+{
+    abort_if($evaluation->assignment?->ppp_user_id !== Auth::id(), 403);
+
+    if ($evaluation->status !== 'SUBMITTED') {
+        return back()->with('error', 'SKT hanya boleh dipulangkan semasa status SUBMITTED.');
+    }
+
+    $request->validate([
+        'ppp_return_remark' => 'required|string|min:5|max:1000',
+    ]);
+
+    $evaluation->update([
+        'status'            => 'RETURNED_BY_PPP',
+        'ppp_return_remark' => $request->ppp_return_remark,
+        'ppp_returned_at'   => now(),
+    ]);
+
+    PerformanceStatusLog::create([
+        'evaluation_id' => $evaluation->id,
+        'actor_id'      => Auth::id(),
+        'actor_role'    => 'ppp',
+        'action'        => 'RETURN_PPP_SKT',
+        'from_status'   => 'SUBMITTED',
+        'to_status'     => 'RETURNED_BY_PPP',
+        'meta'          => [
+            'module' => 'SKT',
+            'remark' => $request->ppp_return_remark,
+        ],
+    ]);
+
+    if ($evaluation->pyd_user_id) {
+        NotificationHelper::send(
+            $evaluation->pyd_user_id,
+            'SKT Dipulangkan Oleh PPP',
+            Auth::user()->name.' telah memulangkan SKT anda untuk pembetulan.',
+            route('staff.performance.skt'),
+            'SKT',
+            'warning'
+        );
+    }
+
+    return back()->with('success', 'SKT telah dipulangkan kepada PYD.');
+}
 }

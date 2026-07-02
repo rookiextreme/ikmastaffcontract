@@ -120,6 +120,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
             Route::get('/', [PerformanceEvaluationAdminController::class, 'index'])
                 ->name('admin.performance.evaluations.index');
 
+            Route::get('/{id}/pdf', [PerformanceEvaluationAdminController::class, 'pdf'])
+    ->middleware(['role:super-admin|admin'])
+    ->name('admin.performance.evaluations.pdf');
+
             Route::get('/{id}', [PerformanceEvaluationAdminController::class, 'show'])
                 ->name('admin.performance.evaluations.show');
 

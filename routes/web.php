@@ -79,6 +79,9 @@ Route::group(['prefix' => 'ppp', 'middleware' => ['auth']], function () {
         Route::post('/performance/skt/{evaluation}/submit', [PPPSktController::class, 'submit'])
             ->name('ppp.performance.skt.submit');
 
+        Route::post('/performance/skt/{evaluation}/return', [PPPSktController::class, 'returnToPyd'])
+        ->name('ppp.performance.skt.return');
+
     });
 
 });

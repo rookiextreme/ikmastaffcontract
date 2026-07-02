@@ -96,6 +96,21 @@
                     <label class="required form-label">Tarikh Pemilikan</label>
 <input type="text" class="form-control" id="harta-year" placeholder="dd-mm-yyyy">
                 </div>
+                <div class="mb-4">
+    <label class="form-label">
+        Fail Sokongan <span class="text-muted">(Tidak wajib)</span>
+    </label>
+
+    <input type="file"
+           class="form-control"
+           id="harta-attachment"
+           name="attachment"
+           accept=".pdf,.jpg,.jpeg,.png">
+
+    <small class="text-muted">
+        Format dibenarkan: PDF, JPG, JPEG, PNG. Maksimum 5MB.
+    </small>
+</div>
 
             </div>
 

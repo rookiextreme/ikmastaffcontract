@@ -53,7 +53,7 @@
 
                             <!-- ✅ COLUMN STATUS -->
                             <th>Status Perisytiharan</th>
-
+                            <th>Fail Sokongan</th>
                             <th>Tindakan</th>
                         </tr>
                         </thead>

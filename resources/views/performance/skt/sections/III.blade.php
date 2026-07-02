@@ -41,7 +41,7 @@
 
     $iiComplete = (($filledTambah + $filledGugur) > 0) && $okTambah;
 
-    $canSubmitPYD = ($status === 'DRAFT') && $iComplete && $iiComplete;
+    $canSubmitPYD = in_array($status, ['DRAFT', 'RETURNED_BY_PPP'], true) && $iComplete && $iiComplete;
 
     // route ikut role
     $saveUrl = $roleKey === 'ppp'
@@ -192,7 +192,7 @@
                         <button type="submit"
                                 class="btn btn-light-primary"
                                 onclick="return confirm('Hantar SKT kepada PPP?')">
-                            Hantar kepada PPP
+                            {{ $status === 'RETURNED_BY_PPP' ? 'Hantar Semula kepada PPP' : 'Hantar kepada PPP' }}
                         </button>
                     </form>
                 @else
