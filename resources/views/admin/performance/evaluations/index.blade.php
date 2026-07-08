@@ -3,6 +3,10 @@
 @section('title','Admin | Senarai Penilaian Prestasi')
 
 @section('content')
+@php
+    use App\Helpers\PerformanceHelper;
+@endphp
+
 
 <div class="card">
     <div class="card-body">
@@ -77,22 +81,54 @@
 
                         {{-- ✅ LNPT vs SKT: options berbeza --}}
                         <select name="status" class="form-select" onchange="this.form.submit()">
-                            <option value="ALL" {{ $status==='ALL'?'selected':'' }}>Semua</option>
-                            <option value="BELUM_JANA" {{ $status==='BELUM_JANA'?'selected':'' }}>Belum Jana</option>
 
-                            @if($isSkt)
-                                {{-- ✅ SKT --}}
-                                <option value="DRAFT" {{ $status==='DRAFT'?'selected':'' }}>DRAFT</option>
-                                <option value="SUBMITTED" {{ $status==='SUBMITTED'?'selected':'' }}>SUBMITTED</option>
-                                <option value="PPP_REVIEWED" {{ $status==='PPP_REVIEWED'?'selected':'' }}>PPP_REVIEWED</option>
-                            @else
-                                {{-- ✅ LNPT (asal) --}}
-                                <option value="DRAFT" {{ $status==='DRAFT'?'selected':'' }}>DRAFT</option>
-                                <option value="SUBMITTED" {{ $status==='SUBMITTED'?'selected':'' }}>SUBMITTED</option>
-                                <option value="PPP_SCORED" {{ $status==='PPP_SCORED'?'selected':'' }}>PPP_SCORED</option>
-                                <option value="PPK_APPROVED" {{ $status==='PPK_APPROVED'?'selected':'' }}>PPK_APPROVED</option>
-                            @endif
-                        </select>
+    <option value="ALL" {{ $status=='ALL'?'selected':'' }}>
+        Semua
+    </option>
+
+    <option value="BELUM_JANA" {{ $status=='BELUM_JANA'?'selected':'' }}>
+        {{ PerformanceHelper::statusLabel('BELUM_JANA') }}
+    </option>
+
+    @if($isSkt)
+
+        <option value="DRAFT" {{ $status=='DRAFT'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('DRAFT') }}
+        </option>
+
+        <option value="SUBMITTED" {{ $status=='SUBMITTED'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('SUBMITTED') }}
+        </option>
+
+        <option value="RETURNED_BY_PPP" {{ $status=='RETURNED_BY_PPP'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('RETURNED_BY_PPP') }}
+        </option>
+
+        <option value="PPP_REVIEWED" {{ $status=='PPP_REVIEWED'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('PPP_REVIEWED') }}
+        </option>
+
+    @else
+
+        <option value="DRAFT" {{ $status=='DRAFT'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('DRAFT') }}
+        </option>
+
+        <option value="SUBMITTED" {{ $status=='SUBMITTED'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('SUBMITTED') }}
+        </option>
+
+        <option value="PPP_SCORED" {{ $status=='PPP_SCORED'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('PPP_SCORED') }}
+        </option>
+
+        <option value="PPK_APPROVED" {{ $status=='PPK_APPROVED'?'selected':'' }}>
+            {{ PerformanceHelper::statusLabel('PPK_APPROVED') }}
+        </option>
+
+    @endif
+
+</select>
                     </div>
 
                     {{-- ✅ Carian IC (PYD) --}}

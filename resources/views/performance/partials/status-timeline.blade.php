@@ -206,8 +206,8 @@ $out[] = "Maklumat {$label} (rekod {$ordinal}) telah dikemaskini.";
                         $action = (string)($log->action ?? '');
                         $a = $actionText[$action] ?? null;
 
-                        $title = $a['title'] ?? (trim($action) !== '' ? str_replace('_', ' ', $action) : 'Kemaskini');
-                        $desc  = $a['desc']  ?? null;
+                        $title = \App\Helpers\PerformanceHelper::actionLabel($action);
+$desc  = $a['desc'] ?? null;
 
                         $dateText = optional($log->created_at)->timezone(config('app.timezone'))->format('d/m/Y H:i');
                         $isLast = ($i === $logs->count() - 1);

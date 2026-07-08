@@ -411,18 +411,7 @@
     </div>
 </div>
 
-<div class="menu-item">
-    <a class="menu-link" href="{{ route('staff.performance.index') }}">
-        <span class="menu-icon">
-            <i class="ki-duotone ki-abstract-13 fs-2">
-                <span class="path1"></span><span class="path2"></span>
-            </i>
-        </span>
-        <span class="menu-title">Penilaian Prestasi</span>
-    </a>
-</div>
-
-{{-- ✅ TAMBAH: SKT (PYD) --}}
+{{-- ✅ SKT (PYD) --}}
 <div class="menu-item">
     <a class="menu-link" href="{{ route('staff.performance.skt', ['bahagian' => 'I']) }}">
         <span class="menu-icon">
@@ -434,17 +423,27 @@
     </a>
 </div>
 
-{{-- ✅ Menu PPK (TAPIS ikut lantikan) --}}
-@if($isPPK)
+{{-- ✅ Penilaian Prestasi (PYD) --}}
 <div class="menu-item">
-    <a class="menu-link {{ request()->is('ppk/performance*') ? 'active' : '' }}"
-       href="{{ route('ppk.performance.index') }}">
+    <a class="menu-link" href="{{ route('staff.performance.index') }}">
         <span class="menu-icon">
-            <i class="ki-duotone ki-chart-line fs-2">
+            <i class="ki-duotone ki-abstract-13 fs-2">
                 <span class="path1"></span><span class="path2"></span>
             </i>
         </span>
-        <span class="menu-title">Penilaian Prestasi (PPK)</span>
+        <span class="menu-title">Penilaian Prestasi</span>
+    </a>
+</div>
+
+@if($isPPPSkt)
+<div class="menu-item">
+    <a class="menu-link" href="{{ route('ppp.performance.skt.index') }}">
+        <span class="menu-icon">
+            <i class="ki-duotone ki-clipboard-check fs-2">
+                <span class="path1"></span><span class="path2"></span>
+            </i>
+        </span>
+        <span class="menu-title">Penilaian SKT (PPP)</span>
     </a>
 </div>
 @endif
@@ -462,15 +461,16 @@
 </div>
 @endif
 
-@if($isPPPSkt)
+@if($isPPK)
 <div class="menu-item">
-    <a class="menu-link" href="{{ route('ppp.performance.skt.index') }}">
+    <a class="menu-link {{ request()->is('ppk/performance*') ? 'active' : '' }}"
+       href="{{ route('ppk.performance.index') }}">
         <span class="menu-icon">
-            <i class="ki-duotone ki-clipboard-check fs-2">
+            <i class="ki-duotone ki-chart-line fs-2">
                 <span class="path1"></span><span class="path2"></span>
             </i>
         </span>
-        <span class="menu-title">Penilaian SKT (PPP)</span>
+        <span class="menu-title">Penilaian Prestasi (PPK)</span>
     </a>
 </div>
 @endif

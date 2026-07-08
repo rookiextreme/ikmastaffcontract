@@ -154,6 +154,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
         Route::get('/performance/skt', [AdminSktController::class, 'index'])
             ->name('admin.performance.skt.index');
 
+            Route::get('/performance/skt/{evaluation}/pdf', [AdminSktController::class, 'pdf'])
+    ->middleware(['role:super-admin|admin'])
+    ->name('admin.performance.skt.pdf');
+
         Route::get('/performance/skt/{evaluation}', [AdminSktController::class, 'show'])
             ->name('admin.performance.skt.show');
 

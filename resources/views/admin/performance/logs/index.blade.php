@@ -3,9 +3,18 @@
 @section('title', 'Log Prestasi')
 
 @section('content')
+@php
+    use App\Helpers\PerformanceHelper;
+@endphp
+
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Log Prestasi (Admin)</h3>
+        <div>
+            <h3 class="card-title mb-1">Log Prestasi (Admin)</h3>
+            <div class="text-muted small">
+                Senarai rekod aktiviti dan perubahan status SKT / LNPT.
+            </div>
+        </div>
     </div>
 
     <div class="card-body">
@@ -22,12 +31,21 @@
             </div>
 
             <div class="col-md-3">
+                <label class="form-label">Modul</label>
+                <select name="module" class="form-select">
+                    <option value="">Semua</option>
+                    <option value="SKT" {{ ($module ?? '') === 'SKT' ? 'selected' : '' }}>SKT</option>
+                    <option value="LNPT" {{ ($module ?? '') === 'LNPT' ? 'selected' : '' }}>LNPT</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select">
                     <option value="">Semua</option>
-                    @foreach(['DRAFT','SUBMITTED','PPP_SCORED','PPK_APPROVED'] as $st)
+                    @foreach(['DRAFT','SUBMITTED','RETURNED_BY_PPP','PPP_REVIEWED','PPK_APPROVED','FINAL'] as $st)
                         <option value="{{ $st }}" {{ $status === $st ? 'selected' : '' }}>
-                            {{ $st }}
+                            {{ PerformanceHelper::statusLabel($st) }}
                         </option>
                     @endforeach
                 </select>
@@ -47,28 +65,38 @@
             <table class="table table-bordered align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:70px">ID</th>
+                        <th style="width:70px">Bil.</th>
                         <th>PYD</th>
                         <th>PPP</th>
                         <th>PPK</th>
-                        <th style="width:120px">Tahun</th>
-                        <th style="width:150px">Status</th>
-                        <th style="width:120px"></th>
+                        <th style="width:100px">Tahun</th>
+                        <th style="width:100px">Modul</th>
+                        <th style="width:220px">Status</th>
+                        <th style="width:120px">Tindakan</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($rows as $r)
+                        @php
+                            $latestLog = $r->logs->first();
+                            $logModule = $latestLog->meta['module'] ?? null;
+
+                            if (empty($logModule)) {
+                                $logModule = !empty($r->skt_submitted_at) || !empty($r->skt_ppp_reviewed_at)
+                                    ? 'SKT'
+                                    : 'LNPT';
+                            }
+                        @endphp
+
                         <tr>
-                            <td>{{ $r->id }}</td>
+                            <td>{{ $rows->firstItem() + $loop->index }}</td>
                             <td>{{ $r->assignment->pydUser->name ?? '-' }}</td>
                             <td>{{ $r->assignment->pppUser->name ?? '-' }}</td>
                             <td>{{ $r->assignment->ppkUser->name ?? '-' }}</td>
                             <td>{{ $r->period->year ?? '-' }}</td>
-                            <td>
-                                <span class="badge badge-light-primary">
-                                    {{ $r->status }}
-                                </span>
-                            </td>
+                            <td>{!! PerformanceHelper::moduleBadge($logModule) !!}</td>
+                            <td>{!! PerformanceHelper::statusBadge($r->status) !!}</td>
                             <td>
                                 <a href="{{ route('admin.performance.logs.show', $r->id) }}"
                                    class="btn btn-sm btn-light-primary">
@@ -78,7 +106,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted">
+                            <td colspan="8" class="text-center text-muted">
                                 Tiada rekod dijumpai.
                             </td>
                         </tr>

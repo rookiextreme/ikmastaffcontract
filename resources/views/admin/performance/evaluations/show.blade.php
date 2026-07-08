@@ -29,7 +29,7 @@
                     {{ $evaluation->assignment->ppkUser->name ?? '-' }}<br>
 
                     Status:
-                    <strong>{{ $status }}</strong>
+{!! \App\Helpers\PerformanceHelper::statusBadge($status) !!}
                 </div>
             </div>
 
@@ -85,7 +85,9 @@
         @if($status === 'FINAL')
             <div class="alert alert-success mb-4">
                 <strong>Penilaian telah dimuktamadkan.</strong><br>
-                Rekod ini telah selesai di peringkat urus setia / admin dan status semasa ialah <strong>FINAL</strong>.
+                Rekod ini telah selesai di peringkat urus setia / admin dan status semasa ialah
+
+{!! \App\Helpers\PerformanceHelper::statusBadge('FINAL') !!}
             </div>
         @endif
 

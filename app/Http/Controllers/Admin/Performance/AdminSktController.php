@@ -8,6 +8,7 @@ use App\Models\PerformanceStatusLog;
 use App\Repositories\Performance\PerformanceEvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminSktController extends Controller
 {
@@ -90,4 +91,26 @@ class AdminSktController extends Controller
             ->route('admin.performance.skt.show', [$evaluation->id, 'bahagian' => 'I'])
             ->with('success', 'SKT berjaya dimuktamadkan.');
     }
+    public function pdf(PerformanceEvaluation $evaluation)
+{
+    abort_if(strtoupper($evaluation->period?->type) !== 'SKT', 404);
+
+    if (strtoupper((string)$evaluation->status) !== 'FINAL') {
+        return back()->with('error', 'PDF SKT hanya boleh dijana selepas SKT dimuktamadkan.');
+    }
+
+    $evaluation->load([
+        'period',
+        'assignment.pydUser.staffPosition.position',
+        'assignment.pydUser.staffPosition.grade',
+        'assignment.pppUser',
+        'logs.actor',
+    ]);
+
+    $pdf = Pdf::loadView('admin.performance.skt.pdf', [
+        'evaluation' => $evaluation,
+    ])->setPaper('a4', 'portrait');
+
+    return $pdf->stream('laporan-skt-'.$evaluation->id.'.pdf');
+}
 }

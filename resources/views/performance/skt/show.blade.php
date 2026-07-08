@@ -97,18 +97,37 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">
-                    @if($roleKey === 'admin' && $e && $statusSkt === 'PPP_REVIEWED')
-                        <button type="button"
-                                class="btn btn-success"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modalFinalizeSkt">
-                            Muktamadkan SKT
-                        </button>
-                    @endif
 
-                    @if($roleKey === 'ppp')
+    {{-- ADMIN: Muktamadkan SKT --}}
+    @if($roleKey === 'admin' && $e && $statusSkt === 'PPP_REVIEWED')
+        <button type="button"
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#modalFinalizeSkt">
+            Muktamadkan SKT
+        </button>
+    @endif
 
-    @if($e && $statusSkt === 'SUBMITTED')
+    {{-- ADMIN: PDF SKT hanya selepas FINAL --}}
+    @if($roleKey === 'admin' && $e && $statusSkt === 'FINAL')
+        <a href="{{ route('admin.performance.skt.pdf', $e->id) }}"
+           target="_blank"
+           class="btn btn-danger">
+            <i class="fas fa-file-pdf me-1"></i>
+            PDF SKT
+        </a>
+    @endif
+
+    {{-- ADMIN: Kembali --}}
+    @if($roleKey === 'admin')
+        <a href="{{ route('admin.performance.evaluations.index', ['tab' => 'skt']) }}"
+           class="btn btn-light">
+            Kembali
+        </a>
+    @endif
+
+    {{-- PPP: Pulangkan Kepada PYD --}}
+    @if($roleKey === 'ppp' && $e && $statusSkt === 'SUBMITTED')
         <button type="button"
                 class="btn btn-warning"
                 data-bs-toggle="modal"
@@ -117,17 +136,16 @@
         </button>
     @endif
 
-    <a href="{{ route('ppp.performance.skt.index') }}" class="btn btn-light">
-        Kembali
-    </a>
-                    @elseif($roleKey === 'admin')
-                        <a href="{{ url()->previous() }}" class="btn btn-light">
-                            Kembali
-                        </a>
-                    @endif
-                </div>
-            </div>
+    {{-- PPP: Kembali --}}
+    @if($roleKey === 'ppp')
+        <a href="{{ route('ppp.performance.skt.index') }}"
+           class="btn btn-light">
+            Kembali
+        </a>
+    @endif
 
+</div>
+  </div>
             {{-- FLASH MESSAGE --}}
             @if(session('success'))
                 <div class="alert alert-success mb-4">{{ session('success') }}</div>
