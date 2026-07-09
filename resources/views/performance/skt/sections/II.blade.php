@@ -4,7 +4,7 @@
     $tambah = (array)($data['tambah'] ?? []);
     $gugur  = (array)($data['gugur'] ?? []);
 
-    $readonly = ($roleKey === 'ppp') || $is_locked;
+    $readonly = in_array($roleKey, ['ppp','ppk','admin'], true) || $is_locked;
     $canEdit  = ($roleKey === 'pyd') && !$readonly;
 
     // ✅ buang row kosong
@@ -87,7 +87,7 @@
     }
 </style>
 
-@if($roleKey === 'admin' || $roleKey === 'ppp')
+@if(in_array($roleKey, ['admin','ppp','ppk'], true))
     <div class="card border mb-6">
         <div class="card-header">
             <h4 class="card-title mb-0">BAHAGIAN II - Kajian Semula Sasaran Kerja Tahunan Pertengahan Tahun</h4>
@@ -172,7 +172,7 @@
             @endif
 
             <div class="skt-section-note">
-                * Paparan ini adalah read-only untuk {{ $roleKey === 'admin' ? 'Admin' : 'PPP' }}.
+                * Paparan ini adalah read-only untuk {{ $roleKey === 'admin' ? 'Admin' : ($roleKey === 'ppk' ? 'PPK' : 'PPP') }}.
             </div>
 
         </div>

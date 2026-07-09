@@ -40,11 +40,12 @@
     $lockedPPP = !in_array($statusSkt, ['SUBMITTED','PPP_REVIEWED'], true);
 
     $is_locked = match($roleKey){
-        'pyd'   => $lockedPYD,
-        'ppp'   => $lockedPPP,
-        'admin' => true,
-        default => true,
-    };
+    'pyd'   => $lockedPYD,
+    'ppp'   => $lockedPPP,
+    'ppk'   => true,   // ✅ PPK hanya boleh lihat
+    'admin' => true,
+    default => true,
+};
 
     // =========================
     // INFO PAPARAN
@@ -73,7 +74,7 @@
             {{-- HEADER --}}
             <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
                 <div>
-                    <h3 class="mb-1">Paparan Sasaran Kerja Tahunan (SKT) - Admin</h3>
+                    <h3 class="mb-1">Paparan Sasaran Kerja Tahunan (SKT) - PPK</h3>
                     <div class="text-muted">
                         PYD:
                         <strong>{{ $pydName }}</strong><br>
@@ -97,6 +98,21 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">
+
+    {{-- PPK --}}
+    @if($roleKey === 'ppk')
+        <a href="{{ route('ppk.performance.index') }}"
+           class="btn btn-light">
+            <i class="fas fa-arrow-left"></i>
+            Kembali
+        </a>
+
+        <a href="{{ $continueUrl ?? route('ppk.performance.index') }}"
+   class="btn btn-primary">
+    <i class="fas fa-star"></i>
+    Teruskan Penilaian
+</a>
+    @endif
 
     {{-- ADMIN: Muktamadkan SKT --}}
     @if($roleKey === 'admin' && $e && $statusSkt === 'PPP_REVIEWED')

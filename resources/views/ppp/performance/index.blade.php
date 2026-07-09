@@ -18,7 +18,7 @@
             <table class="table table-row-bordered align-middle">
                 <thead>
                 <tr class="text-muted">
-                    <th style="width:60px;">#</th>
+                    <th style="width:60px;" class="text-center">Bil.</th>
                     <th>PYD</th>
                     <th>Status</th>
                     <th style="width:120px;" class="text-end">Tindakan</th>

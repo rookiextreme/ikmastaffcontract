@@ -8,8 +8,7 @@
         $items = [['aktiviti'=>'','petunjuk'=>'']];
     }
 
-    $readonly = ($roleKey === 'ppp') || $is_locked;
-
+$readonly = in_array($roleKey, ['ppp','ppk','admin'], true) || $is_locked;
     // check lengkap
     $filledI = 0; $okI = true;
 
@@ -96,7 +95,7 @@ BAHAGIAN I - Penetapan Sasaran Kerja Tahunan
 </div>
 
 
-@if($roleKey === 'admin' || $roleKey === 'ppp')
+@if(in_array($roleKey, ['admin','ppp','ppk'], true))
 
 {{-- =========================
    PAPARAN ADMIN / PPP
@@ -174,7 +173,7 @@ Tiada aktiviti / projek direkodkan.
 
 
 <div class="skt-section-note">
-* Paparan ini adalah read-only untuk {{ $roleKey === 'admin' ? 'Admin' : 'PPP' }}.
+* Paparan ini adalah read-only untuk {{ $roleKey === 'admin' ? 'Admin' : ($roleKey === 'ppk' ? 'PPK' : 'PPP') }}.
 </div>
 
 

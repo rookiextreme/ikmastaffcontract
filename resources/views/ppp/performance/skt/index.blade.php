@@ -43,7 +43,7 @@
                     <table class="table table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th style="width:60px">#</th>
+                                <th style="width:60px"class="text-center">Bil.</th>
                                 <th>PYD</th>
                                 <th style="width:180px">Status</th>
                                 <th style="width:160px">Tindakan</th>

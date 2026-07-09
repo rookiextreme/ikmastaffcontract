@@ -98,7 +98,7 @@
         <div class="mb-4 skt-section-block">
             <label class="form-label fw-semibold">1. Laporan / Ulasan Oleh PYD</label>
 
-            @if($roleKey === 'admin' || $roleKey === 'ppp')
+            @if(in_array($roleKey, ['admin','ppp','ppk'], true))
                 <div class="skt-readonly-box">{!! nl2br(e($ulasanPyd !== '' ? $ulasanPyd : '-')) !!}</div>
                 <div class="skt-section-note">
                     * Ruangan ini diisi oleh PYD.

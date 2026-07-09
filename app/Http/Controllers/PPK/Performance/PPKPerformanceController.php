@@ -29,7 +29,7 @@ class PPKPerformanceController extends Controller
             ->whereHas('assignment', function ($q) use ($userId) {
                 $q->where('ppk_user_id', $userId);
             })
-            ->whereIn('status', ['PPP_SCORED','PPK_APPROVED'])
+            ->whereIn('status', ['PPP_SCORED', 'PPK_APPROVED'])
             ->orderByDesc('id')
             ->get();
 
@@ -81,6 +81,49 @@ class PPKPerformanceController extends Controller
             'bahagian','sectionMeta'
         ));
     }
+
+    public function viewSkt(Request $request, $evaluationId)
+{
+    $userId = Auth::id();
+
+    // Rekod LNPT yang dipilih
+    $lnpt = PerformanceEvaluation::with([
+        'assignment',
+        'period',
+    ])->findOrFail($evaluationId);
+
+    // Pastikan PPK yang betul
+    abort_if(
+        (int)($lnpt->assignment->ppk_user_id ?? 0) !== (int)$userId,
+        403
+    );
+
+    // Cari rekod SKT bagi PYD yang sama
+    $evaluation = PerformanceEvaluation::with([
+        'assignment.pydUser',
+        'assignment.pppUser',
+        'assignment.ppkUser',
+        'period',
+    ])
+    ->where('pyd_user_id', $lnpt->pyd_user_id)
+    ->whereHas('period', function ($q) {
+        $q->where('type', 'SKT');
+    })
+    ->latest('id')
+    ->firstOrFail();
+
+    return view('performance.skt.show', [
+        'period'      => $evaluation->period,
+        'assignment'  => $evaluation->assignment,
+        'evaluation'  => $evaluation,
+        'bahagian'    => $request->get('bahagian', 'I'),
+        'baseUrl'     => route('ppk.performance.skt', $lnpt->id),
+        'message'     => null,
+        'roleKey'     => 'ppk',
+        'continueUrl' => route('ppk.performance.show', $lnpt->id),
+        'backUrl'     => route('ppk.performance.index'),
+    ]);
+}
 
     public function save(Request $request, $evaluationId)
     {

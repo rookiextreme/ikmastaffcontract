@@ -97,6 +97,10 @@ Route::group(['prefix' => 'ppk', 'middleware' => ['auth']], function () {
         Route::get('/performance', [PPKPerformanceController::class, 'index'])
             ->name('ppk.performance.index');
 
+        Route::get('/performance/{evaluation}/skt', [PPKPerformanceController::class, 'viewSkt'])
+    ->whereNumber('evaluation')
+    ->name('ppk.performance.skt'); 
+
         Route::get('/performance/{evaluationId}', [PPKPerformanceController::class, 'show'])
             ->name('ppk.performance.show');
 
