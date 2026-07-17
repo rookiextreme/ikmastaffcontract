@@ -253,6 +253,19 @@ class PerformanceEvaluationAdminController extends Controller
     $created++;
 
     // ✅ Notification kepada PYD
+if ($tab === 'skt') {
+
+    NotificationHelper::send(
+        $a->pyd_user_id,
+        'SKT Baharu',
+        'Sasaran Kerja Tahunan (SKT) baharu telah dijana. Sila lengkapkan SKT anda.',
+        route('staff.performance.skt'),
+        'SKT',
+        'info'
+    );
+
+} else {
+
     NotificationHelper::send(
         $a->pyd_user_id,
         'Penilaian LNPT Baharu',
@@ -261,6 +274,8 @@ class PerformanceEvaluationAdminController extends Controller
         'LNPT',
         'info'
     );
+
+}
 }
 
             // ✅ kalau SKT, tandakan dijana

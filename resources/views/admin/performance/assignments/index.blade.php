@@ -151,7 +151,7 @@
 
                             <div class="col-12">
                                 <button class="btn btn-primary">
-                                    {{ $type === 'SKT' ? 'Simpan Lantikan PPP (SKT)' : 'Simpan Lantikan' }}
+                                    {{ $type === 'SKT' ? 'Simpan Lantikan' : 'Simpan Lantikan' }}
                                 </button>
                             </div>
 

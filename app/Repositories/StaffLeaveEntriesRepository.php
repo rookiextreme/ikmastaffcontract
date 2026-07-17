@@ -118,6 +118,9 @@ class StaffLeaveEntriesRepository
 
         $isGroupLeave = (($getLeaveCategory->is_group_leave ?? 0) == 1);
 
+$isOfficePermission = strtolower(trim($getLeaveCategory->name ?? ''))
+    === 'kebenaran keluar pejabat';
+
 $hTaken      = 0;
 $currentDate = $date['start'];
 
@@ -155,8 +158,43 @@ if ($getLeaveCategory->is_half_day == true) {
     $hTaken = 0.5 * $hTaken;
 }
 
-        DB::beginTransaction();
-        try {
+/*
+|--------------------------------------------------------------------------
+| SEMAK PERTINDIHAN TARIKH CUTI
+|--------------------------------------------------------------------------
+| Hanya semak permohonan aktif:
+| - PENDING
+| - APPROVED
+|
+| Rekod lama / dibatalkan tidak diambil kira.
+*/
+$overlapLeave = StaffLeaveEntry::where('staff_position_id', $staffPosition->id)
+    ->where(function ($query) {
+        $query->where('old', false)
+            ->orWhere('old', 0)
+            ->orWhereNull('old');
+    })
+    ->whereIn('leave_request_status_id', [
+        LeaveRequestStatus::PENDING,
+        LeaveRequestStatus::APPROVED,
+    ])
+    ->whereDate('start_date', '<=', $date['end'])
+    ->whereDate('end_date', '>=', $date['start'])
+    ->first();
+
+if ($overlapLeave) {
+    return [
+        'status'  => 'error',
+        'message' => 'Tarikh yang dipilih bertindih dengan permohonan cuti sedia ada '
+            . date('d/m/Y', strtotime($overlapLeave->start_date))
+            . ' hingga '
+            . date('d/m/Y', strtotime($overlapLeave->end_date))
+            . '. Sila pilih tarikh lain.',
+    ];
+}
+
+DB::beginTransaction();
+try {
             // ✅ pastikan rekod staff_leave wujud
             $sLeave = $staffPosition->getStaffLeave
                 ?: $this->staffLeaveRepository->checkExistRecord($staffPosition->id);
@@ -225,20 +263,24 @@ if ($approverStaff && $approverStaff->user_id) {
                 $sLeave->group_taken   = $sLeave->group_taken + $hTaken;
                 $sLeave->group_balance = $sLeave->group_balance - $hTaken;
 
-            } elseif ($getLeaveCategory->is_half_day == true) {
+            } elseif ($isOfficePermission) {
 
-                if ($sLeave->leave_balance < $hTaken) {
-                    DB::rollBack();
-                    return [
-                        'status'  => 'error',
-                        'message' => 'Baki cuti tidak mencukupi'
-                    ];
-                }
+    // Kebenaran Keluar Pejabat tidak menolak mana-mana baki cuti
 
-                $sLeave->leave_taken   = $sLeave->leave_taken + $hTaken;
-                $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
+} elseif ($getLeaveCategory->is_half_day == true) {
 
-            } else {
+    if ($sLeave->leave_balance < $hTaken) {
+        DB::rollBack();
+        return [
+            'status'  => 'error',
+            'message' => 'Baki cuti tidak mencukupi'
+        ];
+    }
+
+    $sLeave->leave_taken   = $sLeave->leave_taken + $hTaken;
+    $sLeave->leave_balance = $sLeave->leave_balance - $hTaken;
+
+} else {
 
                 if ($sLeave->leave_balance < $hTaken) {
                     DB::rollBack();
@@ -360,17 +402,23 @@ if ($approverStaff && $approverStaff->user_id) {
             $cat    = $entry->getLeaveCategory;
 
             if ($cat && $cat->is_mc) {
-                $sLeave->mc_balance += $entry->days;
-                $sLeave->mc_taken   -= $entry->days;
+    $sLeave->mc_balance += $entry->days;
+    $sLeave->mc_taken   -= $entry->days;
 
-            } elseif ($cat && $cat->is_group_leave) {
-                $sLeave->group_balance += $entry->days;
-                $sLeave->group_taken   -= $entry->days;
+} elseif ($cat && $cat->is_group_leave) {
+    $sLeave->group_balance += $entry->days;
+    $sLeave->group_taken   -= $entry->days;
 
-            } else {
-                $sLeave->leave_balance += $entry->days;
-                $sLeave->leave_taken   -= $entry->days;
-            }
+} elseif (
+    $cat &&
+    strtolower(trim($cat->name ?? '')) === 'kebenaran keluar pejabat'
+) {
+    // Tidak perlu pulangkan baki kerana tiada baki ditolak
+
+} else {
+    $sLeave->leave_balance += $entry->days;
+    $sLeave->leave_taken   -= $entry->days;
+}
 
             $sLeave->save();
             DB::commit();
@@ -403,17 +451,23 @@ if ($approverStaff && $approverStaff->user_id) {
                 $cat    = $m->getLeaveCategory;
 
                 if ($cat && $cat->is_mc) {
-                    $sLeave->mc_balance += $m->days;
-                    $sLeave->mc_taken   -= $m->days;
+    $sLeave->mc_balance += $m->days;
+    $sLeave->mc_taken   -= $m->days;
 
-                } elseif ($cat && $cat->is_group_leave) {
-                    $sLeave->group_balance += $m->days;
-                    $sLeave->group_taken   -= $m->days;
+} elseif ($cat && $cat->is_group_leave) {
+    $sLeave->group_balance += $m->days;
+    $sLeave->group_taken   -= $m->days;
 
-                } else {
-                    $sLeave->leave_balance += $m->days;
-                    $sLeave->leave_taken   -= $m->days;
-                }
+} elseif (
+    $cat &&
+    strtolower(trim($cat->name ?? '')) === 'kebenaran keluar pejabat'
+) {
+    // Tidak perlu pulangkan baki kerana tiada baki ditolak
+
+} else {
+    $sLeave->leave_balance += $m->days;
+    $sLeave->leave_taken   -= $m->days;
+}
 
                 $sLeave->save();
             }

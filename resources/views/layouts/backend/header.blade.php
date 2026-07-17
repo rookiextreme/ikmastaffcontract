@@ -170,10 +170,10 @@
 
         @forelse($notifications as $notification)
 
-            <div class="menu-item px-5 py-3">
+            <div class="menu-item px-5 py-3 {{ !$notification->is_read ? 'bg-light-warning' : '' }}">
 
-                <a href="{{ route('notification.read', $notification->id) }}"
-                   class="text-gray-800 text-hover-primary">
+    <a href="{{ route('notification.read', $notification->id) }}"
+       class="text-gray-800 text-hover-primary d-block">
 
                     <div class="fw-bold">
                         {{ $notification->title }}

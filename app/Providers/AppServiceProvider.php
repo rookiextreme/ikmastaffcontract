@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laratrust\LaratrustFacade as Laratrust;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,16 +24,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Gunakan pagination Bootstrap 5 untuk semua halaman
+        Paginator::useBootstrapFive();
+
         RedirectIfAuthenticated::redirectUsing(function () {
             $user = Auth::user();
-            if($user->hasRole('super-admin|admin')){
+
+            if ($user->hasRole('super-admin|admin')) {
                 return route('admin.user.list', absolute: false);
-            }else if($user->hasRole(['staff'])){
-                return route('staff.profile', ['user_id' => $user->id, 'page' => 'main'],  absolute: false);
+            } elseif ($user->hasRole(['staff'])) {
+                return route(
+                    'staff.profile',
+                    [
+                        'user_id' => $user->id,
+                        'page' => 'main',
+                    ],
+                    absolute: false
+                );
             }
         });
 
-        if(app()->environment('production')) {
+        if (app()->environment('production')) {
             URL::forceScheme('https');
         }
     }
