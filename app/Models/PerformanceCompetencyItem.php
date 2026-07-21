@@ -7,11 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class PerformanceCompetencyItem extends Model
 {
     protected $fillable = [
-        'code','name','description','weight','sort_order','is_active'
+        'code',
+        'group_type',
+        'name',
+        'description',
+        'weight',
+        'sort_order',
+        'is_active',
     ];
 
     public function scores()
     {
-        return $this->hasMany(PerformanceCompetencyScore::class, 'competency_item_id');
+        return $this->hasMany(
+            PerformanceCompetencyScore::class,
+            'competency_item_id'
+        );
     }
 }

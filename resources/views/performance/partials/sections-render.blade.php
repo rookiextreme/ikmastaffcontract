@@ -63,6 +63,27 @@
                     <input class="form-control" value="{{ $status }}" disabled>
                 </div>
 
+                @php
+    $pydGroup = strtoupper(
+        trim((string) ($evaluation->assignment->pyd_group ?? ''))
+    );
+
+    $pydGroupLabel = match ($pydGroup) {
+        'A'  => 'Kumpulan Pengurusan & Profesional (A)',
+        'BC' => 'Kumpulan Perkhidmatan Sokongan (B/C)',
+        default => '-',
+    };
+@endphp
+
+<div class="col-md-4">
+    <label class="form-label">Kumpulan Perkhidmatan</label>
+    <input
+        class="form-control"
+        value="{{ $pydGroupLabel }}"
+        disabled
+    >
+</div>
+
                 <div class="col-md-6">
                     <label class="form-label">PPP</label>
                     <input class="form-control" value="{{ $evaluation->assignment->pppUser->name ?? '-' }}" disabled>

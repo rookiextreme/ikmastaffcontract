@@ -212,11 +212,32 @@
                                 <td>{{ $i+1 }}</td>
 
                                 <td>
-                                    <strong>{{ $r->assignment->pydUser->name ?? '-' }}</strong>
-                                    @if(!empty($r->assignment->pydUser->no_staff))
-                                        <div class="text-muted small">{{ $r->assignment->pydUser->no_staff }}</div>
-                                    @endif
-                                </td>
+    <strong>{{ $r->assignment->pydUser->name ?? '-' }}</strong>
+
+    @if(!empty($r->assignment->pydUser->no_staff))
+        <div class="text-muted small">
+            {{ $r->assignment->pydUser->no_staff }}
+        </div>
+    @endif
+
+    @php
+        $group = strtoupper((string) ($r->assignment->pyd_group ?? ''));
+    @endphp
+
+    @if($group === 'A')
+        <div class="mt-1">
+            <span class="badge badge-light-success">
+                Pengurusan (A)
+            </span>
+        </div>
+    @elseif($group === 'BC')
+        <div class="mt-1">
+            <span class="badge badge-light-warning">
+                Sokongan (B/C)
+            </span>
+        </div>
+    @endif
+</td>
 
                                 <td class="text-muted">{{ $icNo ?? '-' }}</td>
 

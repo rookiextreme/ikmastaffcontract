@@ -78,12 +78,18 @@ class StaffPerformanceController extends Controller
         $evaluation = $this->repo->getEvaluation($period->id, $assignment, $userId);
 
         // ✅ Kekalkan asal: default ambil semua
-        $items = $this->repo->getCompetencyItems();
+        $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
 
-        // ✅ Override ikut bahagian (III/IV/V/VI sahaja)
-        if (in_array($bahagian, ['III','IV','V','VI'])) {
-            $items = $this->repo->getCompetencyItemsByCode($bahagian);
-        }
+$items = $this->repo->getCompetencyItems();
+
+if (in_array($bahagian, ['III', 'IV', 'V', 'VI'], true)) {
+    $items = $this->repo->getCompetencyItemsByCode(
+        $bahagian,
+        $bahagian === 'V' ? $pydGroup : null
+    );
+}
 
         $scores = collect();
 

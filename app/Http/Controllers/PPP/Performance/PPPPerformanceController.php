@@ -65,12 +65,20 @@ class PPPPerformanceController extends Controller
 
         $sectionMeta = method_exists($this->repo, 'sectionMeta') ? $this->repo->sectionMeta() : [];
 
-        $items = collect();
-        if (in_array($code, ['III','IV','V','VI'], true)) {
-            $items = method_exists($this->repo, 'getCompetencyItemsByCode')
-                ? $this->repo->getCompetencyItemsByCode($code)
-                : $this->repo->getCompetencyItems();
-        }
+        $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
+
+$items = collect();
+
+if (in_array($code, ['III','IV','V','VI'], true)) {
+    $items = method_exists($this->repo, 'getCompetencyItemsByCode')
+        ? $this->repo->getCompetencyItemsByCode(
+            $code,
+            $code === 'V' ? $pydGroup : null
+        )
+        : $this->repo->getCompetencyItems();
+}
 
         $scores = $evaluation->competencyScores()->get()->keyBy('competency_item_id');
 

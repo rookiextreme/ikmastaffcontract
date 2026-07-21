@@ -18,19 +18,44 @@
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
                 <h3 class="mb-1">Paparan Penilaian Prestasi (Admin)</h3>
-                <div class="text-muted">
-                    PYD:
-                    <strong>{{ $evaluation->assignment->pydUser->name ?? '-' }}</strong><br>
+                @php
+    $pydGroup = strtoupper(
+        trim((string) ($evaluation->assignment->pyd_group ?? ''))
+    );
+@endphp
 
-                    PPP:
-                    {{ $evaluation->assignment->pppUser->name ?? '-' }}
-                    |
-                    PPK:
-                    {{ $evaluation->assignment->ppkUser->name ?? '-' }}<br>
+<div class="text-muted">
+    PYD:
+    <strong>{{ $evaluation->assignment->pydUser->name ?? '-' }}</strong><br>
 
-                    Status:
-{!! \App\Helpers\PerformanceHelper::statusBadge($status) !!}
-                </div>
+    PPP:
+    {{ $evaluation->assignment->pppUser->name ?? '-' }}
+    |
+    PPK:
+    {{ $evaluation->assignment->ppkUser->name ?? '-' }}<br>
+
+    Kumpulan:
+
+    @if($pydGroup === 'A')
+        <span class="badge badge-light-success">
+            Kumpulan Pengurusan &amp; Profesional (A)
+        </span>
+    @elseif($pydGroup === 'BC')
+        <span class="badge badge-light-warning">
+            Kumpulan Perkhidmatan Sokongan (B/C)
+        </span>
+    @else
+        <span class="badge badge-light-secondary">
+            Belum Ditetapkan
+        </span>
+    @endif
+
+    <br>
+
+    Status:
+
+    {!! \App\Helpers\PerformanceHelper::statusBadge($status) !!}
+</div>
             </div>
 
             {{-- ✅ TAMBAH: butang reset + finalize + kekalkan butang kembali (tiada code dibuang) --}}

@@ -3,6 +3,19 @@
     $ppp = $evaluation->assignment->pppUser ?? null;
     $ppk = $evaluation->assignment->ppkUser ?? null;
     $period = $evaluation->period ?? null;
+    $pydGroup = strtoupper(
+    trim((string) (
+        $pydGroup
+        ?? $evaluation->assignment->pyd_group
+        ?? 'BC'
+    ))
+);
+
+$pydGroupLabel = match ($pydGroup) {
+    'A'  => 'Kumpulan Pengurusan & Profesional (A)',
+    'BC' => 'Kumpulan Perkhidmatan Sokongan (B/C)',
+    default => '-',
+};
 
     $pppTotal = $evaluation->ppp_total_score ?? 0;
     $ppkTotal = $evaluation->ppk_total_score ?? 0;
@@ -170,6 +183,11 @@
         <td>{{ $pyd->staffPosition->grade->name ?? '-' }}</td>
     </tr>
     <tr>
+    <td>Kumpulan Perkhidmatan</td>
+    <td>:</td>
+    <td>{{ $pydGroupLabel }}</td>
+</tr>
+    <tr>
         <td>PPP</td>
         <td>:</td>
         <td>{{ $ppp->name ?? '-' }}</td>
@@ -221,12 +239,26 @@
 
         $sumPPP = 0;
         $sumPPK = 0;
+        $maxScore = match ($sec) {
+    'III' => 50,
+    'IV'  => 30,
+    'V'   => $pydGroup === 'A' ? 50 : 40,
+    'VI'  => 10,
+    default => max(1, (int) $items->count() * 10),
+};
 
         foreach ($items as $item) {
             $score = $scores->get($item->id);
             $sumPPP += (int)($score->ppp_score ?? 0);
             $sumPPK += (int)($score->ppk_score ?? 0);
         }
+        $weightedPPP = ($maxScore > 0 && $weight)
+    ? ($sumPPP / $maxScore) * $weight
+    : 0;
+
+$weightedPPK = ($maxScore > 0 && $weight)
+    ? ($sumPPK / $maxScore) * $weight
+    : 0;
     @endphp
 
     <div class="section-title">
@@ -254,9 +286,9 @@
                     <td>{{ $idx + 1 }}</td>
                     <td>
                         <strong>{{ $item->name ?? '-' }}</strong>
-                        @if(!empty($item->description))
-                            <div class="muted">{{ $item->description }}</div>
-                        @endif
+                        @if($sec !== 'V' && !empty($item->description))
+    <div class="muted">{{ $item->description }}</div>
+@endif
                     </td>
                     <td style="text-align:center;">{{ $score->ppp_score ?? '-' }}</td>
                     <td style="text-align:center;">{{ $score->ppk_score ?? '-' }}</td>
@@ -268,10 +300,34 @@
             @endforelse
 
             <tr>
-                <td colspan="2"><strong>Jumlah</strong></td>
-                <td style="text-align:center;"><strong>{{ $sumPPP }}</strong></td>
-                <td style="text-align:center;"><strong>{{ $sumPPK }}</strong></td>
-            </tr>
+    <td colspan="2">
+        <strong>Jumlah markah mengikut wajaran</strong>
+    </td>
+
+    <td style="text-align:center;">
+        <strong>{{ $sumPPP }} / {{ $maxScore }}</strong>
+
+        @if($weight)
+            <div class="muted">
+                {{ $sumPPP }} / {{ $maxScore }}
+                × {{ $weight }}
+                = {{ number_format($weightedPPP, 2) }}
+            </div>
+        @endif
+    </td>
+
+    <td style="text-align:center;">
+        <strong>{{ $sumPPK }} / {{ $maxScore }}</strong>
+
+        @if($weight)
+            <div class="muted">
+                {{ $sumPPK }} / {{ $maxScore }}
+                × {{ $weight }}
+                = {{ number_format($weightedPPK, 2) }}
+            </div>
+        @endif
+    </td>
+</tr>
         </tbody>
     </table>
 @endforeach

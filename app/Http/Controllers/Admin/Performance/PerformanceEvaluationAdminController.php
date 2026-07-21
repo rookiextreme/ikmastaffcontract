@@ -182,10 +182,18 @@ class PerformanceEvaluationAdminController extends Controller
         $bahagian = strtoupper((string)$request->get('bahagian', 'I'));
         $sectionMeta = $this->repo->sectionMeta();
 
-        $items = $this->repo->getCompetencyItems();
-        if (in_array($bahagian, ['III', 'IV', 'V', 'VI'])) {
-            $items = $this->repo->getCompetencyItemsByCode($bahagian);
-        }
+        $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
+
+$items = $this->repo->getCompetencyItems();
+
+if (in_array($bahagian, ['III', 'IV', 'V', 'VI'], true)) {
+    $items = $this->repo->getCompetencyItemsByCode(
+        $bahagian,
+        $bahagian === 'V' ? $pydGroup : null
+    );
+}
 
         $scores = $evaluation->competencyScores()->get()->keyBy('competency_item_id');
 
@@ -673,21 +681,29 @@ if ($tab === 'skt') {
 
     $sectionMeta = $this->repo->sectionMeta();
 
-    $itemsBySection = [
-        'III' => $this->repo->getCompetencyItemsByCode('III'),
-        'IV'  => $this->repo->getCompetencyItemsByCode('IV'),
-        'V'   => $this->repo->getCompetencyItemsByCode('V'),
-        'VI'  => $this->repo->getCompetencyItemsByCode('VI'),
-    ];
+    $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
+
+$itemsBySection = [
+    'III' => $this->repo->getCompetencyItemsByCode('III'),
+    'IV'  => $this->repo->getCompetencyItemsByCode('IV'),
+    'V'   => $this->repo->getCompetencyItemsByCode(
+        'V',
+        $pydGroup
+    ),
+    'VI'  => $this->repo->getCompetencyItemsByCode('VI'),
+];
 
     $scores = $evaluation->competencyScores()->get()->keyBy('competency_item_id');
 
     $pdf = Pdf::loadView('admin.performance.evaluations.pdf', compact(
-        'evaluation',
-        'sectionMeta',
-        'itemsBySection',
-        'scores'
-    ))->setPaper('a4', 'portrait');
+    'evaluation',
+    'sectionMeta',
+    'itemsBySection',
+    'scores',
+    'pydGroup'
+))->setPaper('a4', 'portrait');
 
     $filename = 'laporan-penilaian-prestasi-' . $evaluation->id . '.pdf';
 

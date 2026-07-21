@@ -9,6 +9,9 @@
     $sectionMeta = $sectionMeta ?? [];
     $meta   = $sectionMeta[$bahagian] ?? null;
     $weight = (int)($meta['weight'] ?? 0);
+    $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
 
     // =========================
     // NORMALIZE NAME (supaya mapping match DB)
@@ -41,10 +44,10 @@
             'desc' => '2.1. Dinilai dari segi kesempurnaan, teratur dan kemas.',
         ],
         $norm('Kualiti Hasil Kerja (Usaha & inisiatif untuk mencapai kesempurnaan)') => [
-            'bil' => '',
-            'title' => 'KUALITI HASIL KERJA (USAHA & INISIATIF UNTUK MENCAPAI KESEMPURNAAN)',
-            'desc' => '2.2. Dinilai dari segi usaha dan inisiatif untuk mencapai kesempurnaan hasil kerja.',
-        ],
+    'bil'   => '',
+    'title' => '',
+    'desc'  => '2.2. Dinilai dari segi usaha dan inisiatif untuk mencapai kesempurnaan hasil kerja.',
+],
         $norm('Ketepatan Masa') => [
             'bil' => '3.',
             'title' => 'KETEPATAN MASA -',
@@ -82,27 +85,36 @@
     // DETAIL MAPPING BAHAGIAN V (Wajaran 20%) - ikut borang + ikut nama DB Irham
     // =========================
     $mapV = [
-        $norm('Kebolehan mengelola') => [
-            'bil'   => '1.',
-            'title' => 'KEBOLEHAN MENGELOLA -',
-            'desc'  => "Keupayaan dan kebolehan menggembleng segala sumber dalam kawalannya seperti kewangan, tenaga manusia, peralatan dan maklumat bagi merancang, mengatur, membahagi dan mengendalikan sesuatu tugas untuk mencapai objektif organisasi.",
-        ],
-        $norm('Disiplin') => [
-            'bil'   => '2.',
-            'title' => 'DISIPLIN -',
-            'desc'  => "Mempunyai daya kawal diri dari segi mental dan fizikal termasuk mematuhi peraturan, menepati masa, menunaikan janji dan bersifat sabar.",
-        ],
-        $norm('Proaktif & inovatif') => [
-            'bil'   => '3.',
-            'title' => 'PROAKTIF & INOVATIF',
-            'desc'  => "Kebolehan menjangka kemungkinan, mencipta dan mengeluarkan idea baru serta membuat pembaharuan bagi mempertingkatkan kualiti dan produktiviti organisasi.",
-        ],
-        $norm('Jalinan hubungan & kerjasama') => [
-            'bil'   => '4.',
-            'title' => 'JALINAN HUBUNGAN & KERJASAMA',
-            'desc'  => "Kebolehan pegawai dalam mewujudkan suasana kerjasama yang harmoni dan mesra serta boleh menyesuaikan diri dalam semua keadaan.",
-        ],
-    ];
+    $norm('Ciri-ciri Pemimpin') => [
+        'bil'   => '1.',
+        'title' => 'CIRI-CIRI PEMIMPIN',
+        'desc'  => 'Mempunyai wawasan, komitmen, kebolehan membuat keputusan, menggerak dan memberi dorongan kepada pegawai ke arah pencapaian objektif organisasi.',
+    ],
+
+    $norm('Kebolehan mengelola') => [
+        'bil'   => $pydGroup === 'A' ? '2.' : '1.',
+        'title' => 'KEBOLEHAN MENGELOLA -',
+        'desc'  => 'Keupayaan dan kebolehan menggembleng segala sumber dalam kawalannya seperti kewangan, tenaga manusia, peralatan dan maklumat bagi merancang, mengatur, membahagi dan mengendalikan sesuatu tugas untuk mencapai objektif organisasi.',
+    ],
+
+    $norm('Disiplin') => [
+        'bil'   => $pydGroup === 'A' ? '3.' : '2.',
+        'title' => 'DISIPLIN -',
+        'desc'  => 'Mempunyai daya kawal diri dari segi mental dan fizikal termasuk mematuhi peraturan, menepati masa, menunaikan janji dan bersifat sabar.',
+    ],
+
+    $norm('Proaktif & inovatif') => [
+        'bil'   => $pydGroup === 'A' ? '4.' : '3.',
+        'title' => 'PROAKTIF & INOVATIF',
+        'desc'  => 'Kebolehan menjangka kemungkinan, mencipta dan mengeluarkan idea baru serta membuat pembaharuan bagi mempertingkatkan kualiti dan produktiviti organisasi.',
+    ],
+
+    $norm('Jalinan hubungan & kerjasama') => [
+        'bil'   => $pydGroup === 'A' ? '5.' : '4.',
+        'title' => 'JALINAN HUBUNGAN & KERJASAMA',
+        'desc'  => 'Kebolehan pegawai dalam mewujudkan suasana kerjasama yang harmoni dan mesra serta boleh menyesuaikan diri dalam semua keadaan.',
+    ],
+];
 
     // =========================
     // DETAIL MAPPING BAHAGIAN VI (Wajaran 5%)
@@ -129,12 +141,12 @@
     // MAX SCORE (ikut borang)
     // =========================
     $maxScore = match ($bahagian) {
-        'III' => 50,
-        'IV'  => 30,
-        'V'   => 40, // 4 item x 10
-        'VI'  => 10, // 1 item x 10
-        default => max(1, (int)$items->count() * 10),
-    };
+    'III' => 50,
+    'IV'  => 30,
+    'V'   => $pydGroup === 'A' ? 50 : 40,
+    'VI'  => 10,
+    default => max(1, (int) $items->count() * 10),
+};
 
     // jumlah markah
     $sumPPP = 0;
@@ -184,12 +196,18 @@
             // BIL (BUANG untuk VI)
             // =========================
             $bilText = '';
-            if ($bahagian !== 'VI') {
-                $bilText = ($idx + 1).'.';
-                if ($detail && isset($detail['bil']) && $detail['bil'] !== '') {
-                    $bilText = $detail['bil'];
-                }
-            }
+
+if ($bahagian !== 'VI') {
+    $bilText = ($idx + 1).'.';
+
+    /*
+     * Gunakan nilai mapping walaupun sengaja dikosongkan.
+     * Contoh Bahagian III item 2.2 tidak mempunyai nombor utama.
+     */
+    if ($detail && array_key_exists('bil', $detail)) {
+        $bilText = $detail['bil'];
+    }
+}
 
             // =========================
             // TITLE/DESC
@@ -216,14 +234,17 @@
 
             <td>
                 @if(!empty($titleText))
-                    <div class="fw-bold text-uppercase">{{ $titleText }}</div>
-                @endif
+    <div class="fw-bold text-uppercase">
+        {{ $titleText }}
+    </div>
+@endif
 
-                @if(!empty($descText))
-                    <div class="text-muted small {{ !empty($titleText) ? 'mt-1' : '' }}" style="white-space: pre-line;">
-                        {{ $descText }}
-                    </div>
-                @endif
+@if(!empty($descText))
+    <div class="text-muted small {{ !empty($titleText) ? 'mt-1' : '' }}"
+         style="white-space: pre-line;">
+        {{ $descText }}
+    </div>
+@endif
             </td>
 
             <td class="text-center">

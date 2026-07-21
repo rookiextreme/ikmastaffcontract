@@ -13,50 +13,100 @@ class PerformanceAssignmentController extends Controller
 {
     private PerformanceAssignmentRepository $repo;
 
-    public function __construct(PerformanceAssignmentRepository $repo)
-    {
+    public function __construct(
+        PerformanceAssignmentRepository $repo
+    ) {
         $this->repo = $repo;
     }
 
+    /**
+     * Tentukan tab semasa.
+     */
     private function resolveTab(Request $request): string
     {
-        $tab = strtolower((string) $request->get('tab', 'lnpt'));
-        return in_array($tab, ['skt', 'lnpt'], true) ? $tab : 'lnpt';
+        $tab = strtolower(
+            (string) $request->get('tab', 'lnpt')
+        );
+
+        return in_array(
+            $tab,
+            ['skt', 'lnpt'],
+            true
+        )
+            ? $tab
+            : 'lnpt';
     }
 
+    /**
+     * Tukarkan tab kepada type period.
+     */
     private function resolveType(string $tab): string
     {
-        return $tab === 'skt' ? 'SKT' : 'LNPT';
+        return $tab === 'skt'
+            ? 'SKT'
+            : 'LNPT';
     }
 
+    /**
+     * Paparan senarai lantikan.
+     */
     public function index(Request $request)
     {
         $tab  = $this->resolveTab($request);
         $type = $this->resolveType($tab);
 
-        // ✅ periods ikut type (SKT/LNPT)
         $periods = PerformancePeriod::where('type', $type)
             ->orderByDesc('is_active')
             ->orderByDesc('year')
             ->orderByDesc('session')
             ->get();
 
-        // ✅ pilih active atau selected dalam type ini sahaja
         $period = $this->repo->getActiveOrSelectedPeriod(
             $request->integer('period_id') ?: null,
             $type
         );
 
-        // ✅ FIX: elak 404 / error kalau belum ada tempoh penilaian
         if (!$period) {
             $assignments = collect();
 
-            // dropdown user (ringkas)
-            $users = User::orderBy('name')->get(['id','name']);
+            $users = User::orderBy('name')
+                ->get([
+                    'id',
+                    'name',
+                ]);
 
             $noActivePeriod = true;
 
-            return view('admin.performance.assignments.index', compact(
+            return view(
+                'admin.performance.assignments.index',
+                compact(
+                    'periods',
+                    'period',
+                    'assignments',
+                    'users',
+                    'tab',
+                    'type',
+                    'noActivePeriod'
+                )
+            );
+        }
+
+        $assignments = $this->repo->listByPeriod(
+            $period->id,
+            $type
+        );
+
+        $users = User::orderBy('name')
+            ->get([
+                'id',
+                'name',
+            ]);
+
+        $noActivePeriod = false;
+
+        return view(
+            'admin.performance.assignments.index',
+            compact(
                 'periods',
                 'period',
                 'assignments',
@@ -64,115 +114,285 @@ class PerformanceAssignmentController extends Controller
                 'tab',
                 'type',
                 'noActivePeriod'
-            ));
-        }
-
-        $assignments = $this->repo->listByPeriod($period->id, $type);
-
-        // dropdown user (ringkas)
-        $users = User::orderBy('name')->get(['id','name']);
-
-        $noActivePeriod = false;
-
-        return view('admin.performance.assignments.index', compact(
-            'periods',
-            'period',
-            'assignments',
-            'users',
-            'tab',
-            'type',
-            'noActivePeriod'
-        ));
+            )
+        );
     }
 
+    /**
+     * Simpan lantikan baharu.
+     */
     public function store(Request $request)
     {
         $tab  = $this->resolveTab($request);
         $type = $this->resolveType($tab);
 
         $rules = [
-            'performance_period_id' => ['required','integer','exists:performance_periods,id'],
-            'pyd_user_id'           => ['required','integer','exists:users,id',
-                Rule::unique('performance_assignments','pyd_user_id')
-                    ->where(fn($q) => $q->where('performance_period_id', $request->performance_period_id))
+            'performance_period_id' => [
+                'required',
+                'integer',
+                'exists:performance_periods,id',
             ],
-            'ppp_user_id' => ['required','integer','exists:users,id','different:pyd_user_id'],
+
+            'pyd_user_id' => [
+                'required',
+                'integer',
+                'exists:users,id',
+
+                Rule::unique(
+                    'performance_assignments',
+                    'pyd_user_id'
+                )->where(function ($query) use ($request) {
+                    return $query->where(
+                        'performance_period_id',
+                        $request->performance_period_id
+                    );
+                }),
+            ],
+
+            'ppp_user_id' => [
+                'required',
+                'integer',
+                'exists:users,id',
+                'different:pyd_user_id',
+            ],
         ];
 
-        // ✅ LNPT wajib PPK, SKT tidak
+        /*
+         * LNPT:
+         * - wajib pilih kumpulan
+         * - wajib PPK
+         *
+         * SKT:
+         * - kumpulan tidak digunakan
+         * - PPK tidak digunakan
+         */
         if ($type === 'LNPT') {
-            $rules['ppk_user_id'] = ['required','integer','exists:users,id','different:pyd_user_id'];
+            $rules['pyd_group'] = [
+                'required',
+                'string',
+                Rule::in([
+                    'A',
+                    'BC',
+                ]),
+            ];
+
+            $rules['ppk_user_id'] = [
+                'required',
+                'integer',
+                'exists:users,id',
+                'different:pyd_user_id',
+            ];
         } else {
-            $rules['ppk_user_id'] = ['nullable','integer','exists:users,id','different:pyd_user_id'];
+            $rules['pyd_group'] = [
+                'nullable',
+            ];
+
+            $rules['ppk_user_id'] = [
+                'nullable',
+                'integer',
+                'exists:users,id',
+                'different:pyd_user_id',
+            ];
         }
 
-        $data = $request->validate($rules);
+        $messages = [
+            'pyd_group.required' => 'Sila pilih kumpulan perkhidmatan PYD.',
+            'pyd_group.in'       => 'Pilihan kumpulan perkhidmatan tidak sah.',
 
-        // ✅ safety: pastikan period type sepadan dengan tab
-        $period = PerformancePeriod::findOrFail($data['performance_period_id']);
-        if (strtoupper((string)$period->type) !== $type) {
-            return back()->withErrors(['performance_period_id' => 'Tempoh tidak sepadan dengan tab yang dipilih.'])->withInput();
+            'pyd_user_id.unique' => 'PYD ini telah mempunyai lantikan bagi tempoh yang dipilih.',
+
+            'ppp_user_id.required' => 'Sila pilih PPP.',
+            'ppp_user_id.different' => 'PPP tidak boleh sama dengan PYD.',
+
+            'ppk_user_id.required' => 'Sila pilih PPK.',
+            'ppk_user_id.different' => 'PPK tidak boleh sama dengan PYD.',
+        ];
+
+        $data = $request->validate(
+            $rules,
+            $messages
+        );
+
+        /*
+         * Pastikan period sepadan dengan tab.
+         */
+        $period = PerformancePeriod::findOrFail(
+            $data['performance_period_id']
+        );
+
+        if (
+            strtoupper(trim((string) $period->type))
+            !== $type
+        ) {
+            return back()
+                ->withErrors([
+                    'performance_period_id'
+                        => 'Tempoh tidak sepadan dengan tab yang dipilih.',
+                ])
+                ->withInput();
         }
 
-        // ✅ SKT: paksa tiada PPK
+        /*
+         * SKT tidak menggunakan kumpulan dan PPK.
+         */
         if ($type === 'SKT') {
+            $data['pyd_group'] = null;
             $data['ppk_user_id'] = null;
         }
 
-        // tambahan rule: ppp != ppk (kekal, untuk LNPT sahaja)
-        if (!empty($data['ppp_user_id']) && !empty($data['ppk_user_id']) && ((int)$data['ppp_user_id'] === (int)$data['ppk_user_id'])) {
-            return back()->withErrors(['ppk_user_id' => 'PPK tidak boleh sama dengan PPP.'])->withInput();
+        /*
+         * PPP dan PPK tidak boleh orang yang sama.
+         */
+        if (
+            !empty($data['ppp_user_id'])
+            && !empty($data['ppk_user_id'])
+            && (int) $data['ppp_user_id']
+                === (int) $data['ppk_user_id']
+        ) {
+            return back()
+                ->withErrors([
+                    'ppk_user_id'
+                        => 'PPK tidak boleh sama dengan PPP.',
+                ])
+                ->withInput();
         }
 
         $this->repo->store($data);
 
-        return redirect()->route('admin.performance.assignments.index', [
-                'tab' => $tab,
-                'period_id' => $data['performance_period_id']
-            ])
-            ->with('success', $type === 'SKT'
-                ? 'Lantikan PPP (SKT) berjaya disimpan.'
-                : 'Lantikan PPP/PPK berjaya disimpan.'
+        return redirect()
+            ->route(
+                'admin.performance.assignments.index',
+                [
+                    'tab'       => $tab,
+                    'period_id' => $data['performance_period_id'],
+                ]
+            )
+            ->with(
+                'success',
+                $type === 'SKT'
+                    ? 'Lantikan PPP (SKT) berjaya disimpan.'
+                    : 'Lantikan PPP/PPK berjaya disimpan.'
             );
     }
 
-    public function update(Request $request, $id)
-    {
+    /**
+     * Kemaskini lantikan.
+     */
+    public function update(
+        Request $request,
+        $id
+    ) {
         $tab  = $this->resolveTab($request);
         $type = $this->resolveType($tab);
 
-        // SKT: hanya benarkan update PPP sahaja (PPK paksa null)
+        /*
+         * SKT:
+         * - hanya kemaskini PPP
+         * - PPK dipaksa null
+         * - kumpulan tidak diubah
+         */
         if ($type === 'SKT') {
-            $data = $request->validate([
-                'ppp_user_id' => ['required','integer','exists:users,id'],
-            ]);
+            $data = $request->validate(
+                [
+                    'ppp_user_id' => [
+                        'required',
+                        'integer',
+                        'exists:users,id',
+                    ],
+                ],
+                [
+                    'ppp_user_id.required'
+                        => 'Sila pilih PPP.',
+                ]
+            );
 
             $data['ppk_user_id'] = null;
 
-            $this->repo->update((int)$id, $data);
+            $this->repo->update(
+                (int) $id,
+                $data
+            );
 
-            return back()->with('success', 'Lantikan PPP (SKT) berjaya dikemaskini.');
+            return back()->with(
+                'success',
+                'Lantikan PPP (SKT) berjaya dikemaskini.'
+            );
         }
 
-        // LNPT (asal)
-        $data = $request->validate([
-            'ppp_user_id' => ['nullable','integer','exists:users,id'],
-            'ppk_user_id' => ['nullable','integer','exists:users,id'],
-        ]);
+        /*
+         * LNPT:
+         * - kumpulan wajib
+         * - PPP dan PPK dikekalkan mengikut flow asal
+         */
+        $data = $request->validate(
+            [
+                'pyd_group' => [
+                    'required',
+                    'string',
+                    Rule::in([
+                        'A',
+                        'BC',
+                    ]),
+                ],
 
-        if (!empty($data['ppp_user_id']) && !empty($data['ppk_user_id']) && ((int)$data['ppp_user_id'] === (int)$data['ppk_user_id'])) {
-            return back()->withErrors(['ppk_user_id' => 'PPK tidak boleh sama dengan PPP.']);
+                'ppp_user_id' => [
+                    'nullable',
+                    'integer',
+                    'exists:users,id',
+                ],
+
+                'ppk_user_id' => [
+                    'nullable',
+                    'integer',
+                    'exists:users,id',
+                ],
+            ],
+            [
+                'pyd_group.required'
+                    => 'Sila pilih kumpulan perkhidmatan PYD.',
+
+                'pyd_group.in'
+                    => 'Pilihan kumpulan perkhidmatan tidak sah.',
+            ]
+        );
+
+        if (
+            !empty($data['ppp_user_id'])
+            && !empty($data['ppk_user_id'])
+            && (int) $data['ppp_user_id']
+                === (int) $data['ppk_user_id']
+        ) {
+            return back()->withErrors([
+                'ppk_user_id'
+                    => 'PPK tidak boleh sama dengan PPP.',
+            ]);
         }
 
-        $this->repo->update((int)$id, $data);
+        $this->repo->update(
+            (int) $id,
+            $data
+        );
 
-        return back()->with('success', 'Lantikan berjaya dikemaskini.');
+        return back()->with(
+            'success',
+            'Lantikan berjaya dikemaskini.'
+        );
     }
 
-    public function destroy(Request $request, $id)
-    {
-        $this->repo->destroy((int)$id);
+    /**
+     * Padam lantikan.
+     */
+    public function destroy(
+        Request $request,
+        $id
+    ) {
+        $this->repo->destroy(
+            (int) $id
+        );
 
-        return back()->with('success', 'Lantikan berjaya dipadam.');
+        return back()->with(
+            'success',
+            'Lantikan berjaya dipadam.'
+        );
     }
 }

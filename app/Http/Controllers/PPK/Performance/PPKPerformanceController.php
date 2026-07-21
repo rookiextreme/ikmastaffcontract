@@ -55,12 +55,20 @@ class PPKPerformanceController extends Controller
         $sectionMeta = method_exists($this->repo, 'sectionMeta') ? $this->repo->sectionMeta() : [];
 
         // items hanya untuk kompetensi
-        $items = collect();
-        if (in_array($bahagian, ['III','IV','V','VI'], true)) {
-            $items = method_exists($this->repo, 'getCompetencyItemsByCode')
-                ? $this->repo->getCompetencyItemsByCode($bahagian)
-                : $this->repo->getCompetencyItems();
-        }
+        $pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
+
+$items = collect();
+
+if (in_array($bahagian, ['III','IV','V','VI'], true)) {
+    $items = method_exists($this->repo, 'getCompetencyItemsByCode')
+        ? $this->repo->getCompetencyItemsByCode(
+            $bahagian,
+            $bahagian === 'V' ? $pydGroup : null
+        )
+        : $this->repo->getCompetencyItems();
+}
 
         $scores = $evaluation->competencyScores()->get()->keyBy('competency_item_id');
 

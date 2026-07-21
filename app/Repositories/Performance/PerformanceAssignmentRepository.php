@@ -9,92 +9,145 @@ use Illuminate\Support\Facades\DB;
 class PerformanceAssignmentRepository
 {
     /**
-     * ✅ DIKEMASKINI: pilih period ikut TYPE (SKT/LNPT)
-     * - Kalau $periodId diberi: pastikan period itu wujud + type match
-     * - Kalau tak diberi: ambil period aktif untuk type itu
-     * - Kalau tiada aktif: fallback latest untuk type itu (year desc, session desc)
+     * Pilih period ikut TYPE (SKT/LNPT)
+     *
+     * - Kalau $periodId diberi, pastikan period wujud dan type sepadan.
+     * - Kalau tidak diberi, ambil period aktif untuk type tersebut.
+     * - Kalau tiada period aktif, ambil period terkini.
      */
-    public function getActiveOrSelectedPeriod(?int $periodId = null, string $type = 'LNPT'): ?PerformancePeriod
-{
-    $type = strtoupper(trim($type));
+    public function getActiveOrSelectedPeriod(
+        ?int $periodId = null,
+        string $type = 'LNPT'
+    ): ?PerformancePeriod {
+        $type = strtoupper(trim($type));
 
-    if ($periodId) {
-        return PerformancePeriod::where('id', $periodId)
-            ->whereRaw('UPPER(TRIM(type)) = ?', [$type])
+        if ($periodId) {
+            return PerformancePeriod::where('id', $periodId)
+                ->whereRaw(
+                    'UPPER(TRIM(type)) = ?',
+                    [$type]
+                )
+                ->first();
+        }
+
+        $active = PerformancePeriod::whereRaw(
+                'UPPER(TRIM(type)) = ?',
+                [$type]
+            )
+            ->where('is_active', 1)
+            ->orderByDesc('year')
+            ->orderByDesc('session')
+            ->first();
+
+        if ($active) {
+            return $active;
+        }
+
+        return PerformancePeriod::whereRaw(
+                'UPPER(TRIM(type)) = ?',
+                [$type]
+            )
+            ->orderByDesc('year')
+            ->orderByDesc('session')
             ->first();
     }
 
-    $active = PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
-        ->where('is_active', 1)
-        ->orderByDesc('year')
-        ->orderByDesc('session')
-        ->first();
-
-    if ($active) {
-        return $active;
-    }
-
-    return PerformancePeriod::whereRaw('UPPER(TRIM(type)) = ?', [$type])
-        ->orderByDesc('year')
-        ->orderByDesc('session')
-        ->first();
-}
-
     /**
-     * ✅ DIKEMASKINI: list lantikan ikut period + TYPE
-     * (Elak LNPT keluar dalam tab SKT dan sebaliknya)
+     * Senarai lantikan ikut period dan type.
      */
-    public function listByPeriod(int $periodId, string $type = 'LNPT')
-    {
+    public function listByPeriod(
+        int $periodId,
+        string $type = 'LNPT'
+    ) {
         $type = strtoupper(trim($type));
 
-        // ensure period betul-betul type yang diminta
         $period = PerformancePeriod::where('id', $periodId)
-            // ✅ robust: elak isu 'SKT ' / 'skt'
-            ->whereRaw('UPPER(TRIM(type)) = ?', [$type])
+            ->whereRaw(
+                'UPPER(TRIM(type)) = ?',
+                [$type]
+            )
             ->first();
 
         if (!$period) {
-            // kalau period id tak match type, pulangkan empty supaya UI tak bercampur
             return collect();
         }
 
-        return PerformanceAssignment::with(['pydUser','pppUser','ppkUser'])
-            ->where('performance_period_id', $periodId)
+        return PerformanceAssignment::with([
+                'pydUser',
+                'pppUser',
+                'ppkUser',
+            ])
+            ->where(
+                'performance_period_id',
+                $periodId
+            )
             ->orderBy('pyd_user_id')
             ->get();
     }
 
+    /**
+     * Simpan lantikan baharu.
+     */
     public function store(array $data): PerformanceAssignment
     {
         return DB::transaction(function () use ($data) {
-
             return PerformanceAssignment::create([
-                'performance_period_id' => (int)$data['performance_period_id'],
-                'pyd_user_id'           => (int)$data['pyd_user_id'],
-                'ppp_user_id'           => $data['ppp_user_id'] ?: null,
-                'ppk_user_id'           => $data['ppk_user_id'] ?: null,
+                'performance_period_id' => (int) $data['performance_period_id'],
+                'pyd_user_id'           => (int) $data['pyd_user_id'],
+
+                'pyd_group'             => $data['pyd_group'] ?? null,
+
+                'ppp_user_id'           => !empty($data['ppp_user_id'])
+                    ? (int) $data['ppp_user_id']
+                    : null,
+
+                'ppk_user_id'           => !empty($data['ppk_user_id'])
+                    ? (int) $data['ppk_user_id']
+                    : null,
+
                 'unit_id'               => $data['unit_id'] ?? null,
                 'branch_id'             => $data['branch_id'] ?? null,
             ]);
         });
     }
 
-    public function update(int $id, array $data): PerformanceAssignment
-    {
+    /**
+     * Kemaskini lantikan.
+     */
+    public function update(
+        int $id,
+        array $data
+    ): PerformanceAssignment {
         return DB::transaction(function () use ($id, $data) {
-
             $row = PerformanceAssignment::findOrFail($id);
 
-            $row->update([
-                'ppp_user_id' => $data['ppp_user_id'] ?: null,
-                'ppk_user_id' => $data['ppk_user_id'] ?: null,
-            ]);
+            $updateData = [
+                'ppp_user_id' => !empty($data['ppp_user_id'])
+                    ? (int) $data['ppp_user_id']
+                    : null,
+
+                'ppk_user_id' => !empty($data['ppk_user_id'])
+                    ? (int) $data['ppk_user_id']
+                    : null,
+            ];
+
+            /*
+             * pyd_group hanya dikemaskini apabila dihantar.
+             * Ini memastikan flow SKT tidak mengubah nilai kumpulan.
+             */
+            if (array_key_exists('pyd_group', $data)) {
+                $updateData['pyd_group'] = $data['pyd_group'];
+            }
+
+            $row->update($updateData);
 
             return $row;
         });
     }
 
+    /**
+     * Padam lantikan.
+     */
     public function destroy(int $id): void
     {
         PerformanceAssignment::where('id', $id)->delete();

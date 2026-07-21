@@ -90,14 +90,53 @@ class PerformanceEvaluationRepository
             ->get();
     }
 
-    public function getCompetencyItemsByCode(string $code)
-    {
-        return \App\Models\PerformanceCompetencyItem::where('code', $code)
-            ->where('is_active', 1)
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get();
+    public function getCompetencyItemsByCode(
+    string $code,
+    ?string $pydGroup = null
+) {
+    $code = strtoupper(trim($code));
+    $pydGroup = strtoupper(trim((string) $pydGroup));
+
+    $query = PerformanceCompetencyItem::where('code', $code)
+        ->where('is_active', 1);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bahagian V ikut kumpulan perkhidmatan PYD
+    |--------------------------------------------------------------------------
+    |
+    | A:
+    | - item ALL
+    | - item A
+    |
+    | BC:
+    | - item ALL sahaja
+    |
+    | Bahagian lain:
+    | - kekalkan flow asal
+    |
+    */
+
+    if ($code === 'V') {
+        if ($pydGroup === 'A') {
+            $query->whereIn('group_type', [
+                'ALL',
+                'A',
+            ]);
+        } else {
+            /*
+             * BC dan rekod lama yang belum mempunyai kumpulan
+             * akan menggunakan item umum sahaja.
+             */
+            $query->where('group_type', 'ALL');
+        }
     }
+
+    return $query
+        ->orderBy('sort_order')
+        ->orderBy('id')
+        ->get();
+}
 
     // ✅ tajuk penuh LNPT + wajaran
     public function sectionMeta(): array
@@ -178,30 +217,89 @@ class PerformanceEvaluationRepository
     // =========================================================
     // ✅ BARU (FIX): SECTION III–VI mesti lengkap SEMUA item
     // =========================================================
-    private function requiredItemCountByCode(string $code): int
-    {
-        return \App\Models\PerformanceCompetencyItem::where('is_active', 1)
-            ->where('code', $code)
-            ->count();
+    private function requiredItemCountByCode(
+    string $code,
+    ?string $pydGroup = null
+): int {
+    $code = strtoupper(trim($code));
+    $pydGroup = strtoupper(trim((string) $pydGroup));
+
+    $query = PerformanceCompetencyItem::where('is_active', 1)
+        ->where('code', $code);
+
+    if ($code === 'V') {
+        if ($pydGroup === 'A') {
+            $query->whereIn('group_type', [
+                'ALL',
+                'A',
+            ]);
+        } else {
+            $query->where('group_type', 'ALL');
+        }
     }
 
-    private function filledScoreCountByCode(PerformanceEvaluation $evaluation, string $roleKey, string $code): int
-    {
-        $evaluation->loadMissing(['competencyScores.item']);
+    return $query->count();
+}
 
-        $scoreField = ($roleKey === 'ppk') ? 'ppk_score' : 'ppp_score';
+    private function filledScoreCountByCode(
+    PerformanceEvaluation $evaluation,
+    string $roleKey,
+    string $code,
+    ?string $pydGroup = null
+): int {
+    $evaluation->loadMissing([
+        'competencyScores.item',
+    ]);
 
-        return $evaluation->competencyScores
-            ->filter(function ($sc) use ($scoreField, $code) {
-                if (empty($sc->item)) return false;
+    $scoreField = $roleKey === 'ppk'
+        ? 'ppk_score'
+        : 'ppp_score';
 
-                $itemCode = strtoupper((string)($sc->item->code ?? ''));
-                if ($itemCode !== strtoupper($code)) return false;
+    $code = strtoupper(trim($code));
+    $pydGroup = strtoupper(trim((string) $pydGroup));
 
-                return $sc->{$scoreField} !== null;
-            })
-            ->count();
-    }
+    return $evaluation->competencyScores
+        ->filter(function ($score) use (
+            $scoreField,
+            $code,
+            $pydGroup
+        ) {
+            if (empty($score->item)) {
+                return false;
+            }
+
+            $itemCode = strtoupper(
+                trim((string) ($score->item->code ?? ''))
+            );
+
+            if ($itemCode !== $code) {
+                return false;
+            }
+
+            /*
+             * Untuk Bahagian V, pastikan hanya item kumpulan
+             * berkenaan dikira.
+             */
+            if ($code === 'V') {
+                $groupType = strtoupper(
+                    trim((string) ($score->item->group_type ?? 'ALL'))
+                );
+
+                if ($pydGroup === 'A') {
+                    if (!in_array($groupType, ['ALL', 'A'], true)) {
+                        return false;
+                    }
+                } else {
+                    if ($groupType !== 'ALL') {
+                        return false;
+                    }
+                }
+            }
+
+            return $score->{$scoreField} !== null;
+        })
+        ->count();
+}
 
     // =========================================================
     // ✅ TAMBAH: Helper untuk SKT (row lengkap & optional block)
@@ -232,7 +330,11 @@ class PerformanceEvaluationRepository
     public function isSectionComplete(string $section, string $roleKey, PerformanceEvaluation $evaluation): bool
     {
         // ✅ tambah period untuk detect SKT/LNPT
-        $evaluation->loadMissing(['competencyScores', 'period']);
+        $evaluation->loadMissing([
+    'competencyScores.item',
+    'period',
+    'assignment',
+]);
 
         // =========================
         // ✅ RULE: SKT (untuk tanda ✓ tab SKT)
@@ -294,6 +396,14 @@ class PerformanceEvaluationRepository
                 default => false,
             };
         }
+        /*
+|--------------------------------------------------------------------------
+| LNPT: Kumpulan perkhidmatan PYD
+|--------------------------------------------------------------------------
+*/
+$pydGroup = strtoupper(
+    trim((string) ($evaluation->assignment->pyd_group ?? 'BC'))
+);
 
         // ✅ ikut role: PPP kira ppp_score, PPK kira ppk_score
         $pppScoreCount = $evaluation->competencyScores->whereNotNull('ppp_score')->count();
@@ -319,10 +429,33 @@ class PerformanceEvaluationRepository
              * - mesti isi markah untuk SEMUA item dalam section itu
              * - PPP guna ppp_score, PPK guna ppk_score
              */
-            'III' => $this->filledScoreCountByCode($evaluation, $roleKey, 'III') >= $this->requiredItemCountByCode('III'),
-            'IV'  => $this->filledScoreCountByCode($evaluation, $roleKey, 'IV')  >= $this->requiredItemCountByCode('IV'),
-            'V'   => $this->filledScoreCountByCode($evaluation, $roleKey, 'V')   >= $this->requiredItemCountByCode('V'),
-            'VI'  => $this->filledScoreCountByCode($evaluation, $roleKey, 'VI')  >= $this->requiredItemCountByCode('VI'),
+            'III' => $this->filledScoreCountByCode(
+    $evaluation,
+    $roleKey,
+    'III'
+) >= $this->requiredItemCountByCode('III'),
+
+'IV' => $this->filledScoreCountByCode(
+    $evaluation,
+    $roleKey,
+    'IV'
+) >= $this->requiredItemCountByCode('IV'),
+
+'V' => $this->filledScoreCountByCode(
+    $evaluation,
+    $roleKey,
+    'V',
+    $pydGroup
+) >= $this->requiredItemCountByCode(
+    'V',
+    $pydGroup
+),
+
+'VI' => $this->filledScoreCountByCode(
+    $evaluation,
+    $roleKey,
+    'VI'
+) >= $this->requiredItemCountByCode('VI'),
 
             // VII auto
             'VII' => true,
