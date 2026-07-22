@@ -67,33 +67,53 @@ class PerformanceCompetencyItemSeeder extends Seeder
             ],
 
             // =========================
-            // V: Kualiti Peribadi (20%)
-            // =========================
-            [
-                'code' => 'V', 'weight' => 20, 'sort_order' => 1,
-                'name' => 'Kebolehan mengelola',
-                'description' => null,
-                'is_active' => 1,
-            ],
-            [
-                'code' => 'V', 'weight' => 20, 'sort_order' => 2,
-                'name' => 'Disiplin',
-                'description' => null,
-                'is_active' => 1,
-            ],
-            [
-                'code' => 'V', 'weight' => 20, 'sort_order' => 3,
-                'name' => 'Proaktif & inovatif',
-                'description' => null,
-                'is_active' => 1,
-            ],
-            [
-                'code' => 'V', 'weight' => 20, 'sort_order' => 4,
-                'name' => 'Jalinan hubungan & kerjasama',
-                'description' => null,
-                'is_active' => 1,
-            ],
-
+// V: Kualiti Peribadi (20%)
+// =========================
+[
+    'code' => 'V',
+    'weight' => 20,
+    'sort_order' => 1,
+    'group_type' => 'A',
+    'name' => 'Ciri-ciri Pemimpin',
+    'description' => 'Mempunyai wawasan, komitmen, kebolehan membuat keputusan, menggerak dan memberi dorongan kepada pegawai ke arah pencapaian objektif organisasi.',
+    'is_active' => 1,
+],
+[
+    'code' => 'V',
+    'weight' => 20,
+    'sort_order' => 2,
+    'group_type' => 'ALL',
+    'name' => 'Kebolehan mengelola',
+    'description' => null,
+    'is_active' => 1,
+],
+[
+    'code' => 'V',
+    'weight' => 20,
+    'sort_order' => 3,
+    'group_type' => 'ALL',
+    'name' => 'Disiplin',
+    'description' => null,
+    'is_active' => 1,
+],
+[
+    'code' => 'V',
+    'weight' => 20,
+    'sort_order' => 4,
+    'group_type' => 'ALL',
+    'name' => 'Proaktif & inovatif',
+    'description' => null,
+    'is_active' => 1,
+],
+[
+    'code' => 'V',
+    'weight' => 20,
+    'sort_order' => 5,
+    'group_type' => 'ALL',
+    'name' => 'Jalinan hubungan & kerjasama',
+    'description' => null,
+    'is_active' => 1,
+],
             // =========================
             // VI: Kegiatan & Sumbangan Luar Tugas (5%)
             // =========================
@@ -121,6 +141,7 @@ class PerformanceCompetencyItemSeeder extends Seeder
                     'description' => $it['description'],
                     'weight'      => $it['weight'],
                     'sort_order'  => $it['sort_order'],
+                    'is_active'   => $it['is_active'],
                     'is_active'   => $it['is_active'],
                 ]
             );
