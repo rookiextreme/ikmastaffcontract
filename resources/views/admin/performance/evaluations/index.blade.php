@@ -14,7 +14,7 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between mb-6">
             <div>
                 <h3 class="mb-1">Senarai Penilaian Prestasi</h3>
-                <div class="text-muted">Admin view & urus senarai (bukan isi borang).</div>
+                <div class="text-muted">Paparan pentadbir untuk mengurus senarai penilaian.</div>
             </div>
         </div>
 
@@ -133,7 +133,7 @@
 
                     {{-- ✅ Carian IC (PYD) --}}
                     <div class="col-md-3">
-                        <label class="form-label">Carian IC (PYD)</label>
+                        <label class="form-label">Carian No. Kad Pengenalan (PYD)</label>
                         <input type="text"
                                name="ic"
                                value="{{ $ic ?? request('ic') }}"
@@ -168,7 +168,7 @@
                         <tr class="text-muted">
                             <th style="width:60px;">Bil.</th>
                             <th>PYD</th>
-                            <th style="width:160px;">IC</th>
+                            <th style="width:160px;">No. Kad Pengenalan</th>
                             <th>PPP</th>
                             <th>PPK</th>
                             <th style="width:160px;">Status</th>
@@ -177,7 +177,7 @@
 
                             {{-- ✅ LNPT sahaja: Total + PPSM --}}
                             @if(!$isSkt)
-                                <th style="width:110px;">Total</th>
+                                <th style="width:110px;">Markah Keseluruhan</th>
                                 <th style="width:110px;">PPSM</th>
                             @endif
 
@@ -245,10 +245,8 @@
                                 <td>{{ $r->assignment->ppkUser->name ?? '-' }}</td>
 
                                 <td>
-                                    <span class="badge badge-light">
-                                        {{ $statusText }}
-                                    </span>
-                                </td>
+    {!! \App\Helpers\PerformanceHelper::statusBadge($statusText) !!}
+</td>
 
                                 <td class="text-muted">
                                     {{ $submittedAt ? \Carbon\Carbon::parse($submittedAt)->format('d/m/Y') : '-' }}
@@ -274,7 +272,7 @@
                                         {{-- ✅ bawa tab ke detail supaya boleh kembali tab sama --}}
                                         <a class="btn btn-sm btn-primary"
                                            href="{{ route('admin.performance.evaluations.show', $r->id) }}?tab={{ $tabValue }}">
-                                            Detail
+                                            Butiran
                                         </a>
                                     @else
                                         <span class="text-muted">Belum dijana</span>

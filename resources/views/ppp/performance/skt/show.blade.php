@@ -51,7 +51,9 @@
         </div>
 
         <div class="d-flex align-items-center gap-2">
-            <span class="badge {{ $badgeClass }}">Status: {{ $status }}</span>
+            <span class="badge {{ $badgeClass }}">
+    Status: {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+</span>
             <a href="{{ route('ppp.performance.skt.index') }}" class="btn btn-light">Kembali</a>
         </div>
     </div>

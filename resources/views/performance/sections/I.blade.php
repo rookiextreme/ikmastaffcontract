@@ -78,7 +78,7 @@
 
                 <input
                     class="form-control"
-                    value="{{ $status }}"
+                    value="{{ \App\Helpers\PerformanceHelper::statusLabel($status) }}"
                     disabled
                 >
             </div>

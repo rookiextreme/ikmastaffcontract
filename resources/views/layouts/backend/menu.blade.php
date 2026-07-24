@@ -93,7 +93,7 @@
                                         <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">Papan Pemuka</span>
+                                <span class="menu-title">Utama</span>
                             </a>
                         </div>
                         {{-- PETI PESANAN --}}
@@ -187,7 +187,7 @@
                                         <span class="path3"></span><span class="path4"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">Dashboard Prestasi</span>
+                                <span class="menu-title">Utama Prestasi</span>
                             </a>
                         </div>
 

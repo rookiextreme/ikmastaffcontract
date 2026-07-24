@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PerformanceEvaluation;
 use App\Models\PerformancePeriod;
 use Illuminate\Http\Request;
+use App\Helpers\PerformanceHelper;
 
 class PerformanceDashboardController extends Controller
 {
@@ -50,8 +51,18 @@ class PerformanceDashboardController extends Controller
         ];
 
         $statusChartLabels = $isSkt
-            ? ['DRAFT', 'SUBMITTED', 'PPP_REVIEWED']
-            : ['DRAFT', 'SUBMITTED', 'PPP_SCORED', 'PPK_APPROVED', 'FINAL'];
+    ? [
+        'Draf',
+        'Semakan PPP',
+        'Disahkan PPP',
+    ]
+    : [
+        'Draf',
+        'Semakan PPP',
+        'Pengesahan PPK',
+        'Disahkan PPK',
+        'Muktamad',
+    ];
 
         $statusChartValues = $isSkt
             ? [0, 0, 0]
@@ -134,7 +145,7 @@ class PerformanceDashboardController extends Controller
             'tab',
             'isSkt',
             'periods',
-            'period',
+            'period',             
             'stats',
             'statusChartLabels',
             'statusChartValues',

@@ -1,6 +1,6 @@
 @extends('layouts.backend.master')
 
-@section('title', 'Dashboard Prestasi')
+@section('title', 'Utama Prestasi')
 
 @section('content')
 <div class="container-fluid">
@@ -41,7 +41,7 @@
         <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-4">
             <div>
                 <div class="d-flex align-items-center gap-3 mb-2">
-                    <h3 class="mb-0">Dashboard Prestasi</h3>
+                    <h3 class="mb-0">Utama Prestasi</h3>
                     <span class="badge badge-light-primary">
                         {{ $tab }}
                     </span>
@@ -74,7 +74,7 @@
         <div class="card-body">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <label class="form-label fw-semibold">Jenis Penilaian</label>
+                    <label class="form-label fw-semibold">Modul Penilaian</label>
                     <select name="tab" class="form-select" onchange="this.form.submit()">
                         <option value="LNPT" {{ $tab === 'LNPT' ? 'selected' : '' }}>LNPT</option>
                         <option value="SKT" {{ $tab === 'SKT' ? 'selected' : '' }}>SKT</option>
@@ -97,7 +97,7 @@
 
                 <div class="col-md-4 d-flex align-items-end">
                     <a href="{{ route('admin.performance.dashboard', ['tab' => $tab]) }}" class="btn btn-light-primary">
-                        Reset
+                        Set Semula
                     </a>
                 </div>
             </div>
@@ -120,13 +120,13 @@
                         @endif
                     </h4>
                     <div class="text-muted">
-                        Ringkasan status penilaian bagi tempoh yang dipilih
+                        Ringkasan status penilaian mengikut tempoh yang dipilih.
                     </div>
                 </div>
 
                 <div style="min-width: 260px;">
                     <div class="d-flex justify-content-between mb-1">
-                        <span class="text-muted fs-7">Kemajuan Proses</span>
+                        <span class="text-muted fs-7">Kemajuan Penilai</span>
                         <span class="fw-bold fs-7">{{ $progressPercent }}%</span>
                     </div>
                     <div class="progress h-8px bg-light-primary">
@@ -142,7 +142,7 @@
             <div class="col-md-6 col-xl-2">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body">
-                        <div class="text-muted mb-2">Jumlah Penilaian</div>
+                        <div class="text-muted mb-2">Jumlah Rekod Penilaian</div>
                         <div class="fs-2hx fw-bold text-dark">{{ $stats['total'] }}</div>
                         <div class="text-muted fs-7 mt-2">Keseluruhan rekod penilaian</div>
                     </div>
@@ -162,9 +162,9 @@
             <div class="col-md-6 col-xl-2">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body">
-                        <div class="text-muted mb-2">Telah Dihantar</div>
+                        <div class="text-muted mb-2">Menunggu Semakan PPP</div>
                         <div class="fs-2hx fw-bold text-info">{{ $stats['submitted'] }}</div>
-                        <div class="text-muted fs-7 mt-2">Menunggu semakan seterusnya</div>
+                        <div class="text-muted fs-7 mt-2">Menunggu semakan oleh PPP</div>
                     </div>
                 </div>
             </div>
@@ -173,13 +173,13 @@
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body">
                         <div class="text-muted mb-2">
-                            {{ $isSkt ? 'Disahkan PPP' : 'PPP Selesai' }}
+                            {{ $isSkt ? 'Disahkan PPP' : 'Menunggu Pengesahan PPK' }}
                         </div>
                         <div class="fs-2hx fw-bold text-primary">
                             {{ $isSkt ? $stats['ppp_reviewed'] : $stats['ppp_scored'] }}
                         </div>
                         <div class="text-muted fs-7 mt-2">
-                            {{ $isSkt ? 'SKT selesai semakan PPP' : 'LNPT selesai dinilai PPP' }}
+                            {{ $isSkt ? 'SKT selesai semakan PPP' : 'Menunggu pengesahan oleh PPK' }}
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                 <div class="col-md-6 col-xl-2">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <div class="text-muted mb-2">PPK Sahkan</div>
+                            <div class="text-muted mb-2">Disahkan Oleh PPK</div>
                             <div class="fs-2hx fw-bold text-success">{{ $stats['ppk_approved'] }}</div>
                             <div class="text-muted fs-7 mt-2">Telah disahkan oleh PPK</div>
                         </div>
@@ -237,7 +237,7 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-5 p-4 rounded bg-light-primary">
-                            <div class="text-muted fs-7 mb-1">Status Utama Tempoh Ini</div>
+                            <div class="text-muted fs-7 mb-1">Status Semasa</div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="fw-bold text-dark">{{ $mainStatusLabel }}</div>
                                 <div class="fs-2 fw-bold text-primary">{{ $mainStatusValue }}</div>
@@ -254,36 +254,36 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>DRAFT</td>
+                                        <td>{{ \App\Helpers\PerformanceHelper::statusLabel('DRAFT') }}</td>
                                         <td class="text-end">{{ $stats['draft'] }}</td>
                                     </tr>
                                     <tr>
-                                        <td>SUBMITTED</td>
+                                        <td>{{ \App\Helpers\PerformanceHelper::statusLabel('SUBMITTED') }}</td>
                                         <td class="text-end">{{ $stats['submitted'] }}</td>
                                     </tr>
 
                                     @if($isSkt)
                                         <tr>
-                                            <td>PPP_REVIEWED</td>
+                                            <td>{{ \App\Helpers\PerformanceHelper::statusLabel('PPP_REVIEWED') }}</td>
                                             <td class="text-end">{{ $stats['ppp_reviewed'] }}</td>
                                         </tr>
                                     @else
                                         <tr>
-                                            <td>PPP_SCORED</td>
+                                            <td>{{ \App\Helpers\PerformanceHelper::statusLabel('PPP_SCORED') }}</td>
                                             <td class="text-end">{{ $stats['ppp_scored'] }}</td>
                                         </tr>
                                         <tr>
-                                            <td>PPK_APPROVED</td>
+                                            <td>{{ \App\Helpers\PerformanceHelper::statusLabel('PPK_APPROVED') }}</td>
                                             <td class="text-end">{{ $stats['ppk_approved'] }}</td>
                                         </tr>
                                         <tr>
-                                            <td>FINAL</td>
+                                            <td>{{ \App\Helpers\PerformanceHelper::statusLabel('FINAL') }}</td>
                                             <td class="text-end">{{ $stats['final'] }}</td>
                                         </tr>
                                     @endif
 
                                     <tr class="fw-bold">
-                                        <td>JUMLAH</td>
+                                        <td>Jumlah Rekod</td>
                                         <td class="text-end">{{ $stats['total'] }}</td>
                                     </tr>
                                 </tbody>
@@ -305,10 +305,10 @@
                         <thead>
                             <tr class="fw-bold text-muted bg-light">
                                 <th width="50">Bil</th>
-                                <th>Nama</th>
-                                <th>Jenis</th>
+                                <th>Nama PYD</th>
+                                <th>Modul</th>
                                 <th>Status</th>
-                                <th>Kemaskini Terakhir</th>
+                                <th>Tarikh Kemaskini</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -336,11 +336,11 @@
                                             };
                                         @endphp
                                         <span class="badge badge-light-{{ $badgeClass }}">
-                                            {{ $row->status ?? '-' }}
-                                        </span>
+    {{ \App\Helpers\PerformanceHelper::statusLabel($row->status) }}
+</span>
                                     </td>
                                     <td>
-                                        {{ optional($row->updated_at)->format('d/m/Y h:i A') ?? '-' }}
+                                        {{ optional($row->updated_at)->format('d/m/Y H:i') ?? '-' }}
                                     </td>
                                 </tr>
                             @empty
@@ -359,7 +359,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 @if($period)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -381,10 +381,10 @@
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
+    legend: {
+        display: false
+    }
+},
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -398,4 +398,4 @@
     }
 </script>
 @endif
-@endsection
+@endpush

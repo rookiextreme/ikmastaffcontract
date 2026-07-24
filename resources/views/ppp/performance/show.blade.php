@@ -29,7 +29,10 @@
                 <h3 class="mb-1">Borang Penilaian (PPP)</h3>
                 <div class="text-muted">
                     PYD: <strong>{{ $evaluation->assignment->pydUser->name ?? '-' }}</strong><br>
-                    Status: <strong>{{ $status }}</strong><br>
+                    Status:
+<strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+</strong><br>
                     Tahun: <strong>{{ $evaluation->period->year ?? '-' }}</strong>
                 </div>
             </div>

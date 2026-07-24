@@ -22,7 +22,10 @@
                 <h3 class="mb-1">Borang Penilaian (PPK)</h3>
                 <div class="text-muted">
                     PYD: <strong>{{ $evaluation->assignment->pydUser->name ?? '-' }}</strong><br>
-                    Status: <strong>{{ $status }}</strong>
+                    Status:
+<strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+</strong>
                 </div>
             </div>
             <a href="{{ route('ppk.performance.index') }}" class="btn btn-light">Kembali</a>

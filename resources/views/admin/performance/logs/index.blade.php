@@ -55,7 +55,7 @@
                 <button class="btn btn-primary">Cari</button>
                 <a href="{{ route('admin.performance.logs.index') }}"
                    class="btn btn-light ms-2">
-                    Reset
+                    Set Semula
                 </a>
             </div>
         </form>

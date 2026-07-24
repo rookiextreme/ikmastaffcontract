@@ -57,8 +57,8 @@ class PerformancePeriodController extends Controller
                 }),
             ],
             'session'    => ['nullable','integer','in:1,2'], // optional sekarang
-            'start_date' => ['nullable','date'],
-            'end_date'   => ['nullable','date','after_or_equal:start_date'],
+            'start_date' => ['required','date'],
+            'end_date'   => ['required','date','after_or_equal:start_date'],
             'note'       => ['nullable','string','max:1000'],
             'is_active'  => ['nullable'], // checkbox (jangan strict boolean sebab checkbox kadang2 string)
         ]);
@@ -93,8 +93,8 @@ class PerformancePeriodController extends Controller
                 }),
             ],
             'session'    => ['nullable','integer','in:1,2'],
-            'start_date' => ['nullable','date'],
-            'end_date'   => ['nullable','date','after_or_equal:start_date'],
+            'start_date' => ['required','date'],
+            'end_date'   => ['required','date','after_or_equal:start_date'],
             'note'       => ['nullable','string','max:1000'],
             'is_active'  => ['nullable'],
         ]);

@@ -29,7 +29,8 @@
 
             @if($eval)
                 <span class="badge bg-light text-dark border">
-                    Status: {{ $statusSkt }}
+                    Status:
+{{ \App\Helpers\PerformanceHelper::statusLabel($statusSkt) }}
                 </span>
             @endif
         </div>

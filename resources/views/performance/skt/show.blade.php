@@ -83,7 +83,9 @@
                         {{ $pppName }}<br>
 
                         Status:
-                        <strong>{{ $statusSkt }}</strong><br>
+                        <strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel($statusSkt) }}
+</strong><br>
 
                         Tempoh:
                         <strong>{{ $periodYear }}</strong>
@@ -260,7 +262,13 @@
                 <div class="modal-body">
                     <div class="alert alert-success">
                         Tindakan ini akan menukar status SKT daripada
-                        <strong>PPP_REVIEWED</strong> kepada <strong>FINAL</strong>.
+                        <strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel('PPP_REVIEWED') }}
+</strong>
+kepada
+<strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel('FINAL') }}
+</strong>.
                         <div class="mt-2">
                             Gunakan tindakan ini apabila SKT telah selesai disemak oleh PPP dan
                             admin ingin memuktamadkan rekod sebagai keputusan rasmi.

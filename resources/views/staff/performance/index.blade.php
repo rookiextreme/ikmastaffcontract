@@ -46,7 +46,12 @@
                     <strong>{{ $evaluation?->period?->year ?? '-' }}</strong><br>
 
                     Status:
-                    <strong>{{ $evaluation ? $status : '-' }}</strong><br>
+<strong>
+    {{ $evaluation
+        ? \App\Helpers\PerformanceHelper::statusLabel($status)
+        : '-'
+    }}
+</strong><br>
 
                     PPP: {{ $evaluation?->assignment?->pppUser?->name ?? '-' }} |
                     PPK: {{ $evaluation?->assignment?->ppkUser?->name ?? '-' }}

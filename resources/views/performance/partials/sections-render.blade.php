@@ -60,7 +60,9 @@
 </div>
                 <div class="col-md-4">
                     <label class="form-label">Status</label>
-                    <input class="form-control" value="{{ $status }}" disabled>
+                    <input class="form-control"
+       value="{{ \App\Helpers\PerformanceHelper::statusLabel($status) }}"
+       disabled>
                 </div>
 
                 @php

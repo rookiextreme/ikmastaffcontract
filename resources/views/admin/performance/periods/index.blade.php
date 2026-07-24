@@ -69,7 +69,7 @@
 
                         {{-- Session (optional) --}}
                         <div class="col-md-3">
-                            <label class="form-label">Sesi (Optional)</label>
+                            <label class="form-label">Sesi (Pilihan)</label>
                             <select name="session" class="form-select">
                                 <option value="">-</option>
                                 <option value="1" {{ old('session')=='1' ? 'selected' : '' }}>1</option>
@@ -81,18 +81,18 @@
 
                         <div class="col-md-3">
                             <label class="form-label">Tarikh Mula</label>
-                            <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}">
+                            <input type="text" name="start_date" class="form-control date-ikma" value="{{ old('start_date') }}"required>
                             @error('start_date') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-md-3">
                             <label class="form-label">Tarikh Tamat</label>
-                            <input type="date" name="end_date" class="form-control" value="{{ old('end_date') }}">
+                            <input type="text" name="end_date" class="form-control date-ikma" value="{{ old('end_date') }}"required>
                             @error('end_date') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label">Aktifkan</label>
+                            <label class="form-label">Tempoh Aktif</label>
                             <div class="form-check form-switch mt-2">
                                 <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active_create">
                                 <label class="form-check-label" for="is_active_create">Set sebagai tempoh aktif</label>
@@ -100,8 +100,8 @@
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Nota</label>
-                            <textarea name="note" class="form-control" rows="2" placeholder="Optional">{{ old('note') }}</textarea>
+                            <label class="form-label">Nota (Pilihan)</label>
+                            <textarea name="note" class="form-control" rows="2" placeholder="Pilihan">{{ old('note') }}</textarea>
                             @error('note') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
@@ -150,10 +150,10 @@
                                     <td>{{ $p->session ?? '-' }}</td>
                                     <td>
                                         <div class="text-muted">
-                                            {{ $p->start_date ? \Carbon\Carbon::parse($p->start_date)->format('d/m/Y') : '-' }}
-                                            &nbsp;hingga&nbsp;
-                                            {{ $p->end_date ? \Carbon\Carbon::parse($p->end_date)->format('d/m/Y') : '-' }}
-                                        </div>
+    {{ $p->start_date ? \Carbon\Carbon::parse($p->start_date)->format('d/m/Y') : '-' }}
+    &ndash;
+    {{ $p->end_date ? \Carbon\Carbon::parse($p->end_date)->format('d/m/Y') : '-' }}
+</div>
                                     </td>
                                     <td>{{ $p->note ?? '-' }}</td>
 
@@ -201,7 +201,7 @@
                                                         </div>
 
                                                         <div class="col-md-3">
-                                                            <label class="form-label">Sesi (Optional)</label>
+                                                            <label class="form-label">Sesi (Pilihan)</label>
                                                             <select name="session" class="form-select">
                                                                 <option value="">-</option>
                                                                 <option value="1" {{ (string)$p->session==='1' ? 'selected' : '' }}>1</option>
@@ -211,17 +211,25 @@
                                                         </div>
 
                                                         <div class="col-md-3">
-                                                            <label class="form-label">Tarikh Mula</label>
-                                                            <input type="date" name="start_date" class="form-control" value="{{ $p->start_date }}">
-                                                        </div>
+    <label class="form-label">Tarikh Mula</label>
+    <input type="text"
+           name="start_date"
+           class="form-control date-ikma"
+           value="{{ $p->start_date }}"
+           required>
+</div>
+
+<div class="col-md-3">
+    <label class="form-label">Tarikh Tamat</label>
+    <input type="text"
+           name="end_date"
+           class="form-control date-ikma"
+           value="{{ $p->end_date }}"
+           required>
+</div>
 
                                                         <div class="col-md-3">
-                                                            <label class="form-label">Tarikh Tamat</label>
-                                                            <input type="date" name="end_date" class="form-control" value="{{ $p->end_date }}">
-                                                        </div>
-
-                                                        <div class="col-md-3">
-                                                            <label class="form-label">Aktifkan</label>
+                                                            <label class="form-label">Tempoh Aktif</label>
                                                             <div class="form-check form-switch mt-2">
                                                                 <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active_{{ $p->id }}" {{ $p->is_active ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="is_active_{{ $p->id }}">
@@ -234,7 +242,7 @@
                                                         </div>
 
                                                         <div class="col-12">
-                                                            <label class="form-label">Nota</label>
+                                                            <label class="form-label">Nota (Pilihan)</label>
                                                             <textarea name="note" class="form-control" rows="2">{{ $p->note }}</textarea>
                                                         </div>
                                                     </div>

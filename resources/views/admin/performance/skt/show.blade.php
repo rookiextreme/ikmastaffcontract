@@ -109,7 +109,8 @@
 
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-light text-dark border">
-                Status: {{ $status }}
+                Status:
+{{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
             </span>
 
             {{-- ✅ Butang finalize hanya bila status PPP_REVIEWED --}}

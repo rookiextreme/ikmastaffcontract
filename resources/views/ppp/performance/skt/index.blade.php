@@ -67,7 +67,9 @@
                                     <td class="text-center">{{ $i + 1 }}</td>
                                     <td>{{ $pydName }}</td>
                                     <td class="text-center">
-                                        <span class="badge {{ $badge }}">Status: {{ $status }}</span>
+                                        <span class="badge {{ $badge }}">
+    Status: {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+</span>
                                     </td>
                                     <td class="text-center">
                                         <a class="btn btn-sm btn-primary"
@@ -88,7 +90,10 @@
                 </div>
 
                 <div class="text-muted small mt-3">
-                    * PPP hanya boleh kemaskini Bahagian III apabila status <strong>SUBMITTED</strong> atau <strong>PPP_SCORED</strong>.
+                    * PPP hanya boleh mengemas kini Bahagian III apabila status
+<strong>{{ \App\Helpers\PerformanceHelper::statusLabel('SUBMITTED') }}</strong>
+atau
+<strong>{{ \App\Helpers\PerformanceHelper::statusLabel('PPP_SCORED') }}</strong>.
                 </div>
             </div>
         </div>

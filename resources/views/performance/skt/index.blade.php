@@ -83,7 +83,11 @@
                             <tr>
                                 <td class="text-center">{{ $i+1 }}</td>
                                 <td>{{ $pydName }}</td>
-                                <td class="text-center"><span class="badge {{ $badge }}">Status: {{ $status }}</span></td>
+                                <td class="text-center">
+    <span class="badge {{ $badge }}">
+        Status: {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+    </span>
+</td>
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-primary"
                                        href="{{ route('ppp.performance.skt.show', $row->id) }}?bahagian=I">

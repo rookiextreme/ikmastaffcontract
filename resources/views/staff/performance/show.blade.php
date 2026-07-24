@@ -28,7 +28,10 @@
                 <h3 class="mb-1">Penilaian Prestasi (PYD)</h3>
                 <div class="text-muted">
                     Tempoh: <strong>{{ $evaluation->period->year ?? '-' }}</strong><br>
-                    Status: <strong>{{ $status }}</strong><br>
+                    Status:
+<strong>
+    {{ \App\Helpers\PerformanceHelper::statusLabel($status) }}
+</strong><br>
                     PPP: {{ $evaluation->assignment->pppUser->name ?? '-' }} |
                     PPK: {{ $evaluation->assignment->ppkUser->name ?? '-' }}
                 </div>
