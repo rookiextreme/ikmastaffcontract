@@ -303,14 +303,6 @@
                                 </button>
                             </div>
 
-                            @if($type === 'LNPT')
-                                <div class="col-12">
-                                    <div class="text-muted small">
-                                        Nota: PPP dan PPK tidak boleh sama.
-                                    </div>
-                                </div>
-                            @endif
-
                         </div>
                     </form>
                 </div>
@@ -565,12 +557,6 @@
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-                                                                </div>
-
-                                                                <div class="col-12">
-                                                                    <div class="text-muted small">
-                                                                        Nota: PPP dan PPK tidak boleh sama.
-                                                                    </div>
                                                                 </div>
                                                             @else
                                                                 {{-- SKT: paksa kosong --}}

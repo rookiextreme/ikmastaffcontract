@@ -240,23 +240,6 @@ class PerformanceAssignmentController extends Controller
             $data['ppk_user_id'] = null;
         }
 
-        /*
-         * PPP dan PPK tidak boleh orang yang sama.
-         */
-        if (
-            !empty($data['ppp_user_id'])
-            && !empty($data['ppk_user_id'])
-            && (int) $data['ppp_user_id']
-                === (int) $data['ppk_user_id']
-        ) {
-            return back()
-                ->withErrors([
-                    'ppk_user_id'
-                        => 'PPK tidak boleh sama dengan PPP.',
-                ])
-                ->withInput();
-        }
-
         $this->repo->store($data);
 
         return redirect()
@@ -355,18 +338,6 @@ class PerformanceAssignmentController extends Controller
                     => 'Pilihan kumpulan perkhidmatan tidak sah.',
             ]
         );
-
-        if (
-            !empty($data['ppp_user_id'])
-            && !empty($data['ppk_user_id'])
-            && (int) $data['ppp_user_id']
-                === (int) $data['ppk_user_id']
-        ) {
-            return back()->withErrors([
-                'ppk_user_id'
-                    => 'PPK tidak boleh sama dengan PPP.',
-            ]);
-        }
 
         $this->repo->update(
             (int) $id,
