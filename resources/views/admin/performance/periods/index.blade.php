@@ -32,6 +32,11 @@
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if(session('warning'))
+    <div class="alert alert-warning">
+        {{ session('warning') }}
+    </div>
+@endif
 
         {{-- Tabs --}}
         <ul class="nav nav-tabs nav-line-tabs mb-6">
@@ -133,7 +138,7 @@
                                 <th style="width: 80px;">Sesi</th>
                                 <th>Tarikh</th>
                                 <th>Nota</th>
-                                <th style="width: 260px;" class="text-end">Tindakan</th>
+                                <th style="width: 480px;" class="text-end">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,6 +176,42 @@
                                                 </button>
                                             </form>
                                         @endif
+                                        {{-- Status / Clone Lantikan --}}
+@if(($p->assignments_count ?? 0) > 0)
+
+    {{-- Sudah mempunyai lantikan --}}
+    <span class="badge badge-light-success">
+        <i class="fas fa-check-circle me-1"></i>
+        {{ $p->assignments_count }} Lantikan
+    </span>
+
+@elseif(
+    !empty($latestAssignmentYear)
+    && (int)$p->year > (int)$latestAssignmentYear
+)
+
+    {{-- Tempoh baharu: benarkan clone daripada tahun sebelumnya --}}
+    <form method="POST"
+          action="{{ route('admin.performance.periods.clone-assignments', ['id'=>$p->id, 'tab'=>$tab]) }}"
+          class="d-inline">
+
+        @csrf
+
+        <input type="hidden"
+               name="tab"
+               value="{{ $tab }}">
+
+        <button type="submit"
+                class="btn btn-sm btn-light-success"
+                onclick="return confirm('Salin semua lantikan PYD, PPP, PPK dan Kumpulan daripada tempoh sebelumnya ke tahun {{ $p->year }}?')">
+
+            <i class="fas fa-copy"></i>
+            Salin Lantikan Tahun Sebelumnya
+
+        </button>
+    </form>
+
+@endif
 
                                         {{-- Edit (inline modal) --}}
                                         <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $p->id }}">
@@ -197,7 +238,17 @@
                                                     <div class="row g-4">
                                                         <div class="col-md-3">
                                                             <label class="form-label">Tahun</label>
-                                                            <input type="number" name="year" class="form-control" value="{{ $p->year }}" required>
+                                                            <input type="number"
+       name="year"
+       class="form-control"
+       value="{{ $p->year }}"
+       {{ ($p->assignments_count ?? 0) > 0 ? 'readonly' : '' }}
+       required>
+       @if(($p->assignments_count ?? 0) > 0)
+    <div class="text-muted small mt-1">
+        Tahun dikunci kerana tempoh ini telah mempunyai lantikan.
+    </div>
+@endif
                                                         </div>
 
                                                         <div class="col-md-3">

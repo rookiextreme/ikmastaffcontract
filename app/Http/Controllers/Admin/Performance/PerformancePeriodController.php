@@ -28,14 +28,22 @@ class PerformancePeriodController extends Controller
     }
 
     public function index(Request $request)
-    {
-        $tab = $this->resolveTab($request);
-        $type = $this->resolveType($tab);
+{
+    $tab  = $this->resolveTab($request);
+    $type = $this->resolveType($tab);
 
-        $periods = $this->repo->list($type);
+    $periods = $this->repo->list($type);
 
-        return view('admin.performance.periods.index', compact('periods','tab','type'));
-    }
+    // Tahun paling terkini yang sudah mempunyai lantikan
+    $latestAssignmentYear = $periods
+        ->where('assignments_count', '>', 0)
+        ->max('year');
+
+    return view(
+        'admin.performance.periods.index',
+        compact('periods', 'tab', 'type', 'latestAssignmentYear')
+    );
+}
 
     public function store(Request $request)
     {
@@ -79,6 +87,24 @@ class PerformancePeriodController extends Controller
     {
         $tab  = $this->resolveTab($request);
         $type = $this->resolveType($tab);
+        $period = \App\Models\PerformancePeriod::findOrFail($id);
+
+$hasAssignments = \App\Models\PerformanceAssignment::where(
+    'performance_period_id',
+    $period->id
+)->exists();
+
+if (
+    $hasAssignments &&
+    (int) $request->year !== (int) $period->year
+) {
+    return redirect()
+        ->route('admin.performance.periods.index', ['tab' => $tab])
+        ->with(
+            'warning',
+            'Tahun tidak boleh diubah kerana tempoh ini telah mempunyai lantikan.'
+        );
+}
 
         $data = $request->validate([
             'year'       => ['required','integer','min:2000','max:2100',
@@ -119,4 +145,21 @@ class PerformancePeriodController extends Controller
         return redirect()->route('admin.performance.periods.index', ['tab' => $tab])
             ->with('success', "Tempoh {$type} telah diaktifkan.");
     }
+    public function cloneAssignments(Request $request, $id)
+{
+    $tab  = $this->resolveTab($request);
+    $type = $this->resolveType($tab);
+
+    $result = $this->repo->clonePreviousAssignments((int)$id);
+
+    if (!$result['success']) {
+        return redirect()
+            ->route('admin.performance.periods.index', ['tab' => $tab])
+            ->with('warning', $result['message']);
+    }
+
+    return redirect()
+        ->route('admin.performance.periods.index', ['tab' => $tab])
+        ->with('success', $result['message']);
+}
 }

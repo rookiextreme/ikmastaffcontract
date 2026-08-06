@@ -97,6 +97,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
 
             Route::post('/{id}/activate', [PerformancePeriodController::class, 'activate'])
                 ->name('admin.performance.periods.activate');
+            Route::post('/{id}/clone-assignments', [PerformancePeriodController::class, 'cloneAssignments'])
+    ->name('admin.performance.periods.clone-assignments');
         });
 
         // ================= Lantikan PPP / PPK =================
